@@ -6,24 +6,19 @@ public class MapActivity
     extends SmartMapActivity<TitleBar.TitleBarAggregate>
 {
 
-  public void onFulfillDisplayObjects()
+  @Override
+  protected String getGoogleMapsApiKey()
   {
-    // TODO Auto-generated method stub
-
+    return Constants.GOOGLE_MAPS_API_KEY;
   }
 
   public void onRetrieveBusinessObjects()
       throws BusinessObjectUnavailableException
   {
-    // TODO Auto-generated method stub
 
   }
 
-  @Override
-  protected String getGoogleMapsApiKey()
+  public void onFulfillDisplayObjects()
   {
-    // TODO Auto-generated method stub
-    return "0yyOboPOlEVpjLWYbx-0ZU3Nn3HwjcLHrBvSLXg";
   }
-
 }

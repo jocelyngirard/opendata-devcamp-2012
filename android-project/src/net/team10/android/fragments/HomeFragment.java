@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.team10.android.AboutActivity;
+import net.team10.android.PoiTypeChooserActivity;
 import net.team10.android.R;
 import net.team10.android.SettingsActivity;
 import net.team10.android.TitleBar;
@@ -89,7 +90,7 @@ public final class HomeFragment
   {
     if (view == reportButton)
     {
-
+      startActivity(new Intent(getCheckedActivity(), PoiTypeChooserActivity.class));
     }
   }
 
