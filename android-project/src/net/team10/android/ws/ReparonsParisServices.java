@@ -7,6 +7,7 @@ import java.util.List;
 import net.team10.android.Constants;
 import net.team10.bo.Poi;
 import net.team10.bo.PoiResponse;
+import net.team10.android.bo.PoiTypesResponse;
 import net.team10.bo.PoiType;
 
 import org.codehaus.jackson.JsonParseException;
@@ -102,7 +103,7 @@ public final class ReparonsParisServices
     public List<PoiType> parse(Void parameter, InputStream inputStream)
         throws JSONException
     {
-      return (List<PoiType>) deserializeJson(inputStream, PoiType.class);
+      return ((PoiTypesResponse) deserializeJson(inputStream, PoiTypesResponse.class)).content;
     }
   };
 

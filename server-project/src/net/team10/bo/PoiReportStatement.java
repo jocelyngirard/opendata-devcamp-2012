@@ -15,24 +15,24 @@ public final class PoiReportStatement
 
   private static final long serialVersionUID = -1581788997439273911L;
 
-  private String uid;
+  private final String uid;
 
-  private String poiReportUid;
+  private final String poiReportUid;
 
-  private String accountUid;
+  private final Account account;
 
-  private Date creationDate;
+  private final Date creationDate;
 
-  private String comment;
+  private final String comment;
 
-  private String photoUrl;
+  private final String photoUrl;
 
-  public PoiReportStatement(@JsonProperty("uid") String uid, @JsonProperty("poiReportUid") String poiReportUid, @JsonProperty("accountUid") String accountUid,
+  public PoiReportStatement(@JsonProperty("uid") String uid, @JsonProperty("poiReportUid") String poiReportUid, @JsonProperty("account") Account account,
       @JsonProperty("creationDate") Date creationDate, @JsonProperty("comment") String comment, @JsonProperty("photoUrl") String photoUrl)
   {
     this.uid = uid;
     this.poiReportUid = poiReportUid;
-    this.accountUid = accountUid;
+    this.account = account;
     this.creationDate = creationDate;
     this.comment = comment;
     this.photoUrl = photoUrl;
@@ -50,10 +50,10 @@ public final class PoiReportStatement
     return poiReportUid;
   }
 
-  @JsonProperty("accountUid")
-  public String getAccountUid()
+  @JsonProperty("account")
+  public Account getAccount()
   {
-    return accountUid;
+    return account;
   }
 
   @JsonProperty("creationDate")

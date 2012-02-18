@@ -17,8 +17,10 @@
   <!-- We need this permission, because we write on the SD card -->
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
   <!-- We need this permission, when geolocalizing -->
-  <!--uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-  <uses-permission  android:name="android.permission.ACCESS_FINE_LOCATION"/-->
+  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+  <uses-permission  android:name="android.permission.ACCESS_FINE_LOCATION"/>
+  
+  <uses-permission  android:name="android.permission.GET_ACCOUNTS"/>
 
   <application
     android:name="ReparonsParisApplication"
@@ -63,6 +65,12 @@
       android:name=".AboutActivity"
       android:configChanges="keyboardHidden|orientation"
     />
+    
+    <activity
+      android:name=".PoiTypeChooserActivity"
+      android:configChanges="keyboardHidden|orientation"
+    />
+    
 
   </application>
 

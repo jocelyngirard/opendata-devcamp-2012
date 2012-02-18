@@ -20,23 +20,23 @@ public final class PoiType
 
   private static final long serialVersionUID = -3416068862484418433L;
 
-  private String uid;
+  private final String uid;
 
-  private Date creationDate;
+  private final Date creationDate;
 
-  private String openDataDataSetId;
+  private final String openDataDataSetId;
 
-  private String openDataTypeId;
+  private final String openDataTypeId;
 
-  private String label;
+  private final String label;
 
-  private String poiTypeFolderUid;
+  private final String poiTypeFolderUid;
 
-  private OpenDataSource dataSource;
+  private final OpenDataSource openDataSource;
 
   public PoiType(@JsonProperty("uid") String uid, @JsonProperty("creationDate") Date creationDate, @JsonProperty("openDataDataSetId") String openDataDataSetId,
       @JsonProperty("openDataTypeId") String openDataTypeId, @JsonProperty("label") String label, @JsonProperty("poiTypeFolderUid") String poiTypeFolderUid,
-      @JsonProperty("dataSource") OpenDataSource dataSource)
+      @JsonProperty("openDataSource") OpenDataSource openDataSource)
   {
     this.uid = uid;
     this.creationDate = creationDate;
@@ -44,7 +44,7 @@ public final class PoiType
     this.openDataTypeId = openDataTypeId;
     this.label = label;
     this.poiTypeFolderUid = poiTypeFolderUid;
-    this.dataSource = dataSource;
+    this.openDataSource = openDataSource;
   }
 
   @JsonProperty("uid")
@@ -83,10 +83,10 @@ public final class PoiType
     return poiTypeFolderUid;
   }
 
-  @JsonProperty("dataSource")
-  public OpenDataSource getDataSource()
+  @JsonProperty("openDataSource")
+  public OpenDataSource getOpenDataSource()
   {
-    return dataSource;
+    return openDataSource;
   }
 
 }

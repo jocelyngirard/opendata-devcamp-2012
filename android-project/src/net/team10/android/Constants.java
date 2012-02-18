@@ -34,4 +34,8 @@ public abstract class Constants
   
   public static final String OPEN_DATA_SOFT_URL = "http://demo2.opendatasoft.com/api/search/dataset/";
 
+  public static final String GOOGLE_MAPS_API_KEY = "0yyOboPOlEVpjLWYbx-0ZU3Nn3HwjcLHrBvSLXg";
+
+  public static final String EMAIL_MD5 = "emailMd5";
+
 }

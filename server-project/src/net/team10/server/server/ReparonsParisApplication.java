@@ -235,8 +235,10 @@ public final class ReparonsParisApplication
 
     // Here are the actual services
     router.attach("/poitypes", PoiReportResources.PoiTypesResource.class);
+    router.attach("/poireports?{queryParameters}", PoiReportResources.PoiReportsResource.class);
 
     return router;
   }
 
 }
+
