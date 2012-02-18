@@ -107,7 +107,7 @@ public final class HomeFragment
           {
             try
             {
-              getPreferences().edit().putString(Constants.EMAIL_MD5, ReparonsParisApplication.md5sum(googleAccount.email));
+              getPreferences().edit().putString(Constants.EMAIL_MD5, ReparonsParisApplication.md5sum(googleAccount.email)).commit();
             }
             catch (NoSuchAlgorithmException exception)
             {
@@ -122,10 +122,10 @@ public final class HomeFragment
         builder.setCancelable(true);
         builder.show();
       }
-    }
-    else
-    {
-      startActivity(new Intent(getCheckedActivity(), PoiTypeChooserActivity.class));
+      else
+      {
+        startActivity(new Intent(getCheckedActivity(), PoiTypeChooserActivity.class));
+      }
     }
   }
 
