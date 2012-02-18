@@ -3,10 +3,14 @@ package net.team10.android;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Date;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Environment;
 
 import com.smartnsoft.droid4me.app.ActivityController;
@@ -27,6 +31,13 @@ import com.smartnsoft.droid4me.download.DownloadInstructions;
 public final class ReparonsParisApplication
     extends SmartApplication
 {
+
+  public static final class GoogleAccountInformations
+  {
+    public String userName;
+
+    public String email;
+  }
 
   public static class CacheInstructions
       extends DownloadInstructions.AbstractInstructions
@@ -50,6 +61,42 @@ public final class ReparonsParisApplication
   }
 
   public final static DownloadInstructions.Instructions CACHE_IMAGE_INSTRUCTIONS = new ReparonsParisApplication.CacheInstructions();
+
+  public static GoogleAccountInformations getGoogleAccountInformations(Context context)
+  {
+    if (Build.VERSION.SDK_INT >= 7)
+    {
+      final GoogleAccountInformations googleAccount = new GoogleAccountInformations();
+      try
+      {
+        final Class<?> accountManagerClass = Class.forName("android.accounts.AccountManager");
+        final Method getMethod = accountManagerClass.getMethod("get", Context.class);
+        final Object accountManager = getMethod.invoke(null, context);
+        final Method getAccountsByTypeMethod = accountManagerClass.getMethod("getAccountsByType", String.class);
+        final Object[] accounts = (Object[]) getAccountsByTypeMethod.invoke(accountManager, "com.google");
+        if (accounts.length <= 0)
+        {
+          return null;
+        }
+        final Object account = accounts[0];
+        final Class<?> accountClass = Class.forName("android.accounts.Account");
+        final Field nameField = accountClass.getField("name");
+
+        googleAccount.email = (String) nameField.get(account);
+        googleAccount.userName = googleAccount.email;
+
+        return googleAccount;
+      }
+      catch (Exception exception)
+      {
+        if (log.isWarnEnabled())
+        {
+          log.warn("Could not access to the Google account to get the e-mail", exception);
+        }
+      }
+    }
+    return null;
+  }
 
   @Override
   protected int getLogLevel()
@@ -122,6 +169,7 @@ public final class ReparonsParisApplication
     {
       public void onLifeCycleEvent(Activity activity, Object component, ActivityController.Interceptor.InterceptorEvent event)
       {
+
         titleBar.onLifeCycleEvent(activity, event);
       }
     };

@@ -3,10 +3,15 @@ package net.team10.android.fragments;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.team10.android.R;
 import net.team10.android.TitleBar;
 import net.team10.android.ws.ReparonsParisServices;
 import net.team10.bo.PoiType;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.location.LocationManager;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -83,5 +88,33 @@ public class PoiTypeChooserFragment
     }
 
     return wrappers;
+  }
+
+  @Override
+  public void onFulfillDisplayObjects()
+  {
+    super.onFulfillDisplayObjects();
+
+    if (!((LocationManager) getCheckedActivity().getSystemService(Activity.LOCATION_SERVICE)).isProviderEnabled(LocationManager.GPS_PROVIDER))
+    {
+      final AlertDialog.Builder builder = new AlertDialog.Builder(getCheckedActivity());
+      builder.setMessage(R.string.PoiTypeChooser_enable_gps_messages).setCancelable(false).setPositiveButton(R.string.PoiTypeChooser_enable_gps_valid_button,
+          new DialogInterface.OnClickListener()
+          {
+            public void onClick(DialogInterface dialog, int id)
+            {
+              startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+              getCheckedActivity().finish();
+            }
+          }).setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener()
+      {
+        public void onClick(DialogInterface dialog, int id)
+        {
+          dialog.dismiss();
+          getCheckedActivity().finish();
+        }
+      });
+      builder.show();
+    }
   }
 }

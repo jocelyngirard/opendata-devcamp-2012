@@ -6,8 +6,12 @@ import java.util.List;
 import net.team10.android.AboutActivity;
 import net.team10.android.PoiTypeChooserActivity;
 import net.team10.android.R;
+import net.team10.android.ReparonsParisApplication;
+import net.team10.android.ReparonsParisApplication.GoogleAccountInformations;
 import net.team10.android.SettingsActivity;
 import net.team10.android.TitleBar;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -90,7 +94,18 @@ public final class HomeFragment
   {
     if (view == reportButton)
     {
-      startActivity(new Intent(getCheckedActivity(), PoiTypeChooserActivity.class));
+      final GoogleAccountInformations googleAccount = ReparonsParisApplication.getGoogleAccountInformations(getCheckedActivity());
+      final AlertDialog.Builder builder = new AlertDialog.Builder(getCheckedActivity());
+      builder.setMessage(googleAccount.email);
+      builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
+      {
+        public void onClick(DialogInterface dialog, int which)
+        {
+          startActivity(new Intent(getCheckedActivity(), PoiTypeChooserActivity.class));
+        }
+      });
+      builder.setCancelable(true);
+      builder.show();
     }
   }
 

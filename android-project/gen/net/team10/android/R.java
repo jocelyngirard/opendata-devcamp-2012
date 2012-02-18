@@ -132,6 +132,8 @@ containing a value of this type.
         public static final int Home_menu_about=0x7f08000e;
         public static final int Home_menu_settings=0x7f08000d;
         public static final int Home_report_button=0x7f08000f;
+        public static final int PoiTypeChooser_enable_gps_messages=0x7f080010;
+        public static final int PoiTypeChooser_enable_gps_valid_button=0x7f080011;
         public static final int ReparonsParisSplashScreen_dialogMessage_noSdCard=0x7f08000a;
         public static final int ReparonsParisSplashScreen_smartnsoftMoto=0x7f08000b;
         public static final int Settings_version=0x7f08000c;
