@@ -7,29 +7,47 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.servlet.http.HttpServletRequest;
 
 import net.team10.bo.Account;
 import net.team10.bo.PoiReport;
 import net.team10.bo.PoiReport.ReportKind;
 import net.team10.bo.PoiReport.ReportSeverity;
 import net.team10.bo.PoiReport.ReportStatus;
+import net.team10.bo.PoiReportStatement;
 import net.team10.bo.PoiType;
 import net.team10.bo.PoiType.OpenDataSource;
 import net.team10.server.server.ReparonsParisApplication.BasisResource;
 
+import org.apache.commons.fileupload.FileItemIterator;
+import org.apache.commons.fileupload.FileItemStream;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.io.IOUtils;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerator;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.data.Form;
+import org.restlet.data.MediaType;
+import org.restlet.engine.http.HttpCall;
+import org.restlet.engine.http.HttpRequest;
+import org.restlet.ext.json.JsonRepresentation;
+import org.restlet.ext.servlet.internal.ServletCall;
 import org.restlet.representation.Representation;
 import org.restlet.representation.Variant;
 import org.restlet.resource.Get;
+import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
+
+import com.google.appengine.api.datastore.Blob;
 
 /**
  * @author Édouard Mercier
@@ -118,6 +136,37 @@ public final class PoiReportResources
       }
     }
 
+    protected <T> T deserializeJson(String json, Class<T> valueType)
+    {
+      final ObjectMapper objectMapper = new ObjectMapper();
+      try
+      {
+        return objectMapper.readValue(json, valueType);
+      }
+      catch (JsonParseException jsonParseException)
+      {
+        if (logger.isLoggable(Level.SEVERE))
+        {
+          logger.log(Level.SEVERE, "Error while parsing a JSON object via Jackson !", jsonParseException);
+        }
+      }
+      catch (JsonMappingException jsonMappingException)
+      {
+        if (logger.isLoggable(Level.SEVERE))
+        {
+          logger.log(Level.SEVERE, "Error while mapping a JSON object via Jackson !", jsonMappingException);
+        }
+      }
+      catch (IOException ioException)
+      {
+        if (logger.isLoggable(Level.SEVERE))
+        {
+          logger.log(Level.SEVERE, "I/O error while reading the JSON object via Jackson !", ioException);
+        }
+      }
+      return null;
+    }
+
   }
 
   public final static class PoiTypesResource
@@ -158,10 +207,24 @@ public final class PoiReportResources
       final String dataSource = form.getFirstValue("dataSource");
       final String poiTypeUid = form.getFirstValue("poiTypeUid");
       final String topLeft = form.getFirstValue("topLeft");
+      final double topLeftLatitude;
+      final double topLeftLongitude;
+      {
+        final StringTokenizer tokenizer = new StringTokenizer(",", topLeft);
+        topLeftLatitude = Double.parseDouble(tokenizer.nextToken());
+        topLeftLongitude = Double.parseDouble(tokenizer.nextToken());
+      }
       final String bottomRight = form.getFirstValue("bottomRight");
+      final double bottomRightLatitude;
+      final double bottomRightLongitude;
+      {
+        final StringTokenizer tokenizer = new StringTokenizer(",", bottomRight);
+        bottomRightLatitude = Double.parseDouble(tokenizer.nextToken());
+        bottomRightLongitude = Double.parseDouble(tokenizer.nextToken());
+      }
       if (logger.isLoggable(Level.INFO))
       {
-        logger.info("Asking the POI reports belonging to the dataset (" + openDataDataSetId + "," + openDataTypeId + ")");
+        logger.info("Asking the POI reports belonging to the open-data dataset with id " + openDataDataSetId + "', open-data type id '" + openDataTypeId + "', data source '" + dataSource + "' in the rectangular area (" + topLeftLatitude + "," + topLeftLongitude + ")x(" + bottomRightLatitude + "," + bottomRightLongitude + ")");
       }
       final List<PoiReport> result = new ArrayList<PoiReport>();
       for (int index = 0; index < 10; index++)
@@ -170,7 +233,68 @@ public final class PoiReportResources
       }
 
       final String message = "Here are the POI reports!";
-      return generateCollectionJsonRepresentation(result, "poiTypes", message);
+      return generateObjectJsonRepresentation(result, message);
+    }
+
+    @Post
+    public Representation post(Representation entity)
+        throws ResourceException
+    {
+      if (logger.isLoggable(Level.INFO))
+      {
+        logger.info("Creating a POI report");
+      }
+
+      // Taken from http://stackoverflow.com/questions/1513603/how-to-upload-and-store-an-image-with-google-app-engine-java
+      if (MediaType.MULTIPART_FORM_DATA.equals(entity.getMediaType(), true) == true)
+      {
+        HttpServletRequest httpServletRequest = null;
+        if (getRequest() instanceof HttpRequest)
+        {
+          final HttpCall httpCall = ((HttpRequest) getRequest()).getHttpCall();
+          if (httpCall instanceof ServletCall)
+          {
+            httpServletRequest = ((ServletCall) httpCall).getRequest();
+          }
+        }
+        if (httpServletRequest != null)
+        {
+          final ServletFileUpload upload = new ServletFileUpload();
+          final FileItemIterator iterator;
+          try
+          {
+            iterator = upload.getItemIterator(httpServletRequest);
+            Blob imageBlob = null;
+            while (iterator.hasNext())
+            {
+              final FileItemStream fileItemStream = iterator.next();
+              if (fileItemStream.isFormField() == false)
+              {
+                if (fileItemStream.getFieldName().equals("photo") == true)
+                {
+                  imageBlob = new Blob(IOUtils.toByteArray(fileItemStream.openStream()));
+                }
+              }
+            }
+            if (imageBlob != null)
+            {
+              final PoiReport poiReport = deserializeJson(getPostData(entity, "poiReport"), PoiReport.class);
+              final PoiReportStatement poiReportStatement = deserializeJson(getPostData(entity, "poiReportStament"), PoiReportStatement.class);
+              final JSONObject jsonObject = new JSONObject();
+              return new JsonRepresentation(jsonObject);
+            }
+          }
+          catch (Exception exception)
+          {
+            throw handleException(exception, "Could not store the image!");
+          }
+        }
+        else
+        {
+          throw handleException(new IllegalStateException("Request cannot be turned into a servlet request"), "Could not store the image!");
+        }
+      }
+      return error("noPhotoAttached", "ko", "A POI report can only be created provided a photo is attached to it!");
     }
 
   }

@@ -164,18 +164,18 @@ public final class ReparonsParisApplication
     {
       public Intent getRedirection(Activity activity)
       {
-        if (ReparonsParisSplashScreenActivity.isInitialized(ReparonsParisSplashScreenActivity.class) == null)
-        {
-          // We re-direct to the splash screen activity if the application has not been yet initialized
-          if (activity instanceof ReparonsParisSplashScreenActivity)
-          {
-            return null;
-          }
-          else
-          {
-            return new Intent(activity, ReparonsParisSplashScreenActivity.class);
-          }
-        }
+        // if (ReparonsParisSplashScreenActivity.isInitialized(ReparonsParisSplashScreenActivity.class) == null)
+        // {
+        // // We re-direct to the splash screen activity if the application has not been yet initialized
+        // if (activity instanceof ReparonsParisSplashScreenActivity)
+        // {
+        // return null;
+        // }
+        // else
+        // {
+        // return new Intent(activity, ReparonsParisSplashScreenActivity.class);
+        // }
+        // }
         return null;
       }
     };
