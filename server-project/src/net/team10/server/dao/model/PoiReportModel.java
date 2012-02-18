@@ -9,9 +9,9 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
-import net.team10.server.server.bo.PoiReport.ReportKind;
-import net.team10.server.server.bo.PoiReport.ReportSeverity;
-import net.team10.server.server.bo.PoiReport.ReportStatus;
+import net.team10.bo.PoiReport.ReportKind;
+import net.team10.bo.PoiReport.ReportSeverity;
+import net.team10.bo.PoiReport.ReportStatus;
 
 import com.google.appengine.api.datastore.Key;
 

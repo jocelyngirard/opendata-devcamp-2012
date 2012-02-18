@@ -9,7 +9,7 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
-import net.team10.server.server.bo.PoiType.OpenDataSource;
+import net.team10.bo.PoiType.OpenDataSource;
 
 import com.google.appengine.api.datastore.Key;
 
