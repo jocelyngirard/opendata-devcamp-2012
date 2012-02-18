@@ -63,6 +63,12 @@
       android:name=".AboutActivity"
       android:configChanges="keyboardHidden|orientation"
     />
+    
+    <activity
+      android:name=".PoiTypeChooserActivity"
+      android:configChanges="keyboardHidden|orientation"
+    />
+    
 
   </application>
 

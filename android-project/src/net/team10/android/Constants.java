@@ -32,4 +32,6 @@ public abstract class Constants
 
   public static final String API_URL = "http://reparonsparis.appspot.com/rest";
 
+  public static final String GOOGLE_MAPS_API_KEY = "0yyOboPOlEVpjLWYbx-0ZU3Nn3HwjcLHrBvSLXg";
+
 }
