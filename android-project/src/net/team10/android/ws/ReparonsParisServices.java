@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.util.List;
 
 import net.team10.android.Constants;
+import net.team10.bo.Poi;
+import net.team10.bo.PoiResponse;
 import net.team10.bo.PoiType;
 
 import org.codehaus.jackson.JsonParseException;
@@ -111,7 +113,34 @@ public final class ReparonsParisServices
     {
       log.info("Retrieving the list of POI types");
     }
-    return poiTypeStreamParser.backed.getRetentionValue(true, Constants.WEBSERVICE_RETENTION_PERIOD_IN_MILLISECONDS, null, null);
+    return null;
   }
+  
+  private final BackedWSUriStreamParser.BackedUriStreamedValue<List<Poi>, Void, JSONException, PersistenceException> poiStreamParser = new BackedWSUriStreamParser.BackedUriStreamedValue<List<Poi>, Void, JSONException, PersistenceException>(Persistence.getInstance(0), this)
+  {
+
+    public KeysAggregator<Void> computeUri(Void parameter)
+    {
+      return SimpleIOStreamerSourceKey.fromUriStreamerSourceKey(new HttpCallTypeAndBody(Constants.OPEN_DATA_SOFT_URL + "/eclairageparis2011/?format=json&pretty_print=false&q=LEA"), null);
+    }
+
+    public List<Poi> parse(Void parameter, InputStream inputStream)
+        throws JSONException
+    {
+      PoiResponse poiResponse = (PoiResponse) deserializeJson(inputStream, PoiResponse.class);
+      return  poiResponse.getPois();
+    }
+  };
+
+  public synchronized List<Poi> getOpenDataPoi()
+      throws CacheException
+  {
+    if (log.isInfoEnabled())
+    {
+      log.info("Retrieving the list of POI types");
+    }
+    return poiStreamParser.backed.getMemoryValue(true, null, null);
+  }
+
 
 }
