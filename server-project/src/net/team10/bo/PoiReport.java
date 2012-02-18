@@ -30,37 +30,40 @@ public final class PoiReport
     Minor, Major, Severe
   }
 
-  private String uid;
+  private final String uid;
 
-  private String poiTypeUid;
+  private final String openDataPoiId;
 
-  private String creationAccountUid;
+  private final String poiTypeUid;
 
-  private Date creationDate;
+  private final Account creationAccount;
 
-  private Date modificationDate;
+  private final Date creationDate;
 
-  private ReportStatus reportStatus;
+  private final Date modificationDate;
 
-  private String modificationAccountUid;
+  private final ReportStatus reportStatus;
 
-  private ReportKind reportKind;
+  private final Account modificationAccount;
 
-  private ReportSeverity reportSeverity;
+  private final ReportKind reportKind;
 
-  public PoiReport(@JsonProperty("uid") String uid, @JsonProperty("poiTypeUid") String poiTypeUid,
-      @JsonProperty("creationAccountUid") String creationAccountUid, @JsonProperty("creationDate") Date creationDate,
+  private final ReportSeverity reportSeverity;
+
+  public PoiReport(@JsonProperty("uid") String uid, @JsonProperty("openDataPoiId") String openDataPoiId, @JsonProperty("poiTypeUid") String poiTypeUid,
+      @JsonProperty("creationAccount") Account creationAccount, @JsonProperty("creationDate") Date creationDate,
       @JsonProperty("modificationDate") Date modificationDate, @JsonProperty("reportStatus") ReportStatus reportStatus,
-      @JsonProperty("modificationAccountId") String modificationAccountUid, @JsonProperty("reportKind") ReportKind reportKind,
+      @JsonProperty("modificationAccount") Account modificationAccount, @JsonProperty("reportKind") ReportKind reportKind,
       @JsonProperty("reportSeverity") ReportSeverity reportSeverity)
   {
     this.uid = uid;
+    this.openDataPoiId = openDataPoiId;
     this.poiTypeUid = poiTypeUid;
-    this.creationAccountUid = creationAccountUid;
+    this.creationAccount = creationAccount;
     this.creationDate = creationDate;
     this.modificationDate = modificationDate;
     this.reportStatus = reportStatus;
-    this.modificationAccountUid = modificationAccountUid;
+    this.modificationAccount = modificationAccount;
     this.reportKind = reportKind;
     this.reportSeverity = reportSeverity;
   }
@@ -71,16 +74,22 @@ public final class PoiReport
     return uid;
   }
 
+  @JsonProperty("openDataPoiId")
+  public String getOpenDataPoiId()
+  {
+    return openDataPoiId;
+  }
+
   @JsonProperty("poiTypeUid")
   public String getPoiTypeUid()
   {
     return poiTypeUid;
   }
 
-  @JsonProperty("creationAccountUid")
-  public String getCreationAccountUid()
+  @JsonProperty("creationAccount")
+  public Account getCreationAccount()
   {
-    return creationAccountUid;
+    return creationAccount;
   }
 
   @JsonProperty("creationDate")
@@ -101,10 +110,10 @@ public final class PoiReport
     return reportStatus;
   }
 
-  @JsonProperty("modificationAccountId")
-  public String getModificationAccountUid()
+  @JsonProperty("modificationAccount")
+  public Account getModificationAccount()
   {
-    return modificationAccountUid;
+    return modificationAccount;
   }
 
   @JsonProperty("reportKind")

@@ -9,8 +9,6 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
-import net.team10.bo.PoiType.OpenDataSource;
-
 import com.google.appengine.api.datastore.Key;
 
 /**
@@ -18,11 +16,11 @@ import com.google.appengine.api.datastore.Key;
  * @since 2012.02.18
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
-public final class PoiTypeModel
+public final class AccountModel
     implements Serializable
 {
 
-  private static final long serialVersionUID = 6149010778953321236L;
+  private static final long serialVersionUID = 4424395186363387988L;
 
   @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
   @PrimaryKey
@@ -32,21 +30,6 @@ public final class PoiTypeModel
   private Date creationDate;
 
   @Persistent
-  private String openDataDataSetId;
-
-  @Persistent
-  private String openDataTypeId;
-
-  @Persistent
-  private String label;
-
-  @Persistent
-  private String poiTyperFolderUid;
-
-  @Persistent
-  private OpenDataSource openDataSource;
-
-  @Persistent
-  private String openDataPoiId;
+  private String nickname;
 
 }
