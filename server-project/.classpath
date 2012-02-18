@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="com/didunozat/server/server/TransactionGAE.java|com/didunozat/server/server/TransactionManager.java" kind="src" path="src"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/org.restlet.gwt.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/org.restlet.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/org.restlet.ext.servlet.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/org.restlet.gae.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/org.restlet.ext.json.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/org.json.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/org.restlet.ext.spring.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/aspectjrt.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/aspectjweaver.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
+	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER/appengine-java-sdk"/>
+	<classpathentry kind="output" path="war/WEB-INF/classes"/>
+</classpath>

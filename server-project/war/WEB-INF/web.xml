@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Copyright (C) 2009-2010 Smart&Soft.
+
+ The code hereby is the private full property of the Smart&Soft company, Paris, France.
+ 
+ You have no right to re-use or modify it. There are no open-source, nor free license
+ attached to it!
+ -->
+<!DOCTYPE web-app  PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"  "http://java.sun.com/dtd/web-app_2_3.dtd">
+<web-app>
+
+  <!-- The Restlet application class name. -->
+  <context-param>
+    <param-name>org.restlet.application</param-name>
+    <param-value>net.team10.server.server.ReparonsParisApplication</param-value>
+  </context-param>
+
+  <!-- The Restlet servlet. -->
+  <servlet>
+    <servlet-name>restletServlet</servlet-name>
+    <servlet-class>org.restlet.ext.servlet.ServerServlet</servlet-class>
+    <init-param>
+      <param-name>org.restlet.application</param-name>
+      <param-value>net.team10.server.server.ReparonsParisApplication</param-value>
+   </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>restletServlet</servlet-name>
+    <url-pattern>/rest/*</url-pattern>
+  </servlet-mapping>
+
+</web-app>

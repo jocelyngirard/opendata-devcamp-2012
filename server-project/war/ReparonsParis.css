@@ -1,0 +1,19 @@
+/* 
+ * Copyright (C) 2009-2010 Smart&Soft.
+ *
+ * The code hereby is the private full property of the Smart&Soft company, Paris, France.
+ * 
+ * You have no right to re-use or modify it. There are no open-source, nor free license
+ * attached to it!
+ */
+
+/*
+ The hard-coded HTML wrapping page.
+*/
+
+body
+{
+  background: #FFFFFF;
+  font: .74em "Trebuchet MS" Verdana, Arial, sans-serif;
+  line-height: 1.5em;
+}
