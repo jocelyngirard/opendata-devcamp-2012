@@ -2,12 +2,23 @@ package net.team10.android.ws;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.List;
 
 import net.team10.android.Constants;
 import net.team10.android.bo.PoiTypesResponse;
+import net.team10.bo.Account;
+import net.team10.bo.PoiReport;
+import net.team10.bo.PoiReport.ReportKind;
+import net.team10.bo.PoiReport.ReportSeverity;
+import net.team10.bo.PoiReportStatement;
 import net.team10.bo.PoiType;
 
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.InputStreamBody;
+import org.apache.http.entity.mime.content.StringBody;
+import org.codehaus.jackson.JsonFactory;
+import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -58,7 +69,57 @@ public final class ReparonsParisServices
     return Constants.WEBSERVICES_HTML_ENCODING;
   }
 
-  private Object deserializeJson(InputStream inputStream, Class<?> valueType)
+  private final BackedWSUriStreamParser.BackedUriStreamedValue<List<PoiType>, Void, JSONException, PersistenceException> poiTypeStreamParser = new BackedWSUriStreamParser.BackedUriStreamedValue<List<PoiType>, Void, JSONException, PersistenceException>(Persistence.getInstance(0), this)
+  {
+
+    public KeysAggregator<Void> computeUri(Void parameter)
+    {
+      return SimpleIOStreamerSourceKey.fromUriStreamerSourceKey(new HttpCallTypeAndBody(computeUri(Constants.API_URL, "poitypes", null)), null);
+    }
+
+    public List<PoiType> parse(Void parameter, InputStream inputStream)
+        throws JSONException
+    {
+      return deserializeJson(inputStream, PoiTypesResponse.class).content;
+    }
+
+  };
+
+  public synchronized List<PoiType> getPoiTypes()
+      throws CacheException
+  {
+    if (log.isInfoEnabled())
+    {
+      log.info("Retrieving the list of POI types");
+    }
+    return poiTypeStreamParser.backed.getRetentionValue(true, Constants.WEBSERVICE_RETENTION_PERIOD_IN_MILLISECONDS, null, null);
+  }
+
+  public void postPoiReportStatement(String accountUid, String poiTypeUid, ReportKind reportKind, ReportSeverity reportSeverity, String openDataPoiId,
+      String comment, InputStream photoInputStream)
+      throws CallException
+  {
+    if (log.isInfoEnabled())
+    {
+      log.info("Posting a new POI report with the account with UID '" + accountUid + "'");
+    }
+    final MultipartEntity multipartEntity = new MultipartEntity();
+    try
+    {
+      multipartEntity.addPart("photo", new InputStreamBody(photoInputStream, "photo.png"));
+      multipartEntity.addPart(
+          "poiReport",
+          new StringBody(serializeObject(new PoiReport(null, openDataPoiId, poiTypeUid, new Account(accountUid, null, null), null, null, null, null, reportKind, reportSeverity))));
+      multipartEntity.addPart("poiReportStatement", new StringBody(serializeObject(new PoiReportStatement(null, null, null, null, comment, null))));
+    }
+    catch (Exception exception)
+    {
+      throw new CallException("Cannot properly encode one of the multipart parameter", exception);
+    }
+    deserializeJson(getInputStream(computeUri(Constants.API_URL, "poireport", null), CallType.Post, multipartEntity), String.class);
+  }
+
+  private <T> T deserializeJson(InputStream inputStream, Class<T> valueType)
   {
     final ObjectMapper objectMapper = new ObjectMapper();
     try
@@ -70,49 +131,35 @@ public final class ReparonsParisServices
     {
       if (log.isErrorEnabled())
       {
-        log.error("Error while parsing json !", jsonParseException);
+        log.error("Error while parsing a JSON object via Jackson !", jsonParseException);
       }
     }
     catch (JsonMappingException jsonMappingException)
     {
       if (log.isErrorEnabled())
       {
-        log.error("Error while mapping json !", jsonMappingException);
+        log.error("Error while mapping a JSON object via Jackson !", jsonMappingException);
       }
     }
     catch (IOException ioException)
     {
       if (log.isErrorEnabled())
       {
-        log.error("Input/Output error while reading InputStream !", ioException);
+        log.error("I/O error while reading the JSON object via Jackson !", ioException);
       }
     }
     return null;
   }
 
-  private final BackedWSUriStreamParser.BackedUriStreamedValue<List<PoiType>, Void, JSONException, PersistenceException> poiTypeStreamParser = new BackedWSUriStreamParser.BackedUriStreamedValue<List<PoiType>, Void, JSONException, PersistenceException>(Persistence.getInstance(0), this)
+  private String serializeObject(Object object)
+      throws IOException
   {
-
-    public KeysAggregator<Void> computeUri(Void parameter)
-    {
-      return SimpleIOStreamerSourceKey.fromUriStreamerSourceKey(new HttpCallTypeAndBody(Constants.API_URL + "/poitypes"), null);
-    }
-
-    public List<PoiType> parse(Void parameter, InputStream inputStream)
-        throws JSONException
-    {
-      return ((PoiTypesResponse) deserializeJson(inputStream, PoiTypesResponse.class)).content;
-    }
-  };
-
-  public synchronized List<PoiType> getPoiTypes()
-      throws CacheException
-  {
-    if (log.isInfoEnabled())
-    {
-      log.info("Retrieving the list of POI types");
-    }
-    return poiTypeStreamParser.backed.getRetentionValue(true, Constants.WEBSERVICE_RETENTION_PERIOD_IN_MILLISECONDS, null, null);
+    final ObjectMapper objectMapper = new ObjectMapper();
+    final JsonFactory jacksonFactory = new JsonFactory();
+    final StringWriter writer = new StringWriter();
+    final JsonGenerator jsonGenerator = jacksonFactory.createJsonGenerator(writer);
+    objectMapper.writeValue(jsonGenerator, object);
+    return writer.toString();
   }
 
 }

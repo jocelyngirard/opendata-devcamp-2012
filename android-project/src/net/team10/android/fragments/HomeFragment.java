@@ -1,5 +1,6 @@
 package net.team10.android.fragments;
 
+import java.io.ByteArrayInputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,9 @@ import net.team10.android.ReparonsParisApplication;
 import net.team10.android.ReparonsParisApplication.GoogleAccountInformations;
 import net.team10.android.SettingsActivity;
 import net.team10.android.TitleBar;
+import net.team10.android.ws.ReparonsParisServices;
+import net.team10.bo.PoiReport.ReportKind;
+import net.team10.bo.PoiReport.ReportSeverity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,6 +29,7 @@ import com.smartnsoft.droid4me.LifeCycle.BusinessObjectsRetrievalAsynchronousPol
 import com.smartnsoft.droid4me.framework.Commands;
 import com.smartnsoft.droid4me.menu.StaticMenuCommand;
 import com.smartnsoft.droid4me.support.v4.app.SmartFragment;
+import com.smartnsoft.droid4me.ws.WebServiceClient.CallException;
 
 /**
  * The starting screen of the application.
@@ -46,6 +51,7 @@ public final class HomeFragment
 
     reportButton = (Button) view.findViewById(R.id.reportButton);
 
+    setHasOptionsMenu(true);
     return view;
   }
 
@@ -87,6 +93,22 @@ public final class HomeFragment
       public void run()
       {
         startActivity(new Intent(getCheckedActivity(), AboutActivity.class));
+      }
+    }));
+    commands.add(new StaticMenuCommand("Test", '2', 'a', android.R.drawable.ic_menu_info_details, new Commands.StaticEnabledExecutable()
+    {
+      @Override
+      public void run()
+      {
+        try
+        {
+          ReparonsParisServices.getInstance().postPoiReportStatement("accountUid", "poiTypeUid", ReportKind.Broken, ReportSeverity.Major, "openDataPoiId",
+              "comment", new ByteArrayInputStream(new byte[] { 1, 2, 3, 4 }));
+        }
+        catch (CallException exception)
+        {
+          exception.printStackTrace();
+        }
       }
     }));
     return commands;

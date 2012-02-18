@@ -167,6 +167,12 @@ public final class ReparonsParisApplication
       return new ResourceException(Status.SERVER_ERROR_INTERNAL, message, exception);
     }
 
+    protected final String getPostData(Representation entity, String field)
+    {
+      final Form postForm = new Form(entity);
+      return postForm.getFirstValue(field);
+    }
+
     private void setResponseBody(int problemCode, String problemMessage)
     {
       try
@@ -213,8 +219,8 @@ public final class ReparonsParisApplication
         throws ResourceException
     {
       final Form form = getRequest().getResourceRef().getQueryAsForm();
-      final String arg1 = form.getFirstValue("arg1");
-      final int arg2 = Integer.parseInt(form.getFirstValue("arg2"));
+//      final String arg1 = form.getFirstValue("arg1");
+//      final int arg2 = Integer.parseInt(form.getFirstValue("arg2"));
       return new EmptyRepresentation();
     }
 
@@ -235,10 +241,10 @@ public final class ReparonsParisApplication
 
     // Here are the actual services
     router.attach("/poitypes", PoiReportResources.PoiTypesResource.class);
+    router.attach("/poireport", PoiReportResources.PoiReportsResource.class);
     router.attach("/poireports?{queryParameters}", PoiReportResources.PoiReportsResource.class);
 
     return router;
   }
 
 }
-
