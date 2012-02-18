@@ -3,7 +3,7 @@ package net.team10.android;
 import com.smartnsoft.droid4me.support.v4.app.SmartFragmentActivity;
 
 public class PoiTypeChooserActivity
-    extends SmartFragmentActivity
+    extends SmartFragmentActivity<TitleBar.TitleBarAggregate>
 {
 
   public void onRetrieveDisplayObjects()

@@ -4,55 +4,59 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.team10.android.TitleBar;
+import net.team10.android.ws.ReparonsParisServices;
+import net.team10.bo.PoiType;
 import android.app.Activity;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.smartnsoft.droid4me.LifeCycle.BusinessObjectsRetrievalAsynchronousPolicy;
 import com.smartnsoft.droid4me.framework.SmartAdapters;
 import com.smartnsoft.droid4me.framework.SmartAdapters.BusinessViewWrapper;
 import com.smartnsoft.droid4me.framework.SmartAdapters.SimpleBusinessViewWrapper;
 
 public class PoiTypeChooserFragment
     extends SmartListViewFragmentV4<TitleBar.TitleBarAggregate, ListView>
+    implements BusinessObjectsRetrievalAsynchronousPolicy
 {
 
-  public class StringViewAttribute
+  public class PoiTypeViewAttributes
   {
 
     private final TextView text;
 
-    public StringViewAttribute(View view)
+    public PoiTypeViewAttributes(View view)
     {
       text = (TextView) view.findViewById(android.R.id.text1);
     }
 
-    public void update(String arg3)
+    public void update(PoiType businessObject)
     {
-      text.setText(arg3);
+      text.setText(businessObject.getLabel());
     }
 
   }
 
-  public class StringViewWrapper
-      extends SimpleBusinessViewWrapper<String>
+  public class PoiTypeViewWrapper
+      extends SimpleBusinessViewWrapper<PoiType>
   {
 
-    public StringViewWrapper(String string)
+    public PoiTypeViewWrapper(PoiType businessObject)
     {
-      super(string, 0, android.R.layout.simple_list_item_1);
+      super(businessObject, 0, android.R.layout.simple_list_item_1);
     }
 
     @Override
-    protected Object extractNewViewAttributes(Activity arg0, View arg1, String arg2)
+    protected Object extractNewViewAttributes(Activity activity, View view, PoiType businessObject)
     {
-      return new StringViewAttribute(arg1);
+      return new PoiTypeViewAttributes(view);
     }
 
     @Override
-    protected void updateView(Activity arg0, Object arg1, View arg2, String arg3, int arg4)
+    protected void updateView(Activity activity, Object viewAttributes, View view, PoiType businessObject, int position)
     {
-      ((StringViewAttribute) arg1).update(arg3);
+      ((PoiTypeViewAttributes) viewAttributes).update(businessObject);
     }
 
   }
@@ -60,15 +64,24 @@ public class PoiTypeChooserFragment
   public List<? extends BusinessViewWrapper<?>> retrieveBusinessObjectsList()
       throws BusinessObjectUnavailableException
   {
-    final List<BusinessViewWrapper<?>> wrappers = new ArrayList<SmartAdapters.BusinessViewWrapper<?>>();
-    // TODO Auto-generated method stub
+    List<PoiType> poiTypes;
 
-    wrappers.add(new StringViewWrapper("toto"));
-    wrappers.add(new StringViewWrapper("tata"));
-    wrappers.add(new StringViewWrapper("titi"));
-    wrappers.add(new StringViewWrapper("yooo"));
+    try
+    {
+      poiTypes = ReparonsParisServices.getInstance().getPoiTypes();
+    }
+    catch (Exception exception)
+    {
+      throw new BusinessObjectUnavailableException(exception);
+    }
+
+    final List<BusinessViewWrapper<?>> wrappers = new ArrayList<SmartAdapters.BusinessViewWrapper<?>>();
+
+    for (PoiType poiType : poiTypes)
+    {
+      wrappers.add(new PoiTypeViewWrapper(poiType));
+    }
 
     return wrappers;
   }
-
 }
