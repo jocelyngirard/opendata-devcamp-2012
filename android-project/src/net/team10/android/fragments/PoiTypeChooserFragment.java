@@ -5,6 +5,7 @@ import java.util.List;
 
 import net.team10.android.R;
 import net.team10.android.TitleBar;
+import net.team10.android.TitleBar.TitleBarRefreshFeature;
 import net.team10.android.ws.ReparonsParisServices;
 import net.team10.bo.PoiType;
 import android.app.Activity;
@@ -23,7 +24,7 @@ import com.smartnsoft.droid4me.framework.SmartAdapters.SimpleBusinessViewWrapper
 
 public class PoiTypeChooserFragment
     extends SmartListViewFragmentV4<TitleBar.TitleBarAggregate, ListView>
-    implements BusinessObjectsRetrievalAsynchronousPolicy
+    implements BusinessObjectsRetrievalAsynchronousPolicy, TitleBarRefreshFeature
 {
 
   public class PoiTypeViewAttributes
@@ -116,5 +117,10 @@ public class PoiTypeChooserFragment
       });
       builder.show();
     }
+  }
+
+  public void onTitleBarRefresh()
+  {
+    refreshBusinessObjectsAndDisplay(true);
   }
 }
