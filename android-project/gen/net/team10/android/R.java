@@ -92,28 +92,29 @@ containing a value of this type.
         public static final int title_bar_refresh=0x7f02000b;
     }
     public static final class id {
-        public static final int center=0x7f0a0002;
-        public static final int homeFragment=0x7f0a0001;
-        public static final int smartnsoftIllustration=0x7f0a0004;
-        public static final int titleBar=0x7f0a0005;
-        public static final int titleBarAction1=0x7f0a0010;
-        public static final int titleBarAction1Block=0x7f0a000f;
-        public static final int titleBarAction2=0x7f0a0012;
-        public static final int titleBarAction2Block=0x7f0a0011;
-        public static final int titleBarAction3=0x7f0a0014;
-        public static final int titleBarAction3Block=0x7f0a0013;
-        public static final int titleBarAction4=0x7f0a0016;
-        public static final int titleBarAction4Block=0x7f0a0015;
-        public static final int titleBarHome=0x7f0a0007;
-        public static final int titleBarHomeBlock=0x7f0a0006;
-        public static final int titleBarRefresh=0x7f0a000d;
-        public static final int titleBarRefreshBlock=0x7f0a000b;
-        public static final int titleBarRefreshProgress=0x7f0a000e;
-        public static final int titleBarRefreshSeparator=0x7f0a000c;
-        public static final int titleBarTitleBlock=0x7f0a0008;
-        public static final int titleBarTitleImage=0x7f0a0009;
-        public static final int titleBarTitleText=0x7f0a000a;
-        public static final int topLogo=0x7f0a0003;
+        public static final int center=0x7f0a0003;
+        public static final int homeFragment=0x7f0a0002;
+        public static final int reportButton=0x7f0a0001;
+        public static final int smartnsoftIllustration=0x7f0a0005;
+        public static final int titleBar=0x7f0a0006;
+        public static final int titleBarAction1=0x7f0a0011;
+        public static final int titleBarAction1Block=0x7f0a0010;
+        public static final int titleBarAction2=0x7f0a0013;
+        public static final int titleBarAction2Block=0x7f0a0012;
+        public static final int titleBarAction3=0x7f0a0015;
+        public static final int titleBarAction3Block=0x7f0a0014;
+        public static final int titleBarAction4=0x7f0a0017;
+        public static final int titleBarAction4Block=0x7f0a0016;
+        public static final int titleBarHome=0x7f0a0008;
+        public static final int titleBarHomeBlock=0x7f0a0007;
+        public static final int titleBarRefresh=0x7f0a000e;
+        public static final int titleBarRefreshBlock=0x7f0a000c;
+        public static final int titleBarRefreshProgress=0x7f0a000f;
+        public static final int titleBarRefreshSeparator=0x7f0a000d;
+        public static final int titleBarTitleBlock=0x7f0a0009;
+        public static final int titleBarTitleImage=0x7f0a000a;
+        public static final int titleBarTitleText=0x7f0a000b;
+        public static final int topLogo=0x7f0a0004;
         public static final int webView=0x7f0a0000;
     }
     public static final class layout {
@@ -129,6 +130,7 @@ containing a value of this type.
     public static final class string {
         public static final int Home_menu_about=0x7f08000e;
         public static final int Home_menu_settings=0x7f08000d;
+        public static final int Home_report_button=0x7f08000f;
         public static final int ReparonsParisSplashScreen_dialogMessage_noSdCard=0x7f08000a;
         public static final int ReparonsParisSplashScreen_smartnsoftMoto=0x7f08000b;
         public static final int Settings_version=0x7f08000c;

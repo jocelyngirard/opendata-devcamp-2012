@@ -12,7 +12,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import com.smartnsoft.droid4me.LifeCycle.BusinessObjectsRetrievalAsynchronousPolicy;
 import com.smartnsoft.droid4me.framework.Commands;
 import com.smartnsoft.droid4me.menu.StaticMenuCommand;
 import com.smartnsoft.droid4me.support.v4.app.SmartFragment;
@@ -25,19 +27,23 @@ import com.smartnsoft.droid4me.support.v4.app.SmartFragment;
  */
 public final class HomeFragment
     extends SmartFragment<TitleBar.TitleBarAggregate>
+    implements BusinessObjectsRetrievalAsynchronousPolicy, View.OnClickListener
 {
+
+  private Button reportButton;
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
   {
     final View view = inflater.inflate(R.layout.home, null);
 
+    reportButton = (Button) view.findViewById(R.id.reportButton);
+
     return view;
   }
 
   public void onRetrieveDisplayObjects()
   {
-
   }
 
   public void onRetrieveBusinessObjects()
@@ -48,7 +54,7 @@ public final class HomeFragment
 
   public void onFulfillDisplayObjects()
   {
-
+    reportButton.setOnClickListener(this);
   }
 
   public void onSynchronizeDisplayObjects()
@@ -77,6 +83,14 @@ public final class HomeFragment
       }
     }));
     return commands;
+  }
+
+  public void onClick(View view)
+  {
+    if (view == reportButton)
+    {
+
+    }
   }
 
 }
