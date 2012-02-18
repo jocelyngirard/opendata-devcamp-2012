@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 
 import android.app.Activity;
@@ -61,6 +63,25 @@ public final class ReparonsParisApplication
   }
 
   public final static DownloadInstructions.Instructions CACHE_IMAGE_INSTRUCTIONS = new ReparonsParisApplication.CacheInstructions();
+
+  public static String md5sum(String string)
+      throws NoSuchAlgorithmException
+  {
+    // Taken from http://www.spiration.co.uk/post/1199/Java%20md5%20example%20with%20MessageDigest
+    final MessageDigest algorithm = MessageDigest.getInstance("MD5");
+    byte[] defaultBytes = string.getBytes();
+    algorithm.reset();
+    algorithm.update(defaultBytes);
+    final byte messageDigest[] = algorithm.digest();
+    final StringBuffer hexString = new StringBuffer();
+    for (int md5Index = 0; md5Index < messageDigest.length; md5Index++)
+    {
+      hexString.append(Integer.toHexString(0xFF & messageDigest[md5Index]));
+    }
+    final String md5String = hexString.toString();
+
+    return md5String;
+  }
 
   public static GoogleAccountInformations getGoogleAccountInformations(Context context)
   {

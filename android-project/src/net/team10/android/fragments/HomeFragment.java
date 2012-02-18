@@ -1,9 +1,11 @@
 package net.team10.android.fragments;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.team10.android.AboutActivity;
+import net.team10.android.Constants;
 import net.team10.android.PoiTypeChooserActivity;
 import net.team10.android.R;
 import net.team10.android.ReparonsParisApplication;
@@ -94,18 +96,36 @@ public final class HomeFragment
   {
     if (view == reportButton)
     {
-      final GoogleAccountInformations googleAccount = ReparonsParisApplication.getGoogleAccountInformations(getCheckedActivity());
-      final AlertDialog.Builder builder = new AlertDialog.Builder(getCheckedActivity());
-      builder.setMessage(googleAccount.email);
-      builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
+      if (getPreferences().contains(Constants.EMAIL_MD5) == false)
       {
-        public void onClick(DialogInterface dialog, int which)
+        final GoogleAccountInformations googleAccount = ReparonsParisApplication.getGoogleAccountInformations(getCheckedActivity());
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getCheckedActivity());
+        builder.setMessage(googleAccount.email);
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
         {
-          startActivity(new Intent(getCheckedActivity(), PoiTypeChooserActivity.class));
-        }
-      });
-      builder.setCancelable(true);
-      builder.show();
+          public void onClick(DialogInterface dialog, int which)
+          {
+            try
+            {
+              getPreferences().edit().putString(Constants.EMAIL_MD5, ReparonsParisApplication.md5sum(googleAccount.email));
+            }
+            catch (NoSuchAlgorithmException exception)
+            {
+              if (log.isErrorEnabled())
+              {
+                log.error("Cannot compute a local contact e-mail MD5: cannot check whether it belongs to the suggested contacts", exception);
+              }
+            }
+            startActivity(new Intent(getCheckedActivity(), PoiTypeChooserActivity.class));
+          }
+        });
+        builder.setCancelable(true);
+        builder.show();
+      }
+    }
+    else
+    {
+      startActivity(new Intent(getCheckedActivity(), PoiTypeChooserActivity.class));
     }
   }
 

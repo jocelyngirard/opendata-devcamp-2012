@@ -34,4 +34,6 @@ public abstract class Constants
 
   public static final String GOOGLE_MAPS_API_KEY = "0yyOboPOlEVpjLWYbx-0ZU3Nn3HwjcLHrBvSLXg";
 
+  public static final String EMAIL_MD5 = "emailMd5";
+
 }
