@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <style
+    name="Theme.ReparonsParis"
+    parent="android:Theme.Light"
+  >
+    <!-- The "Android 2.0" title bar -->
+    <item name="android:windowTitleBackgroundStyle">@style/titleBar</item>
+    <item name="android:windowTitleSize">@dimen/titleBarHeight</item>
+    <!--item name="android:tabWidgetStyle">@style/Widget.Button.Small.ReparonsParis</item-->
+  </style>
+
+  <style
+    name="Theme.ReparonsParis.NoTitle"
+    parent="Theme.ReparonsParis"
+  >
+    <item name="android:windowNoTitle">true</item>
+  </style>
+
+  <style
+    name="Theme.ReparonsParis.NoTitle.Fullscreen"
+    parent="Theme.ReparonsParis.NoTitle"
+  >
+    <item name="android:windowFullscreen">true</item>
+    <item name="android:windowContentOverlay">@null</item>
+  </style>
+
+  <style
+    name="Theme.Dialog.ReparonsParis"
+    parent="android:Theme.Dialog"
+  />
+
+  <style
+    name="Theme.ReparonsParis.Transparent"
+    parent="Theme.ReparonsParis"
+  >
+    <item name="android:windowBackground">@android:color/transparent</item>
+    <item name="android:windowFrame">@null</item> 
+    <item name="android:windowContentOverlay">@null</item>
+    <item name="android:backgroundDimEnabled">true</item>
+    <item name="android:windowIsTranslucent">true</item>
+    <item name="android:windowNoTitle">true</item>
+    <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+  </style>
+
+</resources>
