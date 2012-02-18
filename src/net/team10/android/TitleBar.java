@@ -29,7 +29,7 @@ import com.smartnsoft.droid4me.log.LoggerFactory;
  * @author �douard Mercier
  * @since 2011.06.22
  */
-class TitleBar
+public class TitleBar
 {
 
   static class TitleBarAttributes
@@ -371,7 +371,7 @@ class TitleBar
   {
   }
 
-  static class TitleBarAggregate
+  public static class TitleBarAggregate
       extends AppPublics.LoadingBroadcastListener
       implements View.OnClickListener
   {
