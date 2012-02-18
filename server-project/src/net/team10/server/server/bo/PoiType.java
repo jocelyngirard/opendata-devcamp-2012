@@ -3,19 +3,12 @@ package net.team10.server.server.bo;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.PrimaryKey;
-
-import com.google.appengine.api.datastore.Key;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
  * @author Édouard Mercier
  * @since 2012.02.18
  */
-@PersistenceCapable(identityType = IdentityType.APPLICATION)
 public final class PoiType
     implements Serializable
 {
@@ -27,26 +20,73 @@ public final class PoiType
 
   private static final long serialVersionUID = -3416068862484418433L;
 
-  @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-  @PrimaryKey
-  private Key uid;
+  private String uid;
 
-  @Persistent
   private Date creationDate;
 
-  @Persistent
   private String openDataDataSetId;
 
-  @Persistent
   private String openDataTypeId;
 
-  @Persistent
   private String label;
 
-  @Persistent
-  private String poiTyperFolderUid;
+  private String poiTypeFolderUid;
 
-  @Persistent
   private OpenDataSource dataSource;
+
+  public PoiType(@JsonProperty("uid") String uid, @JsonProperty("creationDate") Date creationDate, @JsonProperty("openDataDataSetId") String openDataDataSetId,
+      @JsonProperty("openDataTypeId") String openDataTypeId, @JsonProperty("label") String label, @JsonProperty("poiTypeFolderUid") String poiTypeFolderUid,
+      @JsonProperty("dataSource") OpenDataSource dataSource)
+  {
+    this.uid = uid;
+    this.creationDate = creationDate;
+    this.openDataDataSetId = openDataDataSetId;
+    this.openDataTypeId = openDataTypeId;
+    this.label = label;
+    this.poiTypeFolderUid = poiTypeFolderUid;
+    this.dataSource = dataSource;
+  }
+
+  @JsonProperty("uid")
+  public String getUid()
+  {
+    return uid;
+  }
+
+  @JsonProperty("creationDate")
+  public Date getCreationDate()
+  {
+    return creationDate;
+  }
+
+  @JsonProperty("openDataDataSetId")
+  public String getOpenDataDataSetId()
+  {
+    return openDataDataSetId;
+  }
+
+  @JsonProperty("openDataTypeId")
+  public String getOpenDataTypeId()
+  {
+    return openDataTypeId;
+  }
+
+  @JsonProperty("label")
+  public String getLabel()
+  {
+    return label;
+  }
+
+  @JsonProperty("poiTypeFolderUid")
+  public String getPoiTypeFolderUid()
+  {
+    return poiTypeFolderUid;
+  }
+
+  @JsonProperty("dataSource")
+  public OpenDataSource getDataSource()
+  {
+    return dataSource;
+  }
 
 }
