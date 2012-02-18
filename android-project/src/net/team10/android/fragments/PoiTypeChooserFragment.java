@@ -3,6 +3,7 @@ package net.team10.android.fragments;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.team10.android.MapActivity;
 import net.team10.android.R;
 import net.team10.android.TitleBar;
 import net.team10.android.TitleBar.TitleBarRefreshFeature;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import com.smartnsoft.droid4me.LifeCycle.BusinessObjectsRetrievalAsynchronousPolicy;
 import com.smartnsoft.droid4me.framework.SmartAdapters;
 import com.smartnsoft.droid4me.framework.SmartAdapters.BusinessViewWrapper;
+import com.smartnsoft.droid4me.framework.SmartAdapters.ObjectEvent;
 import com.smartnsoft.droid4me.framework.SmartAdapters.SimpleBusinessViewWrapper;
 
 public class PoiTypeChooserFragment
@@ -63,6 +65,16 @@ public class PoiTypeChooserFragment
     protected void updateView(Activity activity, Object viewAttributes, View view, PoiType businessObject, int position)
     {
       ((PoiTypeViewAttributes) viewAttributes).update(businessObject);
+    }
+
+    @Override
+    public Intent computeIntent(Activity activity, Object viewAttributes, View view, PoiType businessObject, ObjectEvent objectEvent, int position)
+    {
+      if (objectEvent == ObjectEvent.Clicked)
+      {
+        return new Intent(getCheckedActivity(), MapActivity.class).putExtra(MapActivity.POI_TYPE, businessObject);
+      }
+      return super.computeIntent(activity, viewAttributes, view, businessObject, objectEvent, position);
     }
 
   }
