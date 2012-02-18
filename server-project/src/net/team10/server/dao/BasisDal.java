@@ -22,8 +22,6 @@ abstract class BasisDal
 
     protected static final Logger logger = Logger.getLogger(BasisDal.class.getName());
 
-    protected static final String FEEDBACK_EMAIL = "cacheserver@metrofrance.fr";
-
     public final String status;
 
     public DalException(String message)

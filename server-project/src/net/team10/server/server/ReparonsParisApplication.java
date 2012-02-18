@@ -4,7 +4,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import net.sf.jsr107cache.CacheException;
+import net.team10.server.resource.PoiReportResources;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.restlet.Application;
@@ -46,6 +48,84 @@ public final class ReparonsParisApplication
     private static final int CACHE_PROBLEM_CODE = 2;
 
     protected static final int START_PROBLEMCODE = 10;
+
+    private final static String JSON_RESULT_FIELD = "result";
+
+    private final static String JSON_CODE_FIELD = "code";
+
+    private final static String JSON_STATUS_FIELD = "status";
+
+    private final static String JSON_CONTENT_FIELD = "content";
+
+    protected final Representation ok(String message)
+        throws ResourceException
+    {
+      return ok(message, (JSONObject) null);
+    }
+
+    protected final Representation ok(String message, JSONArray jsonArray)
+        throws ResourceException
+    {
+      final JSONObject result = new JSONObject();
+      try
+      {
+        result.put(BasisResource.JSON_CODE_FIELD, "ok");
+        result.put(BasisResource.JSON_RESULT_FIELD, message);
+        if (jsonArray != null)
+        {
+          result.put(BasisResource.JSON_CONTENT_FIELD, jsonArray);
+        }
+      }
+      catch (JSONException exception)
+      {
+        throw handleJsonException(exception);
+      }
+      return new JsonRepresentation(result);
+    }
+
+    protected final Representation ok(String message, JSONObject jsonObject)
+        throws ResourceException
+    {
+      final JSONObject result = new JSONObject();
+      try
+      {
+        result.put(BasisResource.JSON_CODE_FIELD, "ok");
+        result.put(BasisResource.JSON_RESULT_FIELD, message);
+        if (jsonObject != null)
+        {
+          result.put(BasisResource.JSON_CONTENT_FIELD, jsonObject);
+        }
+      }
+      catch (JSONException exception)
+      {
+        throw handleJsonException(exception);
+      }
+      return new JsonRepresentation(result);
+    }
+
+    protected final Representation error(String code, String status, String message)
+        throws ResourceException
+    {
+      final JSONObject jsonObject = new JSONObject();
+      try
+      {
+        jsonObject.put(BasisResource.JSON_CODE_FIELD, code);
+        jsonObject.put(BasisResource.JSON_RESULT_FIELD, message);
+        if (status != null)
+        {
+          jsonObject.put(BasisResource.JSON_STATUS_FIELD, status);
+        }
+      }
+      catch (JSONException exception)
+      {
+        throw handleJsonException(exception);
+      }
+      if (logger.isLoggable(Level.WARNING))
+      {
+        logger.warning(message);
+      }
+      return new JsonRepresentation(jsonObject);
+    }
 
     protected final ResourceException handleProblem(Status status, int problemCode, String logMessage)
     {
@@ -143,11 +223,18 @@ public final class ReparonsParisApplication
   @Override
   public Restlet createRoot()
   {
+    // We create a router Restlet that routes each call to a resource
     final Router router = new Router(getContext());
     router.setDefaultMatchingMode(Template.MODE_STARTS_WITH);
 
+    // We defines the default route
     router.attachDefault(ReparonsParisApplication.NoResource.class);
+
+    // And declare a dummy route/web service
     router.attach("/dummy?{queryParameters}", ReparonsParisApplication.DummyResource.class);
+
+    // Here are the actual services
+    router.attach("/poitypes", PoiReportResources.PoiTypesResource.class);
 
     return router;
   }
