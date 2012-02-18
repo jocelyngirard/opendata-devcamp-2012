@@ -3,17 +3,19 @@ package net.team10.android.ws;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.team10.android.Constants;
+import net.team10.android.bo.OpenDataPoi;
+import net.team10.android.bo.PoiResponse;
 import net.team10.android.bo.PoiTypesResponse;
 import net.team10.bo.Account;
-import net.team10.bo.Poi;
 import net.team10.bo.PoiReport;
 import net.team10.bo.PoiReport.ReportKind;
 import net.team10.bo.PoiReport.ReportSeverity;
 import net.team10.bo.PoiReportStatement;
-import net.team10.bo.PoiResponse;
 import net.team10.bo.PoiType;
 
 import org.apache.http.entity.mime.MultipartEntity;
@@ -29,6 +31,7 @@ import org.json.JSONException;
 import com.smartnsoft.droid4me.cache.Persistence;
 import com.smartnsoft.droid4me.cache.Persistence.PersistenceException;
 import com.smartnsoft.droid4me.cache.Values.CacheException;
+import com.smartnsoft.droid4me.ws.WSUriStreamParser.KeysAggregator;
 import com.smartnsoft.droid4me.ws.WebServiceCaller;
 import com.smartnsoft.droid4me.ws.WithCacheWSUriStreamParser.SimpleIOStreamerSourceKey;
 import com.smartnsoft.droid4me.wscache.BackedWSUriStreamParser;
@@ -97,31 +100,111 @@ public final class ReparonsParisServices
     return poiTypeStreamParser.backed.getRetentionValue(true, Constants.WEBSERVICE_RETENTION_PERIOD_IN_MILLISECONDS, null, null);
   }
 
-  private final BackedWSUriStreamParser.BackedUriStreamedValue<List<Poi>, Void, JSONException, PersistenceException> poiStreamParser = new BackedWSUriStreamParser.BackedUriStreamedValue<List<Poi>, Void, JSONException, PersistenceException>(Persistence.getInstance(0), this)
+  private final static class OpenDataParameters
   {
 
-    public KeysAggregator<Void> computeUri(Void parameter)
+    public final String openDataDataSetId;
+
+    public final String openDataTypeId;
+
+    public final double latidude;
+
+    public final double longitude;
+
+    public final int beamInMeters;
+
+    public OpenDataParameters(String openDataDataSetId, String openDataTypeId, double latidude, double longitude, int beamInMeters)
     {
-      return SimpleIOStreamerSourceKey.fromUriStreamerSourceKey(
-          new HttpCallTypeAndBody(Constants.OPEN_DATA_SOFT_URL + "/eclairageparis2011/?format=json&pretty_print=false&q=LEA"), null);
+      this.openDataDataSetId = openDataDataSetId;
+      this.openDataTypeId = openDataTypeId;
+      this.latidude = latidude;
+      this.longitude = longitude;
+      this.beamInMeters = beamInMeters;
     }
 
-    public List<Poi> parse(Void parameter, InputStream inputStream)
+    @Override
+    public int hashCode()
+    {
+      final int prime = 31;
+      int result = 1;
+      long temp;
+      temp = Double.doubleToLongBits(beamInMeters);
+      result = prime * result + (int) (temp ^ (temp >>> 32));
+      temp = Double.doubleToLongBits(latidude);
+      result = prime * result + (int) (temp ^ (temp >>> 32));
+      temp = Double.doubleToLongBits(longitude);
+      result = prime * result + (int) (temp ^ (temp >>> 32));
+      result = prime * result + ((openDataDataSetId == null) ? 0 : openDataDataSetId.hashCode());
+      result = prime * result + ((openDataTypeId == null) ? 0 : openDataTypeId.hashCode());
+      return result;
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+      if (this == obj)
+        return true;
+      if (obj == null)
+        return false;
+      if (getClass() != obj.getClass())
+        return false;
+      OpenDataParameters other = (OpenDataParameters) obj;
+      if (Double.doubleToLongBits(beamInMeters) != Double.doubleToLongBits(other.beamInMeters))
+        return false;
+      if (Double.doubleToLongBits(latidude) != Double.doubleToLongBits(other.latidude))
+        return false;
+      if (Double.doubleToLongBits(longitude) != Double.doubleToLongBits(other.longitude))
+        return false;
+      if (openDataDataSetId == null)
+      {
+        if (other.openDataDataSetId != null)
+          return false;
+      }
+      else if (!openDataDataSetId.equals(other.openDataDataSetId))
+        return false;
+      if (openDataTypeId == null)
+      {
+        if (other.openDataTypeId != null)
+          return false;
+      }
+      else if (!openDataTypeId.equals(other.openDataTypeId))
+        return false;
+      return true;
+    }
+
+  }
+
+  private final BackedWSUriStreamParser.BackedUriStreamedMap<List<OpenDataPoi>, OpenDataParameters, JSONException, PersistenceException> poisStreamParser = new BackedWSUriStreamParser.BackedUriStreamedMap<List<OpenDataPoi>, OpenDataParameters, JSONException, PersistenceException>(Persistence.getInstance(0), this)
+  {
+
+    public KeysAggregator<OpenDataParameters> computeUri(OpenDataParameters parameter)
+    {
+      final Map<String, String> uriParameters = new HashMap<String, String>();
+      uriParameters.put("format", "json");
+      uriParameters.put("pretty_print", "false");
+//      uriParameters.put("disp", "geo");
+      uriParameters.put("location", parameter.latidude + "," + parameter.longitude);
+      uriParameters.put("distance", Integer.toString(parameter.beamInMeters));
+      return SimpleIOStreamerSourceKey.fromUriStreamerSourceKey(
+          new HttpCallTypeAndBody(computeUri(Constants.OPEN_DATA_SOFT_URL, parameter.openDataDataSetId, uriParameters)), null);
+    }
+
+    public List<OpenDataPoi> parse(OpenDataParameters parameter, InputStream inputStream)
         throws JSONException
     {
-      PoiResponse poiResponse = (PoiResponse) deserializeJson(inputStream, PoiResponse.class);
-      return poiResponse.getPois();
+      return deserializeJson(inputStream, PoiResponse.class).getPois();
     }
+
   };
 
-  public synchronized List<Poi> getOpenDataPoi()
+  public synchronized List<OpenDataPoi> getOpenDataPois(String openDataDataSetId, String openDataTypeId, double latitude, double longitude, int beamInMeters)
       throws CacheException
   {
     if (log.isInfoEnabled())
     {
-      log.info("Retrieving the list of POI types");
+      log.info("Retrieving the list of open-data POIs");
     }
-    return poiStreamParser.backed.getMemoryValue(true, null, null);
+    return poisStreamParser.backed.getMemoryValue(true, null, new OpenDataParameters(openDataDataSetId, openDataTypeId, latitude, longitude, beamInMeters));
   }
 
   public void postPoiReportStatement(String accountUid, String poiTypeUid, ReportKind reportKind, ReportSeverity reportSeverity, String openDataPoiId,
