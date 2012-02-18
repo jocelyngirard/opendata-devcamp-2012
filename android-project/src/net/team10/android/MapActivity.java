@@ -6,6 +6,8 @@ public class MapActivity
     extends SmartMapActivity<TitleBar.TitleBarAggregate>
 {
 
+  public static final String POI_TYPE = "poiType";
+
   @Override
   protected String getGoogleMapsApiKey()
   {

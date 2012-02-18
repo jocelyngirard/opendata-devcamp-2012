@@ -393,7 +393,7 @@ public class TitleBar
       this.homeActivityIntent = homeActivityIntent;
     }
 
-    TitleBarAttributes getAttributes()
+    public TitleBarAttributes getAttributes()
     {
       return attributes;
     }
