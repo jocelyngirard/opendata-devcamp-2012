@@ -28,12 +28,15 @@ public final class HomeActivity
   public void onRetrieveBusinessObjects()
       throws BusinessObjectUnavailableException
   {
+	  
+	  
+	  //Test of the openData POI
 	  try {
 		 pois = ReparonsParisServices.getInstance().getOpenDataPoi();
 		
-	} catch (CacheException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
+	} catch (CacheException exception)
+	{
+		throw new BusinessObjectUnavailableException(exception);
 	}
 	  pois.get(0);
 	  
