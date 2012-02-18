@@ -3,7 +3,7 @@ package net.team10.android;
 import com.smartnsoft.droid4me.app.SmartMapActivity;
 
 public class MapActivity
-    extends SmartMapActivity
+    extends SmartMapActivity<TitleBar.TitleBarAggregate>
 {
 
   public void onFulfillDisplayObjects()
