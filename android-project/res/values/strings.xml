@@ -29,6 +29,7 @@
   <string name="ConfirmDialog_tcancel">Annuler</string>
   <string name="ConfirmDialog_comment">Commenter...</string>
   <string name="ConfirmDialog_twitter">Twitter</string>
+  <string name="ConfirmDialog_titleReportKind">Twitter</string>
   
   <string name="ImagePicker_toast_onlyAttachPhoto">"On ne peut que prendre des photos"</string>
   <string name="ImagePicker_toast_cannotFoundGallery">"Impossible d'atteindre la galery"</string>

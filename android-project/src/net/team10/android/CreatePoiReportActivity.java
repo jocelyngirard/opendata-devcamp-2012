@@ -43,7 +43,7 @@ public class CreatePoiReportActivity extends SmartFragmentActivity<TitleBar.Titl
  private static final int PICK_IMAGE_REQUEST_CODE = 0;
 	
 	private ImageView photo;
-	private Spinner type;
+	private Button type;
 	private RatingBar gravity;
 	private Button done;
 	private InputStream photoInputStream;
@@ -120,7 +120,7 @@ public class CreatePoiReportActivity extends SmartFragmentActivity<TitleBar.Titl
 	{
 		setContentView(R.layout.createpoireport);
 		photo = (ImageView) findViewById(R.id.photo);
-		type = (Spinner) findViewById(R.id.type);
+		type = (Button) findViewById(R.id.type);
 		gravity = (RatingBar) findViewById(R.id.gravity);
 		done = (Button) findViewById(R.id.ok);
 	}
@@ -134,6 +134,7 @@ public class CreatePoiReportActivity extends SmartFragmentActivity<TitleBar.Titl
 	{
 		photo.setOnClickListener(this);
 		done.setOnClickListener(this);
+		type.setOnClickListener(this);
 		
 	    adapterPlaceType = new ArrayAdapter<String>(this, R.layout.report_kind_item_dialog_box, R.id.check_text, getResources().getStringArray(
 	            R.array.reportKind))
@@ -149,19 +150,33 @@ public class CreatePoiReportActivity extends SmartFragmentActivity<TitleBar.Titl
 	            final RadioButton radio = (RadioButton) convertView.findViewById(R.id.radiobutton);
 	            final ImageView image = (ImageView) convertView.findViewById(R.id.icon);
 	            content.setText(adapterPlaceType.getItem(position));
-	            final ReportKind aPlaceType = ReportKind.values()[position];
-	            //image.setTileImageResource(FamilyWallApplication.getPlaceResourceId(aPlaceType, false));
+	            final ReportKind reportKind = ReportKind.values()[position];
+	            image.setImageResource(getReportResourceId(reportKind));
 	            radio.setFocusable(false);
 	            radio.setClickable(false);
-	    //        boolean checked = placeIconButton.getTag() != null && getItem(position).equals(placeIconButton.getTag()) ? true
-	       //         : placeIconButton.getTag() == null && position == 0 ? true : false;
-	      //      radio.setChecked(checked);
+	          boolean checked = type.getTag() != null && getItem(position).equals(type.getTag()) ? true
+	               : type.getTag() == null && position == 0 ? true : false;
+	          radio.setChecked(checked);
 	            return convertView;
 	          }
 	        };
-	        //placeIconButton.setTileImageResource(R.drawable.icon_category_more);
+	        type.setText("Type d'incident");
 	}
 	
+	public int getReportResourceId(ReportKind reportKind) 
+	{
+		switch(reportKind)
+		{
+		case Broken:
+			return R.drawable.link_broken;
+		case Stolen:
+			return R.drawable.exclamation;
+		case Missing:
+			return R.drawable.question;
+		}
+		return 0;
+	}
+
 	public void onSynchronizeDisplayObjects() {
 		
 	}
@@ -181,7 +196,7 @@ public class CreatePoiReportActivity extends SmartFragmentActivity<TitleBar.Titl
 		
 		else if(view == type)
 		{
-		  /*    new AlertDialog.Builder(view.getContext()).setTitle(R.string.HtcAddPLace_select_place_icon).setSingleChoiceItems(adapterPlaceType, 0,
+		    new AlertDialog.Builder(view.getContext()).setTitle(R.string.ConfirmDialog_titleReportKind).setSingleChoiceItems(adapterPlaceType, 0,
 		              new DialogInterface.OnClickListener()
 		              {
 						private ReportKind reportKind;
@@ -189,13 +204,14 @@ public class CreatePoiReportActivity extends SmartFragmentActivity<TitleBar.Titl
 						public void onClick(DialogInterface dialog, int which) {
 							  dialog.dismiss();
 			                  reportKind = ReportKind.values()[which];
-			                  String[] type = getResources().getStringArray(
+			                  String[] label = getResources().getStringArray(
 			                      R.array.reportKind);
-			                  //placeIconButton.setTileImageResource(FamilyWallApplication.getPlaceResourceId(placeType, false));
-			                  placeIconButton.setTag(type[which]);
+			                  type.setCompoundDrawables((type.getContext().getResources().getDrawable(getReportResourceId(reportKind))), null, null, null);
+			                  type.setText(label[which]);
+			                  type.setTag(label[which]);
 							
 						}
-		              }).show();*/
+		              }).show();
 		}
 	}
 	

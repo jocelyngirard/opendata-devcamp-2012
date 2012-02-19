@@ -89,17 +89,20 @@ containing a value of this type.
         public static final int camera=0x7f020000;
         public static final int droid4me_inside=0x7f020001;
         public static final int droid4sample_splash_logo=0x7f020002;
-        public static final int icon=0x7f020003;
-        public static final int map_marker=0x7f020004;
-        public static final int poweredby_smartnsoft=0x7f020005;
-        public static final int reparonsparis_splash_logo=0x7f020006;
-        public static final int smartnsoft_illustration=0x7f020007;
-        public static final int title_bar_button_background=0x7f020008;
-        public static final int title_bar_button_background_disabled=0x7f020009;
-        public static final int title_bar_button_background_pressed=0x7f02000a;
-        public static final int title_bar_button_background_selected=0x7f02000b;
-        public static final int title_bar_home=0x7f02000c;
-        public static final int title_bar_refresh=0x7f02000d;
+        public static final int exclamation=0x7f020003;
+        public static final int icon=0x7f020004;
+        public static final int link_broken=0x7f020005;
+        public static final int map_marker=0x7f020006;
+        public static final int poweredby_smartnsoft=0x7f020007;
+        public static final int question=0x7f020008;
+        public static final int reparonsparis_splash_logo=0x7f020009;
+        public static final int smartnsoft_illustration=0x7f02000a;
+        public static final int title_bar_button_background=0x7f02000b;
+        public static final int title_bar_button_background_disabled=0x7f02000c;
+        public static final int title_bar_button_background_pressed=0x7f02000d;
+        public static final int title_bar_button_background_selected=0x7f02000e;
+        public static final int title_bar_home=0x7f02000f;
+        public static final int title_bar_refresh=0x7f020010;
     }
     public static final class id {
         public static final int center=0x7f0b000f;
@@ -164,12 +167,13 @@ containing a value of this type.
         public static final int ConfirmDialog_ok=0x7f080013;
         public static final int ConfirmDialog_tcancel=0x7f080014;
         public static final int ConfirmDialog_title=0x7f080012;
+        public static final int ConfirmDialog_titleReportKind=0x7f080017;
         public static final int ConfirmDialog_twitter=0x7f080016;
         public static final int Home_menu_about=0x7f08000e;
         public static final int Home_menu_settings=0x7f08000d;
         public static final int Home_report_button=0x7f08000f;
-        public static final int ImagePicker_toast_cannotFoundGallery=0x7f080018;
-        public static final int ImagePicker_toast_onlyAttachPhoto=0x7f080017;
+        public static final int ImagePicker_toast_cannotFoundGallery=0x7f080019;
+        public static final int ImagePicker_toast_onlyAttachPhoto=0x7f080018;
         public static final int PoiTypeChooser_enable_gps_messages=0x7f080010;
         public static final int PoiTypeChooser_enable_gps_valid_button=0x7f080011;
         public static final int ReparonsParisSplashScreen_dialogMessage_noSdCard=0x7f08000a;
