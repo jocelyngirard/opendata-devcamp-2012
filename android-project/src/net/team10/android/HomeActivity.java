@@ -88,8 +88,8 @@ public final class HomeActivity
             final PoiType poiType = poiTypes.get(0);
             final double latitude = 48.8566;
             final double longitude = 2.3522;
-            final List<OpenDataPoi> openDataPois = ReparonsParisServices.getInstance().getOpenDataPois(false, poiType.getOpenDataDataSetId(),
-                null, latitude, longitude, 10000);
+            final List<OpenDataPoi> openDataPois = ReparonsParisServices.getInstance().getOpenDataPois(false, poiType.getOpenDataDataSetId(), null, latitude,
+                longitude, 10000);
             final OpenDataPoi openDataPoi = openDataPois.get(0);
             final InputStream photoInputStream = null;// new ByteArrayInputStream(new byte[] { 1, 2, 3, 4 });
             ReparonsParisServices.getInstance().postPoiReportStatement(account.getUid(), poiType.getUid(), ReportKind.Broken, ReportSeverity.Major,
@@ -146,6 +146,13 @@ public final class HomeActivity
       {
         startActivity(new Intent(getApplicationContext(), AboutActivity.class));
       }
+
+      @Override
+      public boolean isVisible()
+      {
+        return false;
+      }
+
     }));
     commands.add(new StaticMenuCommand("Test", '2', 'a', android.R.drawable.ic_menu_info_details, new Commands.StaticEnabledExecutable()
     {
@@ -154,6 +161,12 @@ public final class HomeActivity
       {
         startActivityForResult(new Intent(Intent.ACTION_PICK).setType("image/*"), HomeActivity.PICK_IMAGE_REQUEST_CODE);
       }
+
+      @Override
+      public boolean isVisible()
+      {
+        return false;
+      }
     }));
     return commands;
   }
@@ -161,7 +174,7 @@ public final class HomeActivity
   public static Bitmap decodeFileDescriptorAsBitmap(Uri avatarUri, Rect paddingRectangle, BitmapFactory.Options options, AssetFileDescriptor fileDescriptor)
       throws IOException
   {
-    //final AssetFileDescriptor fileDescriptor = getContentResolver().openAssetFileDescriptor(avatarUri, "r");
+    // final AssetFileDescriptor fileDescriptor = getContentResolver().openAssetFileDescriptor(avatarUri, "r");
     final FileInputStream inputStream = fileDescriptor.createInputStream();
     try
     {

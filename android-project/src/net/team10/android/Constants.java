@@ -28,6 +28,13 @@ public abstract class Constants
    */
   public static final String WEBSERVICES_HTML_ENCODING = HTTP.UTF_8;
 
+  // This is explained at http://code.google.com/intl/fr-FR/android/add-ons/google-apis/mapkey.html
+  // The test environment
+  // public static final String GOOGLE_MAPS_API_KEY = "0yyOboPOlEVpjLWYbx-0ZU3Nn3HwjcLHrBvSLXg";
+
+  // The production environment
+  public static final String GOOGLE_MAPS_API_KEY = "0u-A8VK6gh3wLeiyw-0owIbHD91pCp-6FHcpJaQ";
+
   public static final long WEBSERVICE_RETENTION_PERIOD_IN_MILLISECONDS = 24l * 3600l * 1000l;
 
   // The test environment
@@ -37,8 +44,6 @@ public abstract class Constants
   public static final String API_URL = "http://reparonsparis.appspot.com/rest";
 
   public static final String OPEN_DATA_SOFT_URL = "http://demo2.opendatasoft.com/api/search/dataset";
-
-  public static final String GOOGLE_MAPS_API_KEY = "0yyOboPOlEVpjLWYbx-0ZU3Nn3HwjcLHrBvSLXg";
 
   public static final String EMAIL_MD5_PREFERENCE_KEY = "emailMd5";
 

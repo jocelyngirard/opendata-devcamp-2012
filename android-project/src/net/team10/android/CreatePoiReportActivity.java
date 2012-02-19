@@ -36,6 +36,7 @@ import android.widget.TextView;
 import com.smartnsoft.droid4me.app.SmartCommands;
 import com.smartnsoft.droid4me.app.SmartCommands.GuardedCommand;
 import com.smartnsoft.droid4me.support.v4.app.SmartFragmentActivity;
+import com.smartnsoft.droid4me.ws.WebServiceClient.CallException;
 
 public class CreatePoiReportActivity
     extends SmartFragmentActivity<TitleBar.TitleBarAggregate>
@@ -113,7 +114,7 @@ public class CreatePoiReportActivity
             account = ReparonsParisServices.getInstance().createAccount("accountId" + System.currentTimeMillis(), "accountNickname");
             final List<PoiType> poiTypes = ReparonsParisServices.getInstance().getPoiTypes(false);
             poiType = poiTypes.get(0);
-            //photoInputStream = null;// new ByteArrayInputStream(new byte[] { 1, 2, 3, 4 });
+            // photoInputStream = null;// new ByteArrayInputStream(new byte[] { 1, 2, 3, 4 });
           }
         });
       }
@@ -242,7 +243,33 @@ public class CreatePoiReportActivity
         {
           public void onClick(DialogInterface dialog, int which)
           {
-            postReportPoi(context, account, poiType, openDataPoi, photoInputStream, commentField);
+            final ProgressDialog progressDialog = new ProgressDialog(context);
+            progressDialog.setMessage("envoie du rapport");
+            progressDialog.setIndeterminate(true);
+            progressDialog.show();
+
+            SmartCommands.execute(new Runnable()
+            {
+              public void run()
+              {
+                try
+                {
+                  ReparonsParisServices.getInstance().postPoiReportStatement(account.getUid(), poiType.getUid(), ReportKind.Broken, ReportSeverity.Major,
+                      openDataPoi.getPoiId(), commentField.getText().toString(), photoInputStream);
+                }
+                catch (CallException exception)
+                {
+                  if (log.isErrorEnabled())
+                  {
+                    log.error("Error !", exception);
+                  }
+                }
+                finally
+                {
+                  progressDialog.dismiss();
+                }
+              }
+            });
           }
         }).setNegativeButton(R.string.ConfirmDialog_tcancel, new DialogInterface.OnClickListener()
     {
@@ -262,15 +289,19 @@ public class CreatePoiReportActivity
     progressDialog.setIndeterminate(true);
     progressDialog.show();
 
+    SmartCommands.execute(new GuardedCommand<Activity>((Activity) context)
+    {
+      @Override
+      protected void runGuarded()
+          throws Exception
+      {
+        ReparonsParisServices.getInstance().postPoiReportStatement(account.getUid(), poiType.getUid(), ReportKind.Broken, ReportSeverity.Major,
+            openDataPoi.getPoiId(), commentField.getText().toString(), photoInputStream);
+        progressDialog.dismiss();
 
-      SmartCommands.execute(new GuardedCommand<Activity>((Activity) context){
-	@Override
-	protected void runGuarded() throws Exception {
-	     ReparonsParisServices.getInstance().postPoiReportStatement(account.getUid(), poiType.getUid(), ReportKind.Broken, ReportSeverity.Major,
-	    	      openDataPoi.getPoiId(), commentField.getText().toString(), photoInputStream);
-		progressDialog.dismiss();
-	} });
-     
+      }
+    });
+
   }
 
 }

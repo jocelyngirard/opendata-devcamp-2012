@@ -107,9 +107,8 @@ public class PoiReportsListFragment
 
     try
     {
-      openDataPois = ReparonsParisServices.getInstance().getOpenDataPois(fromCache, poiType.getOpenDataDataSetId(), poiType.getOpenDataTypeId(), 48.8566, 2.3522, 10000);
-      // poiReports = ReparonsParisServices.getInstance().getPoiReports(fromCache, poiType.getOpenDataDataSetId(), poiType.getOpenDataTypeId(),
-      // poiType.getOpenDataSource(), poiType.getPoiTypeFolderUid(), 1.23, 4.56, 7.89, 0.12);
+      openDataPois = ReparonsParisServices.getInstance().getOpenDataPois(fromCache, poiType.getOpenDataDataSetId(), poiType.getOpenDataTypeId(), 48.8566,
+          2.3522, 10000);
     }
     catch (Exception exception)
     {
