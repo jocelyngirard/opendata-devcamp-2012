@@ -48,4 +48,5 @@
     <item>Vole</item>
     <item>Manquant</item>
   </string-array>
+    <string name="CreatePoiReport_title">Déclaration d\'un incident</string>
 </resources>
