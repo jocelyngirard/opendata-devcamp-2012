@@ -24,5 +24,7 @@
   <string name="PoiTypeChooser_enable_gps_messages">Le GPS n\'est pas actif sur votre terminal, veuillez l\'activer pour poursuivre.</string>
   <string name="PoiTypeChooser_enable_gps_valid_button">Activer le GPS</string>
   <string name="PoiTypeChooser_title">Choix du type d\'infrastructure</string>
+  <string name="PoiReportsGroup_button_map">Plan</string>
+  <string name="PoiReportsGroup_button_list">Liste</string>
 
 </resources>

@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.team10.android.PoiReportMapActivity;
-import net.team10.android.PoiReportsListActivity;
+import net.team10.android.PoiReportsGroupsActivity;
 import net.team10.android.R;
 import net.team10.android.TitleBar;
 import net.team10.android.TitleBar.TitleBarRefreshFeature;
+import net.team10.android.fragments.PoiTypeChooserFragment.PoiTypeViewAttributes;
+import net.team10.android.fragments.PoiTypeChooserFragment.PoiTypeViewWrapper;
 import net.team10.android.ws.ReparonsParisServices;
 import net.team10.bo.PoiType;
 import android.app.Activity;
@@ -20,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.smartnsoft.droid4me.LifeCycle.BusinessObjectUnavailableException;
 import com.smartnsoft.droid4me.LifeCycle.BusinessObjectsRetrievalAsynchronousPolicy;
 import com.smartnsoft.droid4me.framework.Commands;
 import com.smartnsoft.droid4me.framework.SmartAdapters;
@@ -84,7 +87,7 @@ public class PoiTypeChooserFragment
     {
       if (objectEvent == ObjectEvent.Clicked)
       {
-        return new Intent(getCheckedActivity(), PoiReportsListActivity.class).putExtra(PoiReportMapActivity.POI_TYPE, businessObject);
+        return new Intent(getCheckedActivity(), PoiReportsGroupsActivity.class).putExtra(PoiReportMapActivity.POI_TYPE, businessObject);
       }
 
       return super.computeIntent(activity, viewAttributes, view, businessObject, objectEvent, position);
