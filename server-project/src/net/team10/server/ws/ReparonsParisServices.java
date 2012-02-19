@@ -1,8 +1,13 @@
 package net.team10.server.ws;
 
+import java.util.List;
+
+import net.team10.bo.Account;
 import net.team10.bo.PoiReport;
 import net.team10.bo.PoiReportStatement;
+import net.team10.bo.PoiType;
 import net.team10.server.dao.ReparonsParisDal;
+import net.team10.server.dao.ReparonsParisDal.BadAccountException;
 
 import com.google.appengine.api.datastore.Blob;
 
@@ -26,9 +31,26 @@ public final class ReparonsParisServices
     return instance;
   }
 
-  public void addPoiReport(PoiReport poiReport, PoiReportStatement poiReportStatement, Blob imageBlob)
+  public void addPoiReport(String accountUid, PoiReport poiReport, PoiReportStatement poiReportStatement, Blob imageBlob)
+      throws BadAccountException
   {
-    reparonsParisDal.addPoiReport(poiReport, poiReportStatement, imageBlob);
+    reparonsParisDal.addPoiReport(accountUid, poiReport, poiReportStatement, imageBlob);
+  }
+
+  public Account createAccount(Account account)
+      throws BadAccountException
+  {
+    return reparonsParisDal.addAccount(account);
+  }
+
+  public List<PoiType> getPoiTypes()
+  {
+    return reparonsParisDal.getPoiTypes();
+  }
+
+  public static PoiType createPoiType(PoiType poiType)
+  {
+    return reparonsParisDal.addPoiType(poiType);
   }
 
 }

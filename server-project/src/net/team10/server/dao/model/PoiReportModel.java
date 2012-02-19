@@ -57,4 +57,22 @@ public final class PoiReportModel
   @Persistent
   private ReportSeverity reportSeverity;
 
+  public PoiReportModel()
+  {
+  }
+
+  public PoiReportModel(String openDataPoiId, String poiTypeUid, String creationAccountUid, Date creationDate, Date modificationDate,
+      ReportStatus reportStatus, String modificationAccountUid, ReportKind reportKind, ReportSeverity reportSeverity)
+  {
+    this.openDataPoiId = openDataPoiId;
+    this.poiTypeUid = poiTypeUid;
+    this.creationAccountUid = creationAccountUid;
+    this.creationDate = creationDate;
+    this.modificationDate = modificationDate;
+    this.reportStatus = reportStatus;
+    this.modificationAccountUid = modificationAccountUid;
+    this.reportKind = reportKind;
+    this.reportSeverity = reportSeverity;
+  }
+
 }

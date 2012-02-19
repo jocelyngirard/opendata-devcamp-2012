@@ -42,4 +42,17 @@ public final class PoiReportStatementModel
   @Persistent
   private Blob photo;
 
+  public PoiReportStatementModel()
+  {
+  }
+
+  public PoiReportStatementModel(String poiReportUid, String accountUid, Date creationDate, String comment, Blob photo)
+  {
+    this.poiReportUid = poiReportUid;
+    this.accountUid = accountUid;
+    this.creationDate = creationDate;
+    this.comment = comment;
+    this.photo = photo;
+  }
+
 }

@@ -27,9 +27,38 @@ public final class AccountModel
   private Key key;
 
   @Persistent
+  private String uid;
+
+  @Persistent
   private Date creationDate;
 
   @Persistent
   private String nickname;
+
+  public AccountModel()
+  {
+  }
+
+  public AccountModel(String uid, Date creationDate, String nickname)
+  {
+    this.uid = uid;
+    this.creationDate = creationDate;
+    this.nickname = nickname;
+  }
+
+  public String getUid()
+  {
+    return uid;
+  }
+
+  public Date getCreationDate()
+  {
+    return creationDate;
+  }
+
+  public String getNickname()
+  {
+    return nickname;
+  }
 
 }
