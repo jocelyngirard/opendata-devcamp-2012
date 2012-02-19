@@ -9,11 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 import net.team10.android.Constants;
-import net.team10.android.bo.AccountResponse;
 import net.team10.android.bo.OpenDataPoi;
-import net.team10.android.bo.PoiReportsResponse;
 import net.team10.android.bo.PoiResponse;
-import net.team10.android.bo.PoiTypesResponse;
 import net.team10.bo.Account;
 import net.team10.bo.PoiReport;
 import net.team10.bo.PoiReport.ReportKind;
@@ -24,9 +21,6 @@ import net.team10.bo.PoiType.OpenDataSource;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.InputStreamBody;
-import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.message.BasicNameValuePair;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerator;
@@ -153,6 +147,37 @@ public final class ReparonsParisServices
       this.bottomRight = bottomRight;
     }
 
+  }
+
+  public static class JsonTemplateResponse<ContentType>
+  {
+
+    public String code;
+
+    public String result;
+
+    public ContentType content;
+
+  }
+
+  public final static class PostReportResponse
+      extends JsonTemplateResponse<Void>
+  {
+  }
+
+  public final static class PoiReportsResponse
+      extends JsonTemplateResponse<List<PoiReport>>
+  {
+  }
+
+  public final static class AccountResponse
+      extends JsonTemplateResponse<Account>
+  {
+  }
+
+  public final static class PoiTypesResponse
+      extends JsonTemplateResponse<List<PoiType>>
+  {
   }
 
   private static volatile ReparonsParisServices instance;
@@ -307,6 +332,7 @@ public final class ReparonsParisServices
     {
       log.info("Posting a new POI report with the account with UID '" + accountUid + "'");
     }
+
     // final MultipartEntity multipartEntity = new MultipartEntity();
     // try
     // {
@@ -330,16 +356,17 @@ public final class ReparonsParisServices
     try
     {
       postParams.add(new BasicNameValuePair("poiReport", serializeObject(new PoiReport(null, openDataPoiId, poiTypeUid, new Account(accountUid, null, null), null, null, null, null, reportKind, reportSeverity))));
-      postParams.add(new BasicNameValuePair("poiReportStatement", serializeObject(new StringBody(serializeObject(new PoiReportStatement(null, null, null, null, comment, null))))));
+      postParams.add(new BasicNameValuePair("poiReportStatement", serializeObject(new PoiReportStatement(null, null, null, null, comment, null))));
       entity = new UrlEncodedFormEntity(postParams);
     }
     catch (Exception exception)
     {
       throw new CallException("Cannot properly encode one of the multipart parameter", exception);
     }
+
     final Map<String, String> uriParameters = new HashMap<String, String>();
     uriParameters.put("accountUid", accountUid);
-    deserializeJson(getInputStream(computeUri(Constants.API_URL, "poireport", uriParameters), CallType.Post, entity), Void.class);
+    deserializeJson(getInputStream(computeUri(Constants.API_URL, "poireport", uriParameters), CallType.Post, entity), PostReportResponse.class);
   }
 
   private <T> T deserializeJson(InputStream inputStream, Class<T> valueType)

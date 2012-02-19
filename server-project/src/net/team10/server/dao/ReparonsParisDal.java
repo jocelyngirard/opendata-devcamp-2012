@@ -1,7 +1,6 @@
 package net.team10.server.dao;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -18,7 +17,6 @@ import net.team10.server.dao.model.AccountModel;
 import net.team10.server.dao.model.PoiReportModel;
 import net.team10.server.dao.model.PoiReportStatementModel;
 import net.team10.server.dao.model.PoiTypeModel;
-import net.team10.server.server.ReparonsParisApplication;
 
 import com.google.appengine.api.datastore.Blob;
 
@@ -125,20 +123,21 @@ public final class ReparonsParisDal
         }
       }
       {
-//        final Query query = tw.persistenceManager.newQuery(PoiReportModel.class);
-//        query.setFilter("openDataPoiId == openDataPoiIdParameter && reportStatusParameter.contains(reportStatus)");
-//        query.declareParameters(String.class.getName() + " openDataPoiIdParameter" + ", " + Collection.class.getName() + " reportStatusParameter");
-//        final List<ReportStatus> notClosedStatuses = new ArrayList<ReportStatus>();
-//        for (ReportStatus reportStatus : ReportStatus.values())
-//        {
-//          if (reportStatus != ReportStatus.InProgress)
-//          {
-//            notClosedStatuses.add(reportStatus);
-//          }
-//        }
-        final List<PoiReportModel> poiReportModels = null;// = (List<PoiReportModel>) query.execute(poiReport.getOpenDataPoiId(), notClosedStatuses);
-        final PoiReportModel poiReportModel;
-        if (poiReportModels == null || poiReportModels.size() <= 0)
+        final Query query = tw.persistenceManager.newQuery(PoiReportModel.class);
+        query.setFilter("openDataPoiId == openDataPoiIdParameter");
+        query.declareParameters(String.class.getName() + " openDataPoiIdParameter");
+        final List<PoiReportModel> poiReportModels = (List<PoiReportModel>) query.execute(poiReport.getOpenDataPoiId());
+        PoiReportModel poiReportModel = null;
+        for (PoiReportModel aPoiReportModel : poiReportModels)
+        {
+          if (aPoiReportModel.getReportStatus() != ReportStatus.Closed)
+          {
+            // We assume that only one non-closed POI report is available
+            poiReportModel = aPoiReportModel;
+            break;
+          }
+        }
+        if (poiReportModel == null)
         {
           // No POI report is being currently not-closed for that POI
           tw.begin();
@@ -146,15 +145,10 @@ public final class ReparonsParisDal
           tw.persistenceManager.makePersistent(poiReportModel);
           tw.commit();
         }
-        else
-        {
-          // We assume that only one non-closed POI report is available
-          poiReportModel = poiReportModels.get(0);
-        }
         // Now, we can create a new POI report statement
         {
           tw.begin();
-          final PoiReportStatementModel poiReportStatementModel = new PoiReportStatementModel(poiReport.getUid(), accountUid, new Date(), poiReportStatement.getComment(), photoBlob);
+          final PoiReportStatementModel poiReportStatementModel = new PoiReportStatementModel(poiReportModel.getUid(), accountUid, new Date(), poiReportStatement.getComment(), photoBlob);
           tw.persistenceManager.makePersistent(poiReportStatementModel);
           tw.commit();
         }

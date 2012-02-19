@@ -122,7 +122,7 @@ public final class PoiReportResources
         logger.info("Creating a POI report from the account with UID '" + accountUid + "'");
       }
 
-      // Taken from http://stackoverflow.com/questions/1513603/how-to-upload-and-store-an-image-with-google-app-engine-java
+      // // Taken from http://stackoverflow.com/questions/1513603/how-to-upload-and-store-an-image-with-google-app-engine-java
       // if (MediaType.MULTIPART_FORM_DATA.equals(entity.getMediaType(), true) == true)
       // {
       // HttpServletRequest httpServletRequest = null;
@@ -151,28 +151,16 @@ public final class PoiReportResources
       // {
       // if (fileItemStream.getFieldName().equals("photo") == true)
       // {
-      // if (logger.isLoggable(Level.FINE))
-      // {
-      // logger.fine("Deserializing the photo");
-      // }
       // imageBlob = new Blob(IOUtils.toByteArray(fileItemStream.openStream()));
       // }
       // }
       // else if (fileItemStream.getFieldName().equals("poiReport") == true)
       // {
-      // if (logger.isLoggable(Level.FINE))
-      // {
-      // logger.fine("Deserializing the POI report");
-      // }
       // final InputStream inputStream = fileItemStream.openStream();
       // rawPoiReport = new String(IOUtils.toByteArray(inputStream));
       // }
       // else if (fileItemStream.getFieldName().equals("poiReportStatement") == true)
       // {
-      // if (logger.isLoggable(Level.FINE))
-      // {
-      // logger.fine("Deserializing the POI report statement");
-      // }
       // rawPoiReportStament = new String(IOUtils.toByteArray(fileItemStream.openStream()));
       // }
       // }
@@ -186,27 +174,15 @@ public final class PoiReportResources
       // }
       // catch (Exception exception)
       // {
-      // if (logger.isLoggable(Level.FINE))
-      // {
-      // logger.log(Level.FINE, "Cannot ---> 1");
-      // }
       // throw handleException(exception, "Could not store the photo!");
       // }
       // }
       // }
-      // if (logger.isLoggable(Level.FINE))
-      // {
-      // logger.log(Level.FINE, "Cannot ---> 2");
-      // }
-      //
-      // if (logger.isLoggable(Level.FINE))
-      // {
-      // logger.log(Level.FINE, "Cannot ---> 3");
-      // }
       // return error("noPhotoAttached", "ko", "A POI report can only be created provided a photo is attached to it!");
 
-      final PoiReport poiReport = deserializeJson(getPostData(entity, "poiReport"), PoiReport.class);
-      final PoiReportStatement poiReportStatement = deserializeJson(getPostData(entity, "poiReportStatement"), PoiReportStatement.class);
+      final Form postForm = new Form(entity);
+      final PoiReport poiReport = deserializeJson(postForm.getFirstValue("poiReport"), PoiReport.class);
+      final PoiReportStatement poiReportStatement = deserializeJson(postForm.getFirstValue("poiReportStatement"), PoiReportStatement.class);
       try
       {
         ReparonsParisServices.getInstance().addPoiReport(accountUid, poiReport, poiReportStatement, null);
@@ -215,6 +191,10 @@ public final class PoiReportResources
       catch (BadAccountException exception)
       {
         throw handleDalException(exception, "Could not record a POI report");
+      }
+      catch (Exception exception)
+      {
+        throw handleException(exception, "Could not record a POI report");
       }
     }
 

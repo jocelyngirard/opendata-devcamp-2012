@@ -14,6 +14,7 @@ import net.team10.bo.PoiReport.ReportSeverity;
 import net.team10.bo.PoiReport.ReportStatus;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 
 /**
  * @author Édouard Mercier
@@ -73,6 +74,56 @@ public final class PoiReportModel
     this.modificationAccountUid = modificationAccountUid;
     this.reportKind = reportKind;
     this.reportSeverity = reportSeverity;
+  }
+
+  public String getUid()
+  {
+    return KeyFactory.keyToString(key);
+  }
+
+  public final String getOpenDataPoiId()
+  {
+    return openDataPoiId;
+  }
+
+  public final String getPoiTypeUid()
+  {
+    return poiTypeUid;
+  }
+
+  public final String getCreationAccountUid()
+  {
+    return creationAccountUid;
+  }
+
+  public final Date getCreationDate()
+  {
+    return creationDate;
+  }
+
+  public final Date getModificationDate()
+  {
+    return modificationDate;
+  }
+
+  public final ReportStatus getReportStatus()
+  {
+    return reportStatus;
+  }
+
+  public final String getModificationAccountUid()
+  {
+    return modificationAccountUid;
+  }
+
+  public final ReportKind getReportKind()
+  {
+    return reportKind;
+  }
+
+  public final ReportSeverity getReportSeverity()
+  {
+    return reportSeverity;
   }
 
 }
