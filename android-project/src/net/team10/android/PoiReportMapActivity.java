@@ -12,6 +12,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
+import android.widget.ImageView;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
@@ -51,9 +52,9 @@ public class PoiReportMapActivity
 
   private ManagedOverlay ManagedOverlayClosed;
 
-  private final List<ManagedOverlayItem> items = null;
-
   private Drawable default_marker;
+
+  private ImageView marker;
 
   private final boolean fromCache = true;
 
@@ -68,6 +69,14 @@ public class PoiReportMapActivity
     return Constants.GOOGLE_MAPS_API_KEY;
   }
 
+  @Override
+  public void onRetrieveDisplayObjects()
+  {
+    super.onRetrieveDisplayObjects();
+
+    marker = new ImageView(this);
+  }
+
   public void onRetrieveBusinessObjects()
       throws BusinessObjectUnavailableException
   {
@@ -76,6 +85,19 @@ public class PoiReportMapActivity
     {
       throw new BusinessObjectUnavailableException("Le POI que vous demandez n'existe pas.");
     }
+
+    // marker.setImageResource(getResources().getIdentifier(poiType.getOpenDataTypeId().toLowerCase(), "drawable", getPackageName()));
+    // default_marker = marker.getDrawable();
+
+    ManagedOverlayOpen = overlayManager.createOverlay("Open", default_marker);
+    ManagedOverlayScheduled = overlayManager.createOverlay("Scheduled", default_marker);
+    ManagedOverlayInProgress = overlayManager.createOverlay("InProgress", default_marker);
+    ManagedOverlayClosed = overlayManager.createOverlay("Closed", default_marker);
+
+    ManagedOverlayOpen.setCustomMarkerRenderer(setManagedOverlayMarker(ReportStatus.Open));
+    ManagedOverlayScheduled.setCustomMarkerRenderer(setManagedOverlayMarker(ReportStatus.Scheduled));
+    ManagedOverlayInProgress.setCustomMarkerRenderer(setManagedOverlayMarker(ReportStatus.InProgress));
+    ManagedOverlayClosed.setCustomMarkerRenderer(setManagedOverlayMarker(ReportStatus.Closed));
 
     if (myLocationOverlay != null)
     {
@@ -163,15 +185,6 @@ public class PoiReportMapActivity
     overlayManager.populate();
     PoiManagedOverlay.setOnOverlayGestureListener(this);
 
-    ManagedOverlayOpen = overlayManager.createOverlay("Open", default_marker);
-    ManagedOverlayScheduled = overlayManager.createOverlay("Scheduled", default_marker);
-    ManagedOverlayInProgress = overlayManager.createOverlay("InProgress", default_marker);
-    ManagedOverlayClosed = overlayManager.createOverlay("Closed", default_marker);
-
-    ManagedOverlayOpen.setCustomMarkerRenderer(setManagedOverlayMarker(ReportStatus.Open));
-    ManagedOverlayScheduled.setCustomMarkerRenderer(setManagedOverlayMarker(ReportStatus.Scheduled));
-    ManagedOverlayInProgress.setCustomMarkerRenderer(setManagedOverlayMarker(ReportStatus.InProgress));
-    ManagedOverlayClosed.setCustomMarkerRenderer(setManagedOverlayMarker(ReportStatus.Closed));
   }
 
   private MarkerRenderer setManagedOverlayMarker(final ReportStatus status)
@@ -231,7 +244,7 @@ public class PoiReportMapActivity
 
   public void onLongPressFinished(MotionEvent e, ManagedOverlay overlay, GeoPoint point, ManagedOverlayItem item)
   {
-
+    overlay.createItem(point, "New");
   }
 
   public boolean onScrolled(MotionEvent arg0, MotionEvent arg1, float arg2, float arg3, ManagedOverlay arg4)
@@ -241,9 +254,13 @@ public class PoiReportMapActivity
 
   public boolean onSingleTap(MotionEvent e, ManagedOverlay overlay, GeoPoint point, ManagedOverlayItem item)
   {
+    // Intent intent = new Intent().putExtra("poiType", );
     if (item != null)
     {
-      startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+      if (item.getTitle().equals("New"))
+        startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+      else
+        startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
     }
     return false;
   }

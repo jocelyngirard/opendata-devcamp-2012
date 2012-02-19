@@ -11,7 +11,6 @@ import net.team10.android.TitleBar;
 import net.team10.android.TitleBar.TitleBarRefreshFeature;
 import net.team10.android.bo.OpenDataPoi;
 import net.team10.android.ws.ReparonsParisServices;
-import net.team10.bo.PoiReport;
 import net.team10.bo.PoiType;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -19,6 +18,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -36,18 +36,25 @@ public class PoiReportsListFragment
   public class OpenDataPoiViewAttributes
   {
 
-    private final TextView text;
+    private final TextView title;
+
+    private final TextView description;
+
+    private final ImageView icon;
 
     public OpenDataPoiViewAttributes(View view)
     {
-      text = (TextView) view.findViewById(android.R.id.text1);
+      title = (TextView) view.findViewById(R.id.title);
+      description = (TextView) view.findViewById(R.id.description);
+      icon = (ImageView) view.findViewById(R.id.icon);
     }
 
-    public void update(OpenDataPoi businessObject)
+    public void update(Activity activity, OpenDataPoi businessObject, int position)
     {
-      text.setText(businessObject.getLabel());
+      title.setText(businessObject.getLabel());
+      description.setText(businessObject.getGeoName());
+      icon.setImageResource(activity.getResources().getIdentifier(businessObject.getTypeId().toLowerCase(), "drawable", activity.getPackageName()));
     }
-
   }
 
   public class OpenDataPoiViewWrapper
@@ -56,7 +63,7 @@ public class PoiReportsListFragment
 
     public OpenDataPoiViewWrapper(OpenDataPoi businessObject)
     {
-      super(businessObject, 0, android.R.layout.simple_list_item_1);
+      super(businessObject, 0, R.layout.poitypechooser_list_item);
     }
 
     @Override
@@ -68,7 +75,7 @@ public class PoiReportsListFragment
     @Override
     protected void updateView(Activity activity, Object viewAttributes, View view, OpenDataPoi businessObject, int position)
     {
-      ((OpenDataPoiViewAttributes) viewAttributes).update(businessObject);
+      ((OpenDataPoiViewAttributes) viewAttributes).update(activity, businessObject, position);
     }
 
     @Override
@@ -96,14 +103,14 @@ public class PoiReportsListFragment
     }
 
     List<OpenDataPoi> openDataPois;
-    List<PoiReport> poiReports;
+    // List<PoiReport> poiReports;
     Map<String, OpenDataPoi> openDataPoiMap = new HashMap<String, OpenDataPoi>();
 
     try
     {
       openDataPois = ReparonsParisServices.getInstance().getOpenDataPois(poiType.getOpenDataDataSetId(), poiType.getOpenDataTypeId(), 48.8566, 2.3522, 10000);
-      poiReports = ReparonsParisServices.getInstance().getPoiReports(fromCache, poiType.getOpenDataDataSetId(), poiType.getOpenDataTypeId(),
-          poiType.getOpenDataSource(), poiType.getPoiTypeFolderUid(), "1.23,4.56", "7.89,0.12");
+      // poiReports = ReparonsParisServices.getInstance().getPoiReports(fromCache, poiType.getOpenDataDataSetId(), poiType.getOpenDataTypeId(),
+      // poiType.getOpenDataSource(), poiType.getPoiTypeFolderUid(), "1.23,4.56", "7.89,0.12");
     }
     catch (Exception exception)
     {
