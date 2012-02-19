@@ -9,6 +9,7 @@ import net.team10.android.bo.OpenDataPoi;
 import net.team10.android.ws.ReparonsParisServices;
 import net.team10.bo.Account;
 import net.team10.bo.PoiReport.ReportKind;
+import net.team10.bo.PoiReport.ReportSeverity;
 import net.team10.bo.PoiType;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -107,12 +108,12 @@ public class CreatePoiReportActivity
             // We extract the input stream from the bitmap
             final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-            final InputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
+            photoInputStream = new ByteArrayInputStream(outputStream.toByteArray());
 
             account = ReparonsParisServices.getInstance().createAccount("accountId" + System.currentTimeMillis(), "accountNickname");
             final List<PoiType> poiTypes = ReparonsParisServices.getInstance().getPoiTypes(false);
             poiType = poiTypes.get(0);
-            photoInputStream = null;// new ByteArrayInputStream(new byte[] { 1, 2, 3, 4 });
+            //photoInputStream = null;// new ByteArrayInputStream(new byte[] { 1, 2, 3, 4 });
           }
         });
       }
@@ -261,16 +262,15 @@ public class CreatePoiReportActivity
     progressDialog.setIndeterminate(true);
     progressDialog.show();
 
-    /*
-     * SmartCommands.execute(new SmartCommands.ProgressGuardedCommand(activity, null, progressDialog, "Could not save the member properly") {
-     * 
-     * @Override protected void runGuardedProgress() throws Exception {
-     * 
-     * ReparonsParisServices.getInstance().postPoiReportStatement(account.getUid(), poiType.getUid(), ReportKind.Broken, ReportSeverity.Major,
-     * openDataPoi.getPoiId(), commentField.getText().toString(), photoInputStream);
-     * 
-     * } });
-     */
+
+      SmartCommands.execute(new GuardedCommand<Activity>((Activity) context){
+	@Override
+	protected void runGuarded() throws Exception {
+	     ReparonsParisServices.getInstance().postPoiReportStatement(account.getUid(), poiType.getUid(), ReportKind.Broken, ReportSeverity.Major,
+	    	      openDataPoi.getPoiId(), commentField.getText().toString(), photoInputStream);
+		progressDialog.dismiss();
+	} });
+     
   }
 
 }
