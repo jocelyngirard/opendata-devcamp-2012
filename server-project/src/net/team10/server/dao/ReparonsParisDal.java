@@ -1,9 +1,13 @@
 package net.team10.server.dao;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.logging.Level;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import javax.jdo.Query;
@@ -13,6 +17,7 @@ import net.team10.bo.PoiReport;
 import net.team10.bo.PoiReport.ReportStatus;
 import net.team10.bo.PoiReportStatement;
 import net.team10.bo.PoiType;
+import net.team10.bo.PoiType.OpenDataSource;
 import net.team10.server.dao.model.AccountModel;
 import net.team10.server.dao.model.PoiReportModel;
 import net.team10.server.dao.model.PoiReportStatementModel;
@@ -77,7 +82,7 @@ public final class ReparonsParisDal
       final List<PoiType> poiTypes = new ArrayList<PoiType>();
       for (PoiTypeModel poiTypeModel : poiTypeModels)
       {
-        poiTypes.add(new PoiType(poiTypeModel.getUid(), poiTypeModel.getCreationDate(), poiTypeModel.getOpenDataDataSetId(), poiTypeModel.getOpenDataTypeId(), poiTypeModel.getLabel(), poiTypeModel.getPoiTypeFolderUid(), poiTypeModel.getOpenDataSource()));
+        poiTypes.add(poiTypeModel.toPojo());
       }
       return poiTypes;
     }
@@ -93,10 +98,10 @@ public final class ReparonsParisDal
     try
     {
       tw.begin();
-      final PoiTypeModel poiTypeModel = new PoiTypeModel(new Date(), poiType.getOpenDataDataSetId(), poiType.getOpenDataTypeId(), poiType.getLabel(), poiType.getPoiTypeFolderUid(), poiType.getOpenDataSource());
+      final PoiTypeModel poiTypeModel = new PoiTypeModel(new Date(), poiType.getOpenDataDataSetId(), poiType.getOpenDataTypeId(), poiType.getLabel(), poiType.getPoiTypeFolderUid(), poiType.getOpenDataSource(), poiType.getImageUrl());
       tw.persistenceManager.makePersistent(poiTypeModel);
       tw.commit();
-      return new PoiType(poiTypeModel.getUid(), poiTypeModel.getCreationDate(), poiTypeModel.getOpenDataDataSetId(), poiTypeModel.getOpenDataTypeId(), poiTypeModel.getLabel(), poiTypeModel.getPoiTypeFolderUid(), poiTypeModel.getOpenDataSource());
+      return poiTypeModel.toPojo();
     }
     finally
     {
@@ -104,13 +109,78 @@ public final class ReparonsParisDal
     }
   }
 
-  public void addPoiReport(String accountUid, PoiReport poiReport, PoiReportStatement poiReportStatement, Blob photoBlob)
+  public List<PoiReport> getPoiReports(String openDataDataSetId, String openDataTypeId, OpenDataSource openDataSource, double topLeftLatitude,
+      double topLeftLongitude, double bottomRightLatitude, double bottomRightLongitude)
+  {
+    final TransactionWrapper tw = new TransactionWrapper();
+    try
+    {
+      // We first need to search for the POI type
+      final String poiTypeUid;
+      {
+        final Query query = tw.persistenceManager.newQuery(PoiTypeModel.class);
+        query.setFilter("openDataDataSetId == openDataDataSetIdParameter && openDataTypeId == openDataTypeIdParameter && openDataSource == openDataSourceParameter");
+        query.declareParameters(String.class.getName() + " openDataDataSetIdParameter" + ", " + String.class.getName() + " openDataTypeIdParameter" + ", " + OpenDataSource.class.getName() + " openDataSourceParameter");
+        final List<PoiTypeModel> poiTypeModels = (List<PoiTypeModel>) query.execute(openDataDataSetId, openDataTypeId, openDataSource);
+        if (poiTypeModels.size() <= 0)
+        {
+          return null;
+        }
+        else
+        {
+          poiTypeUid = poiTypeModels.get(0).getUid();
+        }
+      }
+
+      // Then, we can request the POI reports
+      final List<PoiReportModel> poiReportModels;
+      {
+        final Query query = tw.persistenceManager.newQuery(PoiReportModel.class);
+        query.setFilter("poiTypeUid == poiTypeUidParameter");
+        query.declareParameters(String.class.getName() + " poiTypeUidParameter");
+        poiReportModels = (List<PoiReportModel>) query.execute(poiTypeUid);
+      }
+
+      // Now, we need to request the accounts
+      final Map<String, Account> accountsMap = new HashMap<String, Account>();
+      if (poiReportModels.size() > 0)
+      {
+        final Set<String> accountUids = new HashSet<String>();
+        for (PoiReportModel poiReportModel : poiReportModels)
+        {
+          accountUids.add(poiReportModel.getCreationAccountUid());
+          accountUids.add(poiReportModel.getModificationAccountUid());
+        }
+        final Query query = tw.persistenceManager.newQuery(AccountModel.class);
+        query.setFilter("uidParameter.contains(uid)");
+        query.declareParameters(Collection.class.getName() + " uidParameter");
+        final List<AccountModel> accountModels = (List<AccountModel>) query.execute(accountUids);
+        for (AccountModel accountModel : accountModels)
+        {
+          if (accountsMap.containsKey(accountModel.getUid()) == false)
+          {
+            accountsMap.put(accountModel.getUid(), accountModel.toPojo());
+          }
+        }
+      }
+
+      final List<PoiReport> poiReports = new ArrayList<PoiReport>();
+      for (PoiReportModel poiReportModel : poiReportModels)
+      {
+        poiReports.add(poiReportModel.toPojo(accountsMap.get(poiReportModel.getCreationAccountUid()),
+            accountsMap.get(poiReportModel.getModificationAccountUid())));
+      }
+      return poiReports;
+    }
+    finally
+    {
+      tw.close();
+    }
+  }
+
+  public void declarePoiReportStatement(String accountUid, PoiReport poiReport, PoiReportStatement poiReportStatement, Blob photoBlob)
       throws BadAccountException
   {
-    if (logger.isLoggable(Level.INFO))
-    {
-      logger.log(Level.INFO, "Declaring a new POI report");
-    }
     final TransactionWrapper tw = new TransactionWrapper();
     try
     {
@@ -141,14 +211,14 @@ public final class ReparonsParisDal
         {
           // No POI report is being currently not-closed for that POI
           tw.begin();
-          poiReportModel = new PoiReportModel(poiReport.getOpenDataPoiId(), poiReport.getPoiTypeUid(), accountUid, new Date(), new Date(), poiReport.getReportStatus(), accountUid, poiReport.getReportKind(), poiReport.getReportSeverity());
+          poiReportModel = new PoiReportModel(poiReport.getOpenDataPoiId(), poiReport.getPoiTypeUid(), accountUid, new Date(), new Date(), ReportStatus.Open, accountUid, poiReport.getReportKind(), poiReport.getReportSeverity(), photoBlob);
           tw.persistenceManager.makePersistent(poiReportModel);
           tw.commit();
         }
         // Now, we can create a new POI report statement
         {
           tw.begin();
-          final PoiReportStatementModel poiReportStatementModel = new PoiReportStatementModel(poiReportModel.getUid(), accountUid, new Date(), poiReportStatement.getComment(), photoBlob);
+          final PoiReportStatementModel poiReportStatementModel = new PoiReportStatementModel(poiReportModel.getUid(), accountUid, new Date(), poiReportStatement.getComment());
           tw.persistenceManager.makePersistent(poiReportStatementModel);
           tw.commit();
         }

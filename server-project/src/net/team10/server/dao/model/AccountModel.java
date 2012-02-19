@@ -9,6 +9,8 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+import net.team10.bo.Account;
+
 import com.google.appengine.api.datastore.Key;
 
 /**
@@ -59,6 +61,11 @@ public final class AccountModel
   public String getNickname()
   {
     return nickname;
+  }
+
+  public Account toPojo()
+  {
+    return new Account(getUid(), getCreationDate(), getNickname());
   }
 
 }

@@ -3,7 +3,7 @@ package net.team10.android;
 import com.smartnsoft.droid4me.support.v4.app.SmartFragmentActivity;
 
 public class PoiReportsListActivity
-    extends SmartFragmentActivity<TitleBar.TitleBarAggregate>
+    extends SmartFragmentActivity<Void>
 {
 
   public void onRetrieveDisplayObjects()

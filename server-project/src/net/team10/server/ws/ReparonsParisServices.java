@@ -1,11 +1,14 @@
 package net.team10.server.ws;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import net.team10.bo.Account;
 import net.team10.bo.PoiReport;
 import net.team10.bo.PoiReportStatement;
 import net.team10.bo.PoiType;
+import net.team10.bo.PoiType.OpenDataSource;
 import net.team10.server.dao.ReparonsParisDal;
 import net.team10.server.dao.ReparonsParisDal.BadAccountException;
 
@@ -44,13 +47,43 @@ public final class ReparonsParisServices
 
   public List<PoiType> getPoiTypes()
   {
-    return reparonsParisDal.getPoiTypes();
+    final List<PoiType> poiTypes = reparonsParisDal.getPoiTypes();
+    Collections.sort(poiTypes, new Comparator<PoiType>()
+    {
+      public int compare(PoiType object1, PoiType object2)
+      {
+        if (object1.getOpenDataDataSetId().equals(object2.getOpenDataDataSetId()) == true)
+        {
+          if (object1.getOpenDataTypeId() == null && object2.getOpenDataTypeId() != null)
+          {
+            return 1;
+          }
+          else if (object1.getOpenDataTypeId() != null && object2.getOpenDataTypeId() == null)
+          {
+            return -1;
+          }
+          else
+          {
+            return object1.getOpenDataTypeId().compareTo(object2.getOpenDataTypeId());
+          }
+        }
+        return object1.getOpenDataDataSetId().compareTo(object2.getOpenDataDataSetId());
+      }
+    });
+    return poiTypes;
   }
 
-  public void addPoiReport(String accountUid, PoiReport poiReport, PoiReportStatement poiReportStatement, Blob imageBlob)
+  public static List<PoiReport> getPoiReports(String openDataDataSetId, String openDataTypeId, String openDataSource, double topLeftLatitude,
+      double topLeftLongitude, double bottomRightLatitude, double bottomRightLongitude)
+  {
+    return reparonsParisDal.getPoiReports(openDataDataSetId, openDataTypeId, OpenDataSource.valueOf(openDataSource), topLeftLatitude, topLeftLongitude,
+        bottomRightLatitude, bottomRightLongitude);
+  }
+
+  public void declarePoiReportStatement(String accountUid, PoiReport poiReport, PoiReportStatement poiReportStatement, Blob imageBlob)
       throws BadAccountException
   {
-    reparonsParisDal.addPoiReport(accountUid, poiReport, poiReportStatement, imageBlob);
+    reparonsParisDal.declarePoiReportStatement(accountUid, poiReport, poiReportStatement, imageBlob);
   }
 
 }

@@ -9,7 +9,6 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
-import com.google.appengine.api.datastore.Blob;
 import com.google.appengine.api.datastore.Key;
 
 /**
@@ -39,20 +38,16 @@ public final class PoiReportStatementModel
   @Persistent
   private String comment;
 
-  @Persistent
-  private Blob photo;
-
   public PoiReportStatementModel()
   {
   }
 
-  public PoiReportStatementModel(String poiReportUid, String accountUid, Date creationDate, String comment, Blob photo)
+  public PoiReportStatementModel(String poiReportUid, String accountUid, Date creationDate, String comment)
   {
     this.poiReportUid = poiReportUid;
     this.accountUid = accountUid;
     this.creationDate = creationDate;
     this.comment = comment;
-    this.photo = photo;
   }
 
 }

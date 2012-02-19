@@ -29,7 +29,8 @@ import de.android1.overlaymanager.OverlayManager;
 import de.android1.overlaymanager.ZoomEvent;
 
 public class PoiReportMapActivity
-    extends SmartMapActivity<TitleBar.TitleBarAggregate>
+
+    extends SmartMapActivity<Void>
     implements LifeCycle.BusinessObjectsRetrievalAsynchronousPolicy, OnOverlayGestureListener
 {
   public static final String POI_TYPE = "poiType";
