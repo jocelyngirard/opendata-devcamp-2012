@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.team10.android.PoiReportMapActivity;
+import net.team10.android.PoiReportsListActivity;
 import net.team10.android.R;
 import net.team10.android.TitleBar;
 import net.team10.android.TitleBar.TitleBarRefreshFeature;
@@ -74,7 +75,7 @@ public class PoiTypeChooserFragment
     {
       if (objectEvent == ObjectEvent.Clicked)
       {
-        return new Intent(getCheckedActivity(), PoiReportMapActivity.class).putExtra(PoiReportMapActivity.POI_TYPE, businessObject);
+        return new Intent(getCheckedActivity(), PoiReportsListActivity.class).putExtra(PoiReportMapActivity.POI_TYPE, businessObject);
       }
 
       return super.computeIntent(activity, viewAttributes, view, businessObject, objectEvent, position);

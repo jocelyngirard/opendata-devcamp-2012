@@ -4,6 +4,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import net.sf.jsr107cache.CacheException;
+import net.team10.server.resource.AccountResources;
 import net.team10.server.resource.PoiReportResources;
 
 import org.json.JSONArray;
@@ -219,8 +220,8 @@ public final class ReparonsParisApplication
         throws ResourceException
     {
       final Form form = getRequest().getResourceRef().getQueryAsForm();
-//      final String arg1 = form.getFirstValue("arg1");
-//      final int arg2 = Integer.parseInt(form.getFirstValue("arg2"));
+      // final String arg1 = form.getFirstValue("arg1");
+      // final int arg2 = Integer.parseInt(form.getFirstValue("arg2"));
       return new EmptyRepresentation();
     }
 
@@ -240,8 +241,10 @@ public final class ReparonsParisApplication
     router.attach("/dummy?{queryParameters}", ReparonsParisApplication.DummyResource.class);
 
     // Here are the actual services
+    router.attach("/account", AccountResources.PoiReportsResource.class);
+    router.attach("/poitype", PoiReportResources.PoiTypesResource.class);
     router.attach("/poitypes", PoiReportResources.PoiTypesResource.class);
-    router.attach("/poireport", PoiReportResources.PoiReportsResource.class);
+    router.attach("/poireport?{queryParameters}", PoiReportResources.PoiReportsResource.class);
     router.attach("/poireports?{queryParameters}", PoiReportResources.PoiReportsResource.class);
 
     return router;

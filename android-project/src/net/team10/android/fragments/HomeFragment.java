@@ -1,22 +1,16 @@
 package net.team10.android.fragments;
 
-import java.io.ByteArrayInputStream;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.List;
 
-import net.team10.android.AboutActivity;
 import net.team10.android.Constants;
 import net.team10.android.PoiTypeChooserActivity;
 import net.team10.android.R;
 import net.team10.android.ReparonsParisApplication;
 import net.team10.android.ReparonsParisApplication.GoogleAccountInformations;
-import net.team10.android.SettingsActivity;
 import net.team10.android.TitleBar;
 import net.team10.android.ws.ReparonsParisServices;
-import net.team10.bo.PoiReport.ReportKind;
-import net.team10.bo.PoiReport.ReportSeverity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,8 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.smartnsoft.droid4me.LifeCycle.BusinessObjectsRetrievalAsynchronousPolicy;
-import com.smartnsoft.droid4me.framework.Commands;
-import com.smartnsoft.droid4me.menu.StaticMenuCommand;
+import com.smartnsoft.droid4me.app.SmartCommands;
 import com.smartnsoft.droid4me.support.v4.app.SmartFragment;
 import com.smartnsoft.droid4me.ws.WebServiceClient.CallException;
 
@@ -75,50 +68,11 @@ public final class HomeFragment
 
   }
 
-  @Override
-  public List<StaticMenuCommand> getMenuCommands()
-  {
-    final List<StaticMenuCommand> commands = new ArrayList<StaticMenuCommand>();
-    commands.add(new StaticMenuCommand(R.string.Home_menu_settings, '1', 's', android.R.drawable.ic_menu_preferences, new Commands.StaticEnabledExecutable()
-    {
-      @Override
-      public void run()
-      {
-        startActivity(new Intent(getCheckedActivity(), SettingsActivity.class));
-      }
-    }));
-    commands.add(new StaticMenuCommand(R.string.Home_menu_about, '2', 'a', android.R.drawable.ic_menu_info_details, new Commands.StaticEnabledExecutable()
-    {
-      @Override
-      public void run()
-      {
-        startActivity(new Intent(getCheckedActivity(), AboutActivity.class));
-      }
-    }));
-    commands.add(new StaticMenuCommand("Test", '2', 'a', android.R.drawable.ic_menu_info_details, new Commands.StaticEnabledExecutable()
-    {
-      @Override
-      public void run()
-      {
-        try
-        {
-          ReparonsParisServices.getInstance().postPoiReportStatement("accountUid", "poiTypeUid", ReportKind.Broken, ReportSeverity.Major, "openDataPoiId",
-              "comment", new ByteArrayInputStream(new byte[] { 1, 2, 3, 4 }));
-        }
-        catch (CallException exception)
-        {
-          exception.printStackTrace();
-        }
-      }
-    }));
-    return commands;
-  }
-
   public void onClick(View view)
   {
     if (view == reportButton)
     {
-      if (getPreferences().contains(Constants.EMAIL_MD5) == false)
+      if (getPreferences().contains(Constants.EMAIL_MD5_PREFERENCE_KEY) == false)
       {
         final GoogleAccountInformations googleAccount = ReparonsParisApplication.getGoogleAccountInformations(getCheckedActivity());
         final AlertDialog.Builder builder = new AlertDialog.Builder(getCheckedActivity());
@@ -129,7 +83,27 @@ public final class HomeFragment
           {
             try
             {
-              getPreferences().edit().putString(Constants.EMAIL_MD5, ReparonsParisApplication.md5sum(googleAccount.email)).commit();
+              final String md5sum = ReparonsParisApplication.md5sum(googleAccount.email);
+              final ProgressDialog progressDialog = new ProgressDialog(getCheckedActivity());
+              progressDialog.setIndeterminate(true);
+              progressDialog.show();
+              SmartCommands.execute(new Runnable()
+              {
+                public void run()
+                {
+                  try
+                  {
+                    final String nickname = "Nick";
+                    ReparonsParisServices.getInstance().createAccount(md5sum, nickname);
+                  }
+                  catch (CallException e)
+                  {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                  }
+                }
+              });
+              getPreferences().edit().putString(Constants.EMAIL_MD5_PREFERENCE_KEY, md5sum).commit();
             }
             catch (NoSuchAlgorithmException exception)
             {
@@ -150,5 +124,4 @@ public final class HomeFragment
       }
     }
   }
-
 }

@@ -12,6 +12,7 @@ import javax.jdo.annotations.PrimaryKey;
 import net.team10.bo.PoiType.OpenDataSource;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 
 /**
  * @author Édouard Mercier
@@ -41,12 +42,58 @@ public final class PoiTypeModel
   private String label;
 
   @Persistent
-  private String poiTyperFolderUid;
+  private String poiTypeFolderUid;
 
   @Persistent
   private OpenDataSource openDataSource;
 
-  @Persistent
-  private String openDataPoiId;
+  public PoiTypeModel()
+  {
+  }
+
+  public PoiTypeModel(Date creationDate, String openDataDataSetId, String openDataTypeId, String label, String poiTypeFolderUid, OpenDataSource openDataSource)
+  {
+    this.creationDate = creationDate;
+    this.openDataDataSetId = openDataDataSetId;
+    this.openDataTypeId = openDataTypeId;
+    this.label = label;
+    this.poiTypeFolderUid = poiTypeFolderUid;
+    this.openDataSource = openDataSource;
+  }
+
+  public String getUid()
+  {
+    return KeyFactory.keyToString(key);
+  }
+
+  public Date getCreationDate()
+  {
+    return creationDate;
+  }
+
+  public String getOpenDataDataSetId()
+  {
+    return openDataDataSetId;
+  }
+
+  public String getOpenDataTypeId()
+  {
+    return openDataTypeId;
+  }
+
+  public String getLabel()
+  {
+    return label;
+  }
+
+  public String getPoiTypeFolderUid()
+  {
+    return poiTypeFolderUid;
+  }
+
+  public OpenDataSource getOpenDataSource()
+  {
+    return openDataSource;
+  }
 
 }
