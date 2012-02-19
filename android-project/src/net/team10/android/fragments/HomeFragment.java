@@ -17,6 +17,7 @@ import net.team10.android.ws.ReparonsParisServices;
 import net.team10.bo.PoiReport.ReportKind;
 import net.team10.bo.PoiReport.ReportSeverity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.smartnsoft.droid4me.LifeCycle.BusinessObjectsRetrievalAsynchronousPolicy;
+import com.smartnsoft.droid4me.app.SmartCommands;
 import com.smartnsoft.droid4me.framework.Commands;
 import com.smartnsoft.droid4me.menu.StaticMenuCommand;
 import com.smartnsoft.droid4me.support.v4.app.SmartFragment;
@@ -129,7 +131,26 @@ public final class HomeFragment
           {
             try
             {
-              getPreferences().edit().putString(Constants.EMAIL_MD5, ReparonsParisApplication.md5sum(googleAccount.email)).commit();
+              final String md5sum = ReparonsParisApplication.md5sum(googleAccount.email);
+              final ProgressDialog progressDialog = new ProgressDialog(getCheckedActivity());
+              progressDialog.setIndeterminate(true);
+              progressDialog.show();
+              SmartCommands.execute(new Runnable()
+              {
+                public void run()
+                {
+                  try
+                  {
+                    ReparonsParisServices.getInstance().postAccount(md5sum);
+                  }
+                  catch (CallException e)
+                  {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                  }
+                }
+              });
+              getPreferences().edit().putString(Constants.EMAIL_MD5, md5sum).commit();
             }
             catch (NoSuchAlgorithmException exception)
             {
@@ -150,5 +171,4 @@ public final class HomeFragment
       }
     }
   }
-
 }

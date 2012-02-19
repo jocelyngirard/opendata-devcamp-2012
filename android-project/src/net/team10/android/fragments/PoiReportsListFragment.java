@@ -1,7 +1,9 @@
 package net.team10.android.fragments;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.team10.android.PoiReportMapActivity;
 import net.team10.android.R;
@@ -9,6 +11,7 @@ import net.team10.android.TitleBar;
 import net.team10.android.TitleBar.TitleBarRefreshFeature;
 import net.team10.android.bo.OpenDataPoi;
 import net.team10.android.ws.ReparonsParisServices;
+import net.team10.bo.PoiReport;
 import net.team10.bo.PoiType;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -80,6 +83,8 @@ public class PoiReportsListFragment
 
   }
 
+  private final boolean fromCache = true;
+
   public List<? extends BusinessViewWrapper<?>> retrieveBusinessObjectsList()
       throws BusinessObjectUnavailableException
   {
@@ -91,10 +96,14 @@ public class PoiReportsListFragment
     }
 
     List<OpenDataPoi> openDataPois;
+    List<PoiReport> poiReports;
+    Map<String, OpenDataPoi> openDataPoiMap = new HashMap<String, OpenDataPoi>();
 
     try
     {
       openDataPois = ReparonsParisServices.getInstance().getOpenDataPois(poiType.getOpenDataDataSetId(), poiType.getOpenDataTypeId(), 48.8566, 2.3522, 10000);
+      poiReports = ReparonsParisServices.getInstance().getPoiReports(fromCache, poiType.getOpenDataDataSetId(), poiType.getOpenDataTypeId(),
+          poiType.getOpenDataSource(), poiType.getPoiTypeFolderUid(), "1.23,4.56", "7.89,0.12");
     }
     catch (Exception exception)
     {
@@ -102,6 +111,11 @@ public class PoiReportsListFragment
     }
 
     final List<BusinessViewWrapper<?>> wrappers = new ArrayList<SmartAdapters.BusinessViewWrapper<?>>();
+
+    for (OpenDataPoi openDataPoi : openDataPois)
+    {
+      openDataPoiMap.put(openDataPoi.getPoiId(), openDataPoi);
+    }
 
     for (OpenDataPoi openDataPoi : openDataPois)
     {
