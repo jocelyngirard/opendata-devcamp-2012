@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
-  android:orientation="vertical"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
   android:gravity="center_horizontal"
-  android:padding="20dip"
+  android:paddingTop="20dip"
 >
   <Button
     android:id="@+id/reportButton"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
     android:text="@string/Home_report_button"
     android:drawableTop="@drawable/report"
     android:background="@drawable/abs__tab_indicator_holo"
@@ -20,6 +20,8 @@
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:layout_below="@id/reportButton"
     android:orientation="horizontal"
     android:gravity="center_horizontal"
     android:paddingTop="20dip"
@@ -57,4 +59,23 @@
       android:padding="10dip"
     />
   </LinearLayout>
-</LinearLayout>
+  
+  
+  <ImageView
+    android:id="@+id/mairieParis"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:src="@drawable/mairie_de_paris_logo"
+  />
+  
+  <View 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="#C8032D"
+    android:layout_alignBaseline="@id/mairieParis"
+    android:layout_alignTop="@id/mairieParis"
+    android:layout_toRightOf="@id/mairieParis"
+  />
+  
+</RelativeLayout>
