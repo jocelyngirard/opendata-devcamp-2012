@@ -21,6 +21,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.smartnsoft.droid4me.LifeCycle.BusinessObjectsRetrievalAsynchronousPolicy;
+import com.smartnsoft.droid4me.app.AppPublics;
 import com.smartnsoft.droid4me.framework.Commands;
 import com.smartnsoft.droid4me.framework.SmartAdapters;
 import com.smartnsoft.droid4me.framework.SmartAdapters.BusinessViewWrapper;
@@ -30,7 +31,7 @@ import com.smartnsoft.droid4me.menu.StaticMenuCommand;
 
 public class PoiTypeChooserFragment
     extends SmartListViewFragmentV4<TitleBar.TitleBarAggregate, ListView>
-    implements BusinessObjectsRetrievalAsynchronousPolicy, TitleBarRefreshFeature
+    implements BusinessObjectsRetrievalAsynchronousPolicy, AppPublics.SendLoadingIntent, TitleBarRefreshFeature
 {
 
   public class PoiTypeViewAttributes
@@ -84,11 +85,10 @@ public class PoiTypeChooserFragment
     {
       if (objectEvent == ObjectEvent.Clicked)
       {
+        activity.finish();
         return new Intent(getCheckedActivity(), PoiReportsGroupsActivity.class).putExtra(PoiReportMapActivity.POI_TYPE, businessObject);
       }
-
       return super.computeIntent(activity, viewAttributes, view, businessObject, objectEvent, position);
-
     }
 
   }

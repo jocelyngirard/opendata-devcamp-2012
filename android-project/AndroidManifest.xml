@@ -44,6 +44,7 @@
 
     <activity
       android:name=".HomeActivity"
+      android:label="@string/Home_label"
       android:configChanges="keyboardHidden|orientation"
     >
       <intent-filter>
@@ -65,7 +66,13 @@
       android:name=".AboutActivity"
       android:configChanges="keyboardHidden|orientation"
     />
-    
+
+    <activity
+      android:name=".PoiTypeChooserActivity"
+      android:label="@string/PoiTypeChooser_label"
+      android:configChanges="keyboardHidden|orientation"
+    />
+
     <activity
       android:name=".PoiReportsListActivity"
       android:configChanges="keyboardHidden|orientation"
@@ -76,11 +83,7 @@
       android:name=".PoiReportsGroupsActivity"
       android:configChanges="keyboardHidden|orientation"
     />
-    <activity
-      android:name=".PoiTypeChooserActivity"
-      android:configChanges="keyboardHidden|orientation"
-    />
-    
+
     <activity
       android:name=".PoiReportMapActivity"
       android:configChanges="keyboardHidden|orientation"
