@@ -12,7 +12,6 @@ import android.graphics.Canvas;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
-import android.widget.ImageView;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapController;
@@ -55,7 +54,7 @@ public class PoiReportMapActivity
 
   private Drawable default_marker;
 
-  private ImageView marker;
+  // private ImageView marker;
 
   private final boolean fromCache = true;
 
@@ -75,7 +74,7 @@ public class PoiReportMapActivity
   {
     super.onRetrieveDisplayObjects();
 
-    marker = new ImageView(this);
+    // marker = new ImageView(this);
   }
 
   public void onRetrieveBusinessObjects()
@@ -87,18 +86,17 @@ public class PoiReportMapActivity
       throw new BusinessObjectUnavailableException("Le POI que vous demandez n'existe pas.");
     }
 
-    // marker.setImageResource(getResources().getIdentifier(poiType.getOpenDataTypeId().toLowerCase(), "drawable", getPackageName()));
-    // default_marker = marker.getDrawable();
+    default_marker = getResources().getDrawable(getResources().getIdentifier(poiType.getOpenDataTypeId().toLowerCase(), "drawable", getPackageName()));
 
-    ManagedOverlayOpen = overlayManager.createOverlay("Open", default_marker);
-    ManagedOverlayScheduled = overlayManager.createOverlay("Scheduled", default_marker);
-    ManagedOverlayInProgress = overlayManager.createOverlay("InProgress", default_marker);
-    ManagedOverlayClosed = overlayManager.createOverlay("Closed", default_marker);
-
-    ManagedOverlayOpen.setCustomMarkerRenderer(setManagedOverlayMarker(ReportStatus.Open));
-    ManagedOverlayScheduled.setCustomMarkerRenderer(setManagedOverlayMarker(ReportStatus.Scheduled));
-    ManagedOverlayInProgress.setCustomMarkerRenderer(setManagedOverlayMarker(ReportStatus.InProgress));
-    ManagedOverlayClosed.setCustomMarkerRenderer(setManagedOverlayMarker(ReportStatus.Closed));
+    // ManagedOverlayOpen = overlayManager.createOverlay("Open", default_marker);
+    // ManagedOverlayScheduled = overlayManager.createOverlay("Scheduled", default_marker);
+    // ManagedOverlayInProgress = overlayManager.createOverlay("InProgress", default_marker);
+    // ManagedOverlayClosed = overlayManager.createOverlay("Closed", default_marker);
+    //
+    // ManagedOverlayOpen.setCustomMarkerRenderer(setManagedOverlayMarker(ReportStatus.Open));
+    // ManagedOverlayScheduled.setCustomMarkerRenderer(setManagedOverlayMarker(ReportStatus.Scheduled));
+    // ManagedOverlayInProgress.setCustomMarkerRenderer(setManagedOverlayMarker(ReportStatus.InProgress));
+    // ManagedOverlayClosed.setCustomMarkerRenderer(setManagedOverlayMarker(ReportStatus.Closed));
 
     if (myLocationOverlay != null)
     {
@@ -109,38 +107,38 @@ public class PoiReportMapActivity
       {
         openDataPois = ReparonsParisServices.getInstance().getOpenDataPois(poiType.getOpenDataDataSetId(), poiType.getOpenDataTypeId(),
             myLocationOverlay.getMyLocation().getLatitudeE6() / 1E6, myLocationOverlay.getMyLocation().getLongitudeE6() / 1E6, 10000);
-        poiReports = ReparonsParisServices.getInstance().getPoiReports(fromCache, poiType.getOpenDataDataSetId(), poiType.getOpenDataTypeId(),
-            poiType.getOpenDataSource(), poiType.getPoiTypeFolderUid(), "1.23,4.56", "7.89,0.12");
+        // poiReports = ReparonsParisServices.getInstance().getPoiReports(fromCache, poiType.getOpenDataDataSetId(), poiType.getOpenDataTypeId(),
+        // poiType.getOpenDataSource(), poiType.getPoiTypeFolderUid(), "1.23,4.56", "7.89,0.12");
       }
       catch (Exception exception)
       {
         throw new BusinessObjectUnavailableException(exception);
       }
 
-      for (PoiReport poiReportItem : poiReports)
+      // for (PoiReport poiReportItem : poiReports)
       {
         for (OpenDataPoi openDataPoisItem : openDataPois)
         {
-          if (openDataPoisItem.getDataSetId().equals(poiReportItem.getOpenDataPoiId()))
-          {
-            switch (poiReportItem.getReportStatus())
-            {
-            case Open:
-              ManagedOverlayOpen.createItem(new GeoPoint(openDataPoisItem.getLatitudeE6(), openDataPoisItem.getLongitudeE6()));
-              break;
-            case Scheduled:
-              ManagedOverlayScheduled.createItem(new GeoPoint(openDataPoisItem.getLatitudeE6(), openDataPoisItem.getLongitudeE6()));
-              break;
-            case InProgress:
-              ManagedOverlayInProgress.createItem(new GeoPoint(openDataPoisItem.getLatitudeE6(), openDataPoisItem.getLongitudeE6()));
-              break;
-            case Closed:
-              ManagedOverlayClosed.createItem(new GeoPoint(openDataPoisItem.getLatitudeE6(), openDataPoisItem.getLongitudeE6()));
-              break;
-            }
-          }
-          else
-            PoiManagedOverlay.createItem(new GeoPoint(openDataPoisItem.getLatitudeE6(), openDataPoisItem.getLongitudeE6()));
+          // if (openDataPoisItem.getDataSetId().equals(poiReportItem.getOpenDataPoiId()))
+          // {
+          // switch (poiReportItem.getReportStatus())
+          // {
+          // case Open:
+          // ManagedOverlayOpen.createItem(new GeoPoint(openDataPoisItem.getLatitudeE6(), openDataPoisItem.getLongitudeE6()));
+          // break;
+          // case Scheduled:
+          // ManagedOverlayScheduled.createItem(new GeoPoint(openDataPoisItem.getLatitudeE6(), openDataPoisItem.getLongitudeE6()));
+          // break;
+          // case InProgress:
+          // ManagedOverlayInProgress.createItem(new GeoPoint(openDataPoisItem.getLatitudeE6(), openDataPoisItem.getLongitudeE6()));
+          // break;
+          // case Closed:
+          // ManagedOverlayClosed.createItem(new GeoPoint(openDataPoisItem.getLatitudeE6(), openDataPoisItem.getLongitudeE6()));
+          // break;
+          // }
+          // }
+          // else
+          PoiManagedOverlay.createItem(new GeoPoint(openDataPoisItem.getLatitudeE6(), openDataPoisItem.getLongitudeE6()));
         }
       }
 
@@ -170,7 +168,7 @@ public class PoiReportMapActivity
           public void run()
           {
             mapController.animateTo(myLocationOverlay.getMyLocation());
-            mapController.setZoom(15);
+            mapController.setZoom(17);
             refreshBusinessObjectsAndDisplay();
           }
         });
@@ -182,6 +180,8 @@ public class PoiReportMapActivity
 
     PoiManagedOverlay = overlayManager.createOverlay("POI", default_marker);
     PoiManagedOverlay.createItem(new GeoPoint(-17540798, -149549241), "Point fictif", "Initialisation OverlayManager");
+
+    PoiManagedOverlay.setCustomMarkerRenderer(setManagedOverlayMarker(ReportStatus.Open));
 
     overlayManager.populate();
     PoiManagedOverlay.setOnOverlayGestureListener(this);
@@ -199,9 +199,9 @@ public class PoiReportMapActivity
         Bitmap infoCustomMarker = null;
         switch (status)
         {
-        // case Open:
-        // infoCustomMarker
-        // break;
+        case Open:
+          infoCustomMarker = ((BitmapDrawable) getResources().getDrawable(getResources().getIdentifier("@drawable/settings", null, getPackageName()))).getBitmap();
+          break;
         // case Scheduled:
         // infoCustomMarker
         // break;
@@ -218,7 +218,8 @@ public class PoiReportMapActivity
         canvas.drawBitmap(infoCustomMarker, 0.f, 0.f, null);
 
         BitmapDrawable bd = new BitmapDrawable(poiCustomMarker);
-        return bd;
+        bd.setBounds(0, 0, bd.getIntrinsicWidth(), bd.getIntrinsicHeight());
+        return null;
       }
     };
   }
