@@ -14,6 +14,7 @@ import net.team10.bo.Account;
 import net.team10.bo.PoiReport;
 import net.team10.bo.PoiReport.ReportKind;
 import net.team10.bo.PoiReport.ReportSeverity;
+import net.team10.bo.PoiReportStatement;
 import net.team10.bo.PoiType;
 import android.app.Activity;
 import android.content.Intent;
@@ -87,14 +88,16 @@ public final class HomeActivity
             final PoiType poiType = poiTypes.get(0);
             final double latitude = 48.8566;
             final double longitude = 2.3522;
-            final List<OpenDataPoi> openDataPois = ReparonsParisServices.getInstance().getOpenDataPois(poiType.getOpenDataDataSetId(),
-                poiType.getOpenDataTypeId(), latitude, longitude, 10000);
-            final List<PoiReport> poiReports = ReparonsParisServices.getInstance().getPoiReports(false, poiType.getOpenDataDataSetId(), poiType.getOpenDataTypeId(), poiType.getOpenDataSource(),
-                poiType.getUid(), latitude + .02, longitude - .02, latitude - 0.02, longitude + 0.02);
+            final List<OpenDataPoi> openDataPois = ReparonsParisServices.getInstance().getOpenDataPois(false, poiType.getOpenDataDataSetId(),
+                null, latitude, longitude, 10000);
             final OpenDataPoi openDataPoi = openDataPois.get(0);
             final InputStream photoInputStream = null;// new ByteArrayInputStream(new byte[] { 1, 2, 3, 4 });
             ReparonsParisServices.getInstance().postPoiReportStatement(account.getUid(), poiType.getUid(), ReportKind.Broken, ReportSeverity.Major,
                 openDataPoi.getPoiId(), "comment", photoInputStream);
+            final List<PoiReport> poiReports = ReparonsParisServices.getInstance().getPoiReports(false, poiType.getOpenDataDataSetId(),
+                poiType.getOpenDataTypeId(), poiType.getOpenDataSource(), poiType.getUid(), latitude + .02, longitude - .02, latitude - 0.02, longitude + 0.02);
+            final PoiReport poiReport = poiReports.get(0);
+            final List<PoiReportStatement> poiReportStatements = ReparonsParisServices.getInstance().getPoiReportStatements(false, poiReport.getUid());
           }
         });
 

@@ -61,7 +61,7 @@ public class PoiReportMapActivity
 
       try
       {
-        openDataPois = ReparonsParisServices.getInstance().getOpenDataPois(poiType.getOpenDataDataSetId(), poiType.getOpenDataTypeId(),
+        openDataPois = ReparonsParisServices.getInstance().getOpenDataPois(true, poiType.getOpenDataDataSetId(), poiType.getOpenDataTypeId(),
             myLocationOverlay.getMyLocation().getLatitudeE6() / 1E6, myLocationOverlay.getMyLocation().getLongitudeE6() / 1E6, 10000);
       }
       catch (Exception exception)

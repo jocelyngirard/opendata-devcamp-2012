@@ -180,7 +180,33 @@ public final class PoiReportResources
       }
       catch (Exception exception)
       {
-        throw handleException(exception, "Could not record a POI report");
+        throw handleException(exception, "A problem occurred while requesting the POI report");
+      }
+    }
+
+  }
+
+  public final static class PoiReportStatementsResource
+      extends ReparonsParisBasisResource
+  {
+
+    @Get
+    public Representation get(Variant variant)
+        throws ResourceException
+    {
+      final String poiReportUid = (String) getRequest().getAttributes().get("poiReportUid");
+      if (logger.isLoggable(Level.INFO))
+      {
+        logger.info("Asking the POI report statements regarding the POI report with UID " + poiReportUid + ")");
+      }
+
+      try
+      {
+        return generateObjectJsonRepresentation(ReparonsParisServices.getInstance().getPoiReportStatements(poiReportUid), "The POI report statements");
+      }
+      catch (Exception exception)
+      {
+        throw handleException(exception, "A problem occurred while requesting the POI report statements");
       }
     }
 

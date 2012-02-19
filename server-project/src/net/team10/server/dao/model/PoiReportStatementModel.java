@@ -9,7 +9,11 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+import net.team10.bo.Account;
+import net.team10.bo.PoiReportStatement;
+
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 
 /**
  * @author Édouard Mercier
@@ -48,6 +52,36 @@ public final class PoiReportStatementModel
     this.accountUid = accountUid;
     this.creationDate = creationDate;
     this.comment = comment;
+  }
+
+  public String getUid()
+  {
+    return KeyFactory.keyToString(key);
+  }
+
+  public final String getPoiReportUid()
+  {
+    return poiReportUid;
+  }
+
+  public final String getAccountUid()
+  {
+    return accountUid;
+  }
+
+  public final Date getCreationDate()
+  {
+    return creationDate;
+  }
+
+  public final String getComment()
+  {
+    return comment;
+  }
+
+  public PoiReportStatement toPojo(Account account)
+  {
+    return new PoiReportStatement(getUid(), getPoiReportUid(), account, getCreationDate(), getComment());
   }
 
 }
