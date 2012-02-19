@@ -50,6 +50,7 @@ public class CreatePoiReportActivity extends SmartFragmentActivity<TitleBar.Titl
 	private  Account account;
 	private OpenDataPoi openDataPoi;
 	private PoiType poiType;
+	private ReportKind reportKind;
 
 	private ArrayAdapter<String> adapterPlaceType;
 	
@@ -190,7 +191,7 @@ public class CreatePoiReportActivity extends SmartFragmentActivity<TitleBar.Titl
 		if(view == done)
 		{
 		    final View confirlDialogLayout = getLayoutInflater().inflate(R.layout.confirm_dialog, null);
-			CreatePoiReportActivity.createConfirmationDialog(CreatePoiReportActivity.this, CreatePoiReportActivity.this, confirlDialogLayout, account, poiType, openDataPoi, photoInputStream).show();
+			CreatePoiReportActivity.createConfirmationDialog(CreatePoiReportActivity.this, CreatePoiReportActivity.this, confirlDialogLayout, account,reportKind, poiType, openDataPoi, photoInputStream).show();
 		}
 		
 		else if( view == photo)
@@ -203,7 +204,7 @@ public class CreatePoiReportActivity extends SmartFragmentActivity<TitleBar.Titl
 		    new AlertDialog.Builder(view.getContext()).setTitle(R.string.ConfirmDialog_titleReportKind).setSingleChoiceItems(adapterPlaceType, 0,
 		              new DialogInterface.OnClickListener()
 		              {
-						private ReportKind reportKind;
+						
 
 						public void onClick(DialogInterface dialog, int which) {
 							  dialog.dismiss();
@@ -221,7 +222,7 @@ public class CreatePoiReportActivity extends SmartFragmentActivity<TitleBar.Titl
 		}
 	}
 	
-	  static Dialog createConfirmationDialog(final Activity activity, final Context context, View view, final Account account, final PoiType poiType, final OpenDataPoi openDataPoi, final InputStream photoInputStream)
+	  static Dialog createConfirmationDialog(final Activity activity, final Context context, View view, final Account account, final  ReportKind reportKind, final PoiType poiType, final OpenDataPoi openDataPoi, final InputStream photoInputStream)
 	  {
 	    final EditText commentField = (EditText) view.findViewById(R.id.commentField);
 	    final CheckBox twiterCheck = (CheckBox) view.findViewById(R.id.checkBox);
@@ -230,7 +231,7 @@ public class CreatePoiReportActivity extends SmartFragmentActivity<TitleBar.Titl
 	        {
 	          public void onClick(DialogInterface dialog, int which)
 	          {
-	        	  postReportPoi(context, account, poiType,openDataPoi, photoInputStream, commentField);
+	        	  postReportPoi(context, account, poiType, reportKind,openDataPoi, photoInputStream, commentField);
 	          }
 	        }).setNegativeButton(R.string.ConfirmDialog_tcancel, new DialogInterface.OnClickListener()
 	    {
@@ -241,7 +242,7 @@ public class CreatePoiReportActivity extends SmartFragmentActivity<TitleBar.Titl
 	    }).create();
 	  }
 	  
-	  public static void postReportPoi(final Context context, final Account account, final PoiType poiType, final OpenDataPoi openDataPoi, final InputStream photoInputStream, final EditText commentField)
+	  public static void postReportPoi(final Context context, final Account account, final PoiType poiType,final ReportKind reportType,  final OpenDataPoi openDataPoi, final InputStream photoInputStream, final EditText commentField)
 	  {
 		  
 		     final ProgressDialog progressDialog = new ProgressDialog(context);
@@ -249,17 +250,15 @@ public class CreatePoiReportActivity extends SmartFragmentActivity<TitleBar.Titl
 		      progressDialog.setIndeterminate(true);
 		      progressDialog.show();
 
-	/*	   SmartCommands.execute(new SmartCommands.ProgressGuardedCommand(activity, null, progressDialog, "Could not save the member properly") 
+	 SmartCommands.execute(new GuardedCommand<Activity>((Activity) context) 
 		   {
-				
 				@Override
-				protected void runGuardedProgress() throws Exception {
-
-					ReparonsParisServices.getInstance().postPoiReportStatement(account.getUid(), poiType.getUid(), ReportKind.Broken, ReportSeverity.Major,
+				protected void runGuarded() throws Exception {
+					ReparonsParisServices.getInstance().postPoiReportStatement(account.getUid(), poiType.getUid(), reportType, ReportSeverity.Major,
 					        openDataPoi.getPoiId(), commentField.getText().toString(), photoInputStream);
 					
 				}
-			});*/
+			});
 	  }
 	  
 
