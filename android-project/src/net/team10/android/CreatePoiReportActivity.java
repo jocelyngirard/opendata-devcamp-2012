@@ -22,12 +22,16 @@ import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.RatingBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.smartnsoft.droid4me.app.SmartCommands;
 import com.smartnsoft.droid4me.app.SmartCommands.GuardedCommand;
@@ -46,6 +50,8 @@ public class CreatePoiReportActivity extends SmartFragmentActivity<TitleBar.Titl
 	private  Account account;
 	private OpenDataPoi openDataPoi;
 	private PoiType poiType;
+
+	private ArrayAdapter<String> adapterPlaceType;
 	
 	@Override
 	  public void onActivityResult(int requestCode, int resultCode, Intent data)
@@ -128,6 +134,32 @@ public class CreatePoiReportActivity extends SmartFragmentActivity<TitleBar.Titl
 	{
 		photo.setOnClickListener(this);
 		done.setOnClickListener(this);
+		
+	    adapterPlaceType = new ArrayAdapter<String>(this, R.layout.report_kind_item_dialog_box, R.id.check_text, getResources().getStringArray(
+	            R.array.reportKind))
+	        {
+	          @Override
+	          public View getView(int position, View convertView, ViewGroup parent)
+	          {
+	            if (convertView == null)
+	            {
+	              convertView = getLayoutInflater().inflate(R.layout.report_kind_item_dialog_box, null);
+	            }
+	            final TextView content = (TextView) convertView.findViewById(R.id.check_text);
+	            final RadioButton radio = (RadioButton) convertView.findViewById(R.id.radiobutton);
+	            final ImageView image = (ImageView) convertView.findViewById(R.id.icon);
+	            content.setText(adapterPlaceType.getItem(position));
+	            final ReportKind aPlaceType = ReportKind.values()[position];
+	            //image.setTileImageResource(FamilyWallApplication.getPlaceResourceId(aPlaceType, false));
+	            radio.setFocusable(false);
+	            radio.setClickable(false);
+	    //        boolean checked = placeIconButton.getTag() != null && getItem(position).equals(placeIconButton.getTag()) ? true
+	       //         : placeIconButton.getTag() == null && position == 0 ? true : false;
+	      //      radio.setChecked(checked);
+	            return convertView;
+	          }
+	        };
+	        //placeIconButton.setTileImageResource(R.drawable.icon_category_more);
 	}
 	
 	public void onSynchronizeDisplayObjects() {
@@ -142,10 +174,28 @@ public class CreatePoiReportActivity extends SmartFragmentActivity<TitleBar.Titl
 			CreatePoiReportActivity.createConfirmationDialog(CreatePoiReportActivity.this, confirlDialogLayout, account, poiType, openDataPoi, photoInputStream).show();
 		}
 		
-		
 		else if( view == photo)
 		{
 			startActivityForResult(new Intent(Intent.ACTION_PICK).setType("image/*"), CreatePoiReportActivity.PICK_IMAGE_REQUEST_CODE);
+		}
+		
+		else if(view == type)
+		{
+		  /*    new AlertDialog.Builder(view.getContext()).setTitle(R.string.HtcAddPLace_select_place_icon).setSingleChoiceItems(adapterPlaceType, 0,
+		              new DialogInterface.OnClickListener()
+		              {
+						private ReportKind reportKind;
+
+						public void onClick(DialogInterface dialog, int which) {
+							  dialog.dismiss();
+			                  reportKind = ReportKind.values()[which];
+			                  String[] type = getResources().getStringArray(
+			                      R.array.reportKind);
+			                  //placeIconButton.setTileImageResource(FamilyWallApplication.getPlaceResourceId(placeType, false));
+			                  placeIconButton.setTag(type[which]);
+							
+						}
+		              }).show();*/
 		}
 	}
 	

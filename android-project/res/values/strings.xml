@@ -33,4 +33,11 @@
   <string name="ImagePicker_toast_onlyAttachPhoto">"On ne peut que prendre des photos"</string>
   <string name="ImagePicker_toast_cannotFoundGallery">"Impossible d'atteindre la galery"</string>
   
+  
+    <!-- The available place types -->
+  <string-array name="reportKind">
+    <item>Dégradation</item>
+    <item>Vole</item>
+    <item>Manquant</item>
+  </string-array>
 </resources>

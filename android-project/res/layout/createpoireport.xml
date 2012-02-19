@@ -59,7 +59,7 @@
 	    android:layout_height="wrap_content"
 	    android:layout_gravity="center_horizontal"
 	    android:layout_marginTop="10dip"
-	    android:numStars="5"
+	    android:numStars="3"
 	    android:rating="1"
 	  />
 	</LinearLayout>

@@ -8,6 +8,11 @@
 package net.team10.android;
 
 public final class R {
+    public static final class array {
+        /**  The available place types 
+         */
+        public static final int reportKind=0x7f090000;
+    }
     public static final class attr {
         /** <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
 "<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
@@ -97,42 +102,45 @@ containing a value of this type.
         public static final int title_bar_refresh=0x7f02000d;
     }
     public static final class id {
-        public static final int center=0x7f0a000f;
-        public static final int checkBox=0x7f0a0002;
-        public static final int commentField=0x7f0a0001;
-        public static final int createPoiReportFragment=0x7f0a000b;
-        public static final int gravity=0x7f0a0009;
-        public static final int gravityLabel=0x7f0a0003;
-        public static final int homeFragment=0x7f0a000d;
-        public static final int ok=0x7f0a000a;
-        public static final int photo=0x7f0a0006;
-        public static final int photoLabel=0x7f0a0005;
-        public static final int poiReportsHstoryFragment=0x7f0a000e;
-        public static final int reportButton=0x7f0a000c;
-        public static final int smartnsoftIllustration=0x7f0a0011;
-        public static final int text=0x7f0a0004;
-        public static final int titleBar=0x7f0a0012;
-        public static final int titleBarAction1=0x7f0a001d;
-        public static final int titleBarAction1Block=0x7f0a001c;
-        public static final int titleBarAction2=0x7f0a001f;
-        public static final int titleBarAction2Block=0x7f0a001e;
-        public static final int titleBarAction3=0x7f0a0021;
-        public static final int titleBarAction3Block=0x7f0a0020;
-        public static final int titleBarAction4=0x7f0a0023;
-        public static final int titleBarAction4Block=0x7f0a0022;
-        public static final int titleBarHome=0x7f0a0014;
-        public static final int titleBarHomeBlock=0x7f0a0013;
-        public static final int titleBarRefresh=0x7f0a001a;
-        public static final int titleBarRefreshBlock=0x7f0a0018;
-        public static final int titleBarRefreshProgress=0x7f0a001b;
-        public static final int titleBarRefreshSeparator=0x7f0a0019;
-        public static final int titleBarTitleBlock=0x7f0a0015;
-        public static final int titleBarTitleImage=0x7f0a0016;
-        public static final int titleBarTitleText=0x7f0a0017;
-        public static final int topLogo=0x7f0a0010;
-        public static final int type=0x7f0a0008;
-        public static final int typeLabel=0x7f0a0007;
-        public static final int webView=0x7f0a0000;
+        public static final int center=0x7f0b000f;
+        public static final int checkBox=0x7f0b0002;
+        public static final int check_text=0x7f0b0013;
+        public static final int commentField=0x7f0b0001;
+        public static final int createPoiReportFragment=0x7f0b000b;
+        public static final int gravity=0x7f0b0009;
+        public static final int gravityLabel=0x7f0b0003;
+        public static final int homeFragment=0x7f0b000d;
+        public static final int icon=0x7f0b0012;
+        public static final int ok=0x7f0b000a;
+        public static final int photo=0x7f0b0006;
+        public static final int photoLabel=0x7f0b0005;
+        public static final int poiReportsHstoryFragment=0x7f0b000e;
+        public static final int radiobutton=0x7f0b0014;
+        public static final int reportButton=0x7f0b000c;
+        public static final int smartnsoftIllustration=0x7f0b0011;
+        public static final int text=0x7f0b0004;
+        public static final int titleBar=0x7f0b0015;
+        public static final int titleBarAction1=0x7f0b0020;
+        public static final int titleBarAction1Block=0x7f0b001f;
+        public static final int titleBarAction2=0x7f0b0022;
+        public static final int titleBarAction2Block=0x7f0b0021;
+        public static final int titleBarAction3=0x7f0b0024;
+        public static final int titleBarAction3Block=0x7f0b0023;
+        public static final int titleBarAction4=0x7f0b0026;
+        public static final int titleBarAction4Block=0x7f0b0025;
+        public static final int titleBarHome=0x7f0b0017;
+        public static final int titleBarHomeBlock=0x7f0b0016;
+        public static final int titleBarRefresh=0x7f0b001d;
+        public static final int titleBarRefreshBlock=0x7f0b001b;
+        public static final int titleBarRefreshProgress=0x7f0b001e;
+        public static final int titleBarRefreshSeparator=0x7f0b001c;
+        public static final int titleBarTitleBlock=0x7f0b0018;
+        public static final int titleBarTitleImage=0x7f0b0019;
+        public static final int titleBarTitleText=0x7f0b001a;
+        public static final int topLogo=0x7f0b0010;
+        public static final int type=0x7f0b0008;
+        public static final int typeLabel=0x7f0b0007;
+        public static final int webView=0x7f0b0000;
     }
     public static final class layout {
         public static final int about=0x7f030000;
@@ -145,7 +153,8 @@ containing a value of this type.
         public static final int poireportslist_fragment=0x7f030007;
         public static final int poitypechooser_fragment=0x7f030008;
         public static final int reparonsparis_splash_screen=0x7f030009;
-        public static final int title_bar=0x7f03000a;
+        public static final int report_kind_item_dialog_box=0x7f03000a;
+        public static final int title_bar=0x7f03000b;
     }
     public static final class raw {
         public static final int about=0x7f050000;
@@ -178,23 +187,23 @@ containing a value of this type.
         public static final int unhandledProblem=0x7f080003;
     }
     public static final class style {
-        public static final int Theme_Dialog_ReparonsParis=0x7f090009;
+        public static final int Theme_Dialog_ReparonsParis=0x7f0a0009;
         /** item name="android:tabWidgetStyle">@style/Widget.Button.Small.ReparonsParis</item
          */
-        public static final int Theme_ReparonsParis=0x7f090006;
-        public static final int Theme_ReparonsParis_NoTitle=0x7f090007;
-        public static final int Theme_ReparonsParis_NoTitle_Fullscreen=0x7f090008;
-        public static final int Theme_ReparonsParis_Transparent=0x7f09000a;
+        public static final int Theme_ReparonsParis=0x7f0a0006;
+        public static final int Theme_ReparonsParis_NoTitle=0x7f0a0007;
+        public static final int Theme_ReparonsParis_NoTitle_Fullscreen=0x7f0a0008;
+        public static final int Theme_ReparonsParis_Transparent=0x7f0a000a;
         /**  The application specific styles 
          */
-        public static final int bodyText=0x7f090005;
+        public static final int bodyText=0x7f0a0005;
         /**  The "Android 2.0" title bar 
          */
-        public static final int titleBar=0x7f090000;
-        public static final int titleBarBackground=0x7f090001;
-        public static final int titleBarButton=0x7f090002;
-        public static final int titleBarSeparator=0x7f090003;
-        public static final int titleBarText=0x7f090004;
+        public static final int titleBar=0x7f0a0000;
+        public static final int titleBarBackground=0x7f0a0001;
+        public static final int titleBarButton=0x7f0a0002;
+        public static final int titleBarSeparator=0x7f0a0003;
+        public static final int titleBarText=0x7f0a0004;
     }
     public static final class xml {
         public static final int settings=0x7f040000;
