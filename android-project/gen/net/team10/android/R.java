@@ -147,24 +147,25 @@ containing a value of this type.
         public static final int commentField=0x7f0b0001;
         public static final int createPoiReportFragment=0x7f0b000b;
         public static final int description=0x7f0b0018;
-        public static final int gravity=0x7f0b0009;
+        public static final int gravity=0x7f0b000a;
         public static final int gravityLabel=0x7f0b0003;
         public static final int homeFragment=0x7f0b0011;
         public static final int icon=0x7f0b0016;
+        public static final int layout=0x7f0b0005;
         public static final int listButton=0x7f0b0013;
         public static final int mairieParis=0x7f0b0010;
         public static final int mapButton=0x7f0b0012;
-        public static final int ok=0x7f0b000a;
+        public static final int ok=0x7f0b0004;
         public static final int paypalButton=0x7f0b000f;
-        public static final int photo=0x7f0b0006;
-        public static final int photoLabel=0x7f0b0005;
+        public static final int photo=0x7f0b0008;
+        public static final int photoLabel=0x7f0b0007;
         public static final int poiReportsHstoryFragment=0x7f0b0014;
         public static final int poiTypeChooserFragment=0x7f0b0015;
         public static final int radiobutton=0x7f0b001d;
         public static final int reportButton=0x7f0b000c;
         public static final int settingsButton=0x7f0b000e;
         public static final int smartnsoftIllustration=0x7f0b001b;
-        public static final int text=0x7f0b0004;
+        public static final int text=0x7f0b0006;
         public static final int title=0x7f0b0017;
         public static final int titleBar=0x7f0b001e;
         public static final int titleBarAction1=0x7f0b0029;
@@ -185,8 +186,7 @@ containing a value of this type.
         public static final int titleBarTitleImage=0x7f0b0022;
         public static final int titleBarTitleText=0x7f0b0023;
         public static final int topLogo=0x7f0b001a;
-        public static final int type=0x7f0b0008;
-        public static final int typeLabel=0x7f0b0007;
+        public static final int type=0x7f0b0009;
         public static final int webView=0x7f0b0000;
     }
     public static final class layout {
