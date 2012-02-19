@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.team10.android.CreatePoiReportActivity;
 import net.team10.android.PoiReportMapActivity;
 import net.team10.android.R;
 import net.team10.android.bo.OpenDataPoi;
@@ -81,7 +82,7 @@ public class PoiReportsListFragment
     {
       if (objectEvent == ObjectEvent.Clicked)
       {
-        // return new Intent(getCheckedActivity(), MapActivity.class).putExtra(MapActivity.POI_TYPE, businessObject);
+        return new Intent(getCheckedActivity(), CreatePoiReportActivity.class).putExtra(CreatePoiReportActivity.POI, businessObject);
       }
       return super.computeIntent(activity, viewAttributes, view, businessObject, objectEvent, position);
     }
@@ -106,7 +107,8 @@ public class PoiReportsListFragment
 
     try
     {
-      openDataPois = ReparonsParisServices.getInstance().getOpenDataPois(poiType.getOpenDataDataSetId(), poiType.getOpenDataTypeId(), 48.8566, 2.3522, 10000);
+      openDataPois = ReparonsParisServices.getInstance().getOpenDataPois(true, poiType.getOpenDataDataSetId(), poiType.getOpenDataTypeId(), 48.8566, 2.3522,
+          10000);
       // final List<PoiReport> poiReports = ReparonsParisServices.getInstance().getPoiReports(fromCache, poiType.getOpenDataDataSetId(),
       // poiType.getOpenDataTypeId(), poiType.getOpenDataSource(), poiType.getPoiTypeFolderUid(), 1.23, 4.56, 7.89, 0.12);
     }
@@ -156,6 +158,12 @@ public class PoiReportsListFragment
       });
       builder.show();
     }
+  }
+
+  @Override
+  public void onSynchronizeDisplayObjects()
+  {
+    super.onSynchronizeDisplayObjects();
   }
 
   public void onTitleBarRefresh()

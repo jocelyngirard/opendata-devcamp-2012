@@ -63,6 +63,7 @@ public final class PoiReportModel
 
   @Persistent
   private Blob photo;
+
   public PoiReportModel()
   {
   }

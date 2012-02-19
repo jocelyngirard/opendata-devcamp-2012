@@ -105,7 +105,7 @@ public class PoiReportMapActivity
 
       try
       {
-        openDataPois = ReparonsParisServices.getInstance().getOpenDataPois(poiType.getOpenDataDataSetId(), poiType.getOpenDataTypeId(),
+        openDataPois = ReparonsParisServices.getInstance().getOpenDataPois(true, poiType.getOpenDataDataSetId(), poiType.getOpenDataTypeId(),
             myLocationOverlay.getMyLocation().getLatitudeE6() / 1E6, myLocationOverlay.getMyLocation().getLongitudeE6() / 1E6, 10000);
         // poiReports = ReparonsParisServices.getInstance().getPoiReports(fromCache, poiType.getOpenDataDataSetId(), poiType.getOpenDataTypeId(),
         // poiType.getOpenDataSource(), poiType.getPoiTypeFolderUid(), "1.23,4.56", "7.89,0.12");

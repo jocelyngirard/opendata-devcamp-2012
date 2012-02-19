@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -251,6 +252,11 @@ public final class ReparonsParisServices
   {
   }
 
+  public final static class PoiReportStatementsResponse
+      extends JsonTemplateResponse<List<PoiReportStatement>>
+  {
+  }
+
   private static volatile ReparonsParisServices instance;
 
   // We accept the "out-of-order writes" case
@@ -279,14 +285,54 @@ public final class ReparonsParisServices
     return Constants.WEBSERVICES_HTML_ENCODING;
   }
 
-  public List<OpenDataPoi> getOpenDataPois(String openDataDataSetId, String openDataTypeId, double latitude, double longitude, int beamInMeters)
+  private final BackedWSUriStreamParser.BackedUriStreamedMap<List<OpenDataPoi>, OpenDataParameters, JSONException, PersistenceException> openDataPoisStreamParser = new BackedWSUriStreamParser.BackedUriStreamedMap<List<OpenDataPoi>, OpenDataParameters, JSONException, PersistenceException>(Persistence.getInstance(0), this)
+  {
+
+    public KeysAggregator<OpenDataParameters> computeUri(OpenDataParameters parameter)
+    {
+      final Map<String, String> uriParameters = new HashMap<String, String>();
+      uriParameters.put("format", "json");
+      uriParameters.put("pretty_print", "false");
+      // uriParameters.put("disp", "geo");
+      uriParameters.put("location", parameter.latidude + "," + parameter.longitude);
+      uriParameters.put("distance", Integer.toString(parameter.beamInMeters));
+      return SimpleIOStreamerSourceKey.fromUriStreamerSourceKey(
+          new HttpCallTypeAndBody(computeUri(Constants.OPEN_DATA_SOFT_URL, parameter.openDataDataSetId, uriParameters)), null);
+    }
+
+    public List<OpenDataPoi> parse(OpenDataParameters parameter, InputStream inputStream)
+        throws JSONException
+    {
+      final List<OpenDataPoi> pois = deserializeJson(inputStream, PoiResponse.class).getPois();
+
+      // We filter by type id
+      if (parameter.openDataTypeId != null)
+      {
+        final Iterator<OpenDataPoi> iterator = pois.iterator();
+        while (iterator.hasNext())
+        {
+          final OpenDataPoi openDataPoi = (OpenDataPoi) iterator.next();
+          if (openDataPoi.getTypeId() != null && openDataPoi.getTypeId().equals(parameter.openDataTypeId) == false)
+          {
+            iterator.remove();
+          }
+        }
+      }
+      return pois;
+    }
+
+  };
+
+  public List<OpenDataPoi> getOpenDataPois(boolean fromCache, String openDataDataSetId, String openDataTypeId, double latitude, double longitude,
+      int beamInMeters)
       throws CacheException
   {
     if (log.isInfoEnabled())
     {
-      log.info("Retrieving the list of open-data POIs");
+      log.info("Retrieving the list of open-data POIs for the dataset with id '" + openDataDataSetId + "', for the type id '" + openDataDataSetId + "'");
     }
-    return poisStreamParser.backed.getMemoryValue(true, null, new OpenDataParameters(openDataDataSetId, openDataTypeId, latitude, longitude, beamInMeters));
+    return openDataPoisStreamParser.backed.getMemoryValue(fromCache, null,
+        new OpenDataParameters(openDataDataSetId, openDataTypeId, latitude, longitude, beamInMeters));
   }
 
   public Account createAccount(String accountUid, String nickname)
@@ -374,28 +420,32 @@ public final class ReparonsParisServices
         new PoiReportParameters(openDataDataSetId, openDataTypeId, openDataSource, poiTypeUid, topLeftLatitude, topLeftLongitude, bottomRightLatitude, bottomRightLongitude));
   }
 
-  private final BackedWSUriStreamParser.BackedUriStreamedMap<List<OpenDataPoi>, OpenDataParameters, JSONException, PersistenceException> poisStreamParser = new BackedWSUriStreamParser.BackedUriStreamedMap<List<OpenDataPoi>, OpenDataParameters, JSONException, PersistenceException>(Persistence.getInstance(0), this)
+  private final BackedWSUriStreamParser.BackedUriStreamedMap<List<PoiReportStatement>, String, JSONException, PersistenceException> poiReportStatementsStreamParser = new BackedWSUriStreamParser.BackedUriStreamedMap<List<PoiReportStatement>, String, JSONException, PersistenceException>(Persistence.getInstance(0), this)
   {
 
-    public KeysAggregator<OpenDataParameters> computeUri(OpenDataParameters parameter)
+    public KeysAggregator<String> computeUri(String parameter)
     {
-      final Map<String, String> uriParameters = new HashMap<String, String>();
-      uriParameters.put("format", "json");
-      uriParameters.put("pretty_print", "false");
-      // uriParameters.put("disp", "geo");
-      uriParameters.put("location", parameter.latidude + "," + parameter.longitude);
-      uriParameters.put("distance", Integer.toString(parameter.beamInMeters));
       return SimpleIOStreamerSourceKey.fromUriStreamerSourceKey(
-          new HttpCallTypeAndBody(computeUri(Constants.OPEN_DATA_SOFT_URL, parameter.openDataDataSetId, uriParameters)), null);
+          new HttpCallTypeAndBody(computeUri(Constants.API_URL, "poireports/" + parameter + "/statements", null)), null);
     }
 
-    public List<OpenDataPoi> parse(OpenDataParameters parameter, InputStream inputStream)
+    public List<PoiReportStatement> parse(String parameter, InputStream inputStream)
         throws JSONException
     {
-      return deserializeJson(inputStream, PoiResponse.class).getPois();
+      return deserializeJson(inputStream, PoiReportStatementsResponse.class).content;
     }
 
   };
+
+  public List<PoiReportStatement> getPoiReportStatements(boolean fromCache, String poiReportUid)
+      throws CacheException
+  {
+    if (log.isInfoEnabled())
+    {
+      log.info("Asking for the POI report statements regarding the POI report with UID '" + poiReportUid + "'");
+    }
+    return poiReportStatementsStreamParser.backed.getMemoryValue(fromCache, null, poiReportUid);
+  }
 
   public void postPoiReportStatement(String accountUid, String poiTypeUid, ReportKind reportKind, ReportSeverity reportSeverity, String openDataPoiId,
       String comment, InputStream photoInputStream)
@@ -429,7 +479,7 @@ public final class ReparonsParisServices
     try
     {
       postParams.add(new BasicNameValuePair("poiReport", serializeObject(new PoiReport(null, openDataPoiId, poiTypeUid, new Account(accountUid, null, null), null, null, null, null, reportKind, reportSeverity))));
-      postParams.add(new BasicNameValuePair("poiReportStatement", serializeObject(new PoiReportStatement(null, null, null, null, comment, null))));
+      postParams.add(new BasicNameValuePair("poiReportStatement", serializeObject(new PoiReportStatement(null, null, null, null, comment))));
       entity = new UrlEncodedFormEntity(postParams);
     }
     catch (Exception exception)

@@ -25,17 +25,14 @@ public final class PoiReportStatement
 
   private final String comment;
 
-  private final String photoUrl;
-
   public PoiReportStatement(@JsonProperty("uid") String uid, @JsonProperty("poiReportUid") String poiReportUid, @JsonProperty("account") Account account,
-      @JsonProperty("creationDate") Date creationDate, @JsonProperty("comment") String comment, @JsonProperty("photoUrl") String photoUrl)
+      @JsonProperty("creationDate") Date creationDate, @JsonProperty("comment") String comment)
   {
     this.uid = uid;
     this.poiReportUid = poiReportUid;
     this.account = account;
     this.creationDate = creationDate;
     this.comment = comment;
-    this.photoUrl = photoUrl;
   }
 
   @JsonProperty("uid")
@@ -66,12 +63,6 @@ public final class PoiReportStatement
   public String getComment()
   {
     return comment;
-  }
-
-  @JsonProperty("photoUrl")
-  public String getPhotoUrl()
-  {
-    return photoUrl;
   }
 
 }

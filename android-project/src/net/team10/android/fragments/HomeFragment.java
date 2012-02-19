@@ -120,6 +120,7 @@ public final class HomeFragment
       }
       else
       {
+        // startActivity(new Intent(getCheckedActivity(), PoiTypeChooserActivity.class));
         startActivity(new Intent(getCheckedActivity(), PoiTypeChooserActivity.class));
       }
     }

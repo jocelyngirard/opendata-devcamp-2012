@@ -80,6 +80,27 @@ public final class ReparonsParisServices
         bottomRightLatitude, bottomRightLongitude);
   }
 
+  public List<PoiReportStatement> getPoiReportStatements(String poiReportUid)
+  {
+    final List<PoiReportStatement> poiReportStatements = reparonsParisDal.getPoiReportStatements(poiReportUid);
+    Collections.sort(poiReportStatements, new Comparator<PoiReportStatement>()
+    {
+      public int compare(PoiReportStatement object1, PoiReportStatement object2)
+      {
+        if (object1.getCreationDate().before(object2.getCreationDate()) == true)
+        {
+          return 1;
+        }
+        else if (object1.getCreationDate().before(object2.getCreationDate()) == false)
+        {
+          return -1;
+        }
+        return object1.getAccount().getNickname().compareTo(object2.getAccount().getNickname());
+      }
+    });
+    return poiReportStatements;
+  }
+
   public void declarePoiReportStatement(String accountUid, PoiReport poiReport, PoiReportStatement poiReportStatement, Blob imageBlob)
       throws BadAccountException
   {

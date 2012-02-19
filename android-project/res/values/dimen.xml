@@ -9,4 +9,7 @@
   <dimen name="bodyText">14dip</dimen>
   <dimen name="titleText">18dip</dimen>
 
+  <dimen name="avatarLargeSize">53.34dip</dimen>
+  <dimen name="resizedSentPictureWidth">640px</dimen>
+  <dimen name="resizedSentPictureHeight">480px</dimen>
 </resources>

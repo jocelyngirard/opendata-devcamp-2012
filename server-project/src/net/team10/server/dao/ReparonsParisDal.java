@@ -178,6 +178,55 @@ public final class ReparonsParisDal
     }
   }
 
+  public List<PoiReportStatement> getPoiReportStatements(String poiReportUid)
+  {
+    final TransactionWrapper tw = new TransactionWrapper();
+    try
+    {
+
+      final List<PoiReportStatementModel> poiReportStatementModels;
+      {
+        final Query query = tw.persistenceManager.newQuery(PoiReportStatementModel.class);
+        query.setFilter("poiReportUid == poiReportUidParameter");
+        query.declareParameters(String.class.getName() + " poiReportUidParameter");
+         poiReportStatementModels = (List<PoiReportStatementModel>) query.execute(poiReportUid);
+      }
+
+      // Now, we need to request the accounts
+      final Map<String, Account> accountsMap = new HashMap<String, Account>();
+      if (poiReportStatementModels.size() > 0)
+      {
+        final Set<String> accountUids = new HashSet<String>();
+        for (PoiReportStatementModel poiReportStatmentModel : poiReportStatementModels)
+        {
+          accountUids.add(poiReportStatmentModel.getAccountUid());
+        }
+        final Query query = tw.persistenceManager.newQuery(AccountModel.class);
+        query.setFilter("uidParameter.contains(uid)");
+        query.declareParameters(Collection.class.getName() + " uidParameter");
+        final List<AccountModel> accountModels = (List<AccountModel>) query.execute(accountUids);
+        for (AccountModel accountModel : accountModels)
+        {
+          if (accountsMap.containsKey(accountModel.getUid()) == false)
+          {
+            accountsMap.put(accountModel.getUid(), accountModel.toPojo());
+          }
+        }
+      }
+
+      final List<PoiReportStatement> poiReportStatements = new ArrayList<PoiReportStatement>();
+      for (PoiReportStatementModel poiReportStatementModel : poiReportStatementModels)
+      {
+        poiReportStatements.add(poiReportStatementModel.toPojo(accountsMap.get(poiReportStatementModel.getAccountUid())));
+      }
+      return poiReportStatements;
+    }
+    finally
+    {
+      tw.close();
+    }
+  }
+
   public void declarePoiReportStatement(String accountUid, PoiReport poiReport, PoiReportStatement poiReportStatement, Blob photoBlob)
       throws BadAccountException
   {
