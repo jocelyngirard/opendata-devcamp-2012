@@ -24,4 +24,13 @@
   <string name="PoiTypeChooser_enable_gps_messages">Le GPS n\'est pas actif sur votre terminal, veuillez l\'activer pour poursuivre.</string>
   <string name="PoiTypeChooser_enable_gps_valid_button">Activer le GPS</string>
 
+  <string name="ConfirmDialog_title">Confirmation</string>
+  <string name="ConfirmDialog_ok">OK</string>
+  <string name="ConfirmDialog_tcancel">Annuler</string>
+  <string name="ConfirmDialog_comment">Commenter...</string>
+  <string name="ConfirmDialog_twitter">Twitter</string>
+  
+  <string name="ImagePicker_toast_onlyAttachPhoto">"On ne peut que prendre des photos"</string>
+  <string name="ImagePicker_toast_cannotFoundGallery">"Impossible d'atteindre la galery"</string>
+  
 </resources>

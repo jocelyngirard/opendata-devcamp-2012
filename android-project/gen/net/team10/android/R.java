@@ -69,7 +69,10 @@ containing a value of this type.
         public static final int title_bar_separator=0x7f060001;
     }
     public static final class dimen {
+        public static final int avatarLargeSize=0x7f070005;
         public static final int bodyText=0x7f070003;
+        public static final int resizedSentPictureHeight=0x7f070007;
+        public static final int resizedSentPictureWidth=0x7f070006;
         /**  The "Android 2.0" title bar 
          */
         public static final int titleBarHeight=0x7f070000;
@@ -78,62 +81,86 @@ containing a value of this type.
         public static final int titleText=0x7f070004;
     }
     public static final class drawable {
-        public static final int droid4me_inside=0x7f020000;
-        public static final int droid4sample_splash_logo=0x7f020001;
-        public static final int icon=0x7f020002;
-        public static final int map_marker=0x7f020003;
-        public static final int poweredby_smartnsoft=0x7f020004;
-        public static final int reparonsparis_splash_logo=0x7f020005;
-        public static final int smartnsoft_illustration=0x7f020006;
-        public static final int title_bar_button_background=0x7f020007;
-        public static final int title_bar_button_background_disabled=0x7f020008;
-        public static final int title_bar_button_background_pressed=0x7f020009;
-        public static final int title_bar_button_background_selected=0x7f02000a;
-        public static final int title_bar_home=0x7f02000b;
-        public static final int title_bar_refresh=0x7f02000c;
+        public static final int camera=0x7f020000;
+        public static final int droid4me_inside=0x7f020001;
+        public static final int droid4sample_splash_logo=0x7f020002;
+        public static final int icon=0x7f020003;
+        public static final int map_marker=0x7f020004;
+        public static final int poweredby_smartnsoft=0x7f020005;
+        public static final int reparonsparis_splash_logo=0x7f020006;
+        public static final int smartnsoft_illustration=0x7f020007;
+        public static final int title_bar_button_background=0x7f020008;
+        public static final int title_bar_button_background_disabled=0x7f020009;
+        public static final int title_bar_button_background_pressed=0x7f02000a;
+        public static final int title_bar_button_background_selected=0x7f02000b;
+        public static final int title_bar_home=0x7f02000c;
+        public static final int title_bar_refresh=0x7f02000d;
     }
     public static final class id {
-        public static final int center=0x7f0a0003;
-        public static final int homeFragment=0x7f0a0002;
-        public static final int reportButton=0x7f0a0001;
-        public static final int smartnsoftIllustration=0x7f0a0005;
-        public static final int titleBar=0x7f0a0006;
-        public static final int titleBarAction1=0x7f0a0011;
-        public static final int titleBarAction1Block=0x7f0a0010;
-        public static final int titleBarAction2=0x7f0a0013;
-        public static final int titleBarAction2Block=0x7f0a0012;
-        public static final int titleBarAction3=0x7f0a0015;
-        public static final int titleBarAction3Block=0x7f0a0014;
-        public static final int titleBarAction4=0x7f0a0017;
-        public static final int titleBarAction4Block=0x7f0a0016;
-        public static final int titleBarHome=0x7f0a0008;
-        public static final int titleBarHomeBlock=0x7f0a0007;
-        public static final int titleBarRefresh=0x7f0a000e;
-        public static final int titleBarRefreshBlock=0x7f0a000c;
-        public static final int titleBarRefreshProgress=0x7f0a000f;
-        public static final int titleBarRefreshSeparator=0x7f0a000d;
-        public static final int titleBarTitleBlock=0x7f0a0009;
-        public static final int titleBarTitleImage=0x7f0a000a;
-        public static final int titleBarTitleText=0x7f0a000b;
-        public static final int topLogo=0x7f0a0004;
+        public static final int center=0x7f0a000f;
+        public static final int checkBox=0x7f0a0002;
+        public static final int commentField=0x7f0a0001;
+        public static final int createPoiReportFragment=0x7f0a000b;
+        public static final int gravity=0x7f0a0009;
+        public static final int gravityLabel=0x7f0a0003;
+        public static final int homeFragment=0x7f0a000d;
+        public static final int ok=0x7f0a000a;
+        public static final int photo=0x7f0a0006;
+        public static final int photoLabel=0x7f0a0005;
+        public static final int poiReportsHstoryFragment=0x7f0a000e;
+        public static final int reportButton=0x7f0a000c;
+        public static final int smartnsoftIllustration=0x7f0a0011;
+        public static final int text=0x7f0a0004;
+        public static final int titleBar=0x7f0a0012;
+        public static final int titleBarAction1=0x7f0a001d;
+        public static final int titleBarAction1Block=0x7f0a001c;
+        public static final int titleBarAction2=0x7f0a001f;
+        public static final int titleBarAction2Block=0x7f0a001e;
+        public static final int titleBarAction3=0x7f0a0021;
+        public static final int titleBarAction3Block=0x7f0a0020;
+        public static final int titleBarAction4=0x7f0a0023;
+        public static final int titleBarAction4Block=0x7f0a0022;
+        public static final int titleBarHome=0x7f0a0014;
+        public static final int titleBarHomeBlock=0x7f0a0013;
+        public static final int titleBarRefresh=0x7f0a001a;
+        public static final int titleBarRefreshBlock=0x7f0a0018;
+        public static final int titleBarRefreshProgress=0x7f0a001b;
+        public static final int titleBarRefreshSeparator=0x7f0a0019;
+        public static final int titleBarTitleBlock=0x7f0a0015;
+        public static final int titleBarTitleImage=0x7f0a0016;
+        public static final int titleBarTitleText=0x7f0a0017;
+        public static final int topLogo=0x7f0a0010;
+        public static final int type=0x7f0a0008;
+        public static final int typeLabel=0x7f0a0007;
         public static final int webView=0x7f0a0000;
     }
     public static final class layout {
         public static final int about=0x7f030000;
-        public static final int home=0x7f030001;
-        public static final int home_fragment=0x7f030002;
-        public static final int poireportslist_fragment=0x7f030003;
-        public static final int poitypechooser_fragment=0x7f030004;
-        public static final int reparonsparis_splash_screen=0x7f030005;
-        public static final int title_bar=0x7f030006;
+        public static final int confirm_dialog=0x7f030001;
+        public static final int createpoireport=0x7f030002;
+        public static final int createpoireport_fragment=0x7f030003;
+        public static final int home=0x7f030004;
+        public static final int home_fragment=0x7f030005;
+        public static final int poireportshistory_fragment=0x7f030006;
+        public static final int poireportslist_fragment=0x7f030007;
+        public static final int poitypechooser_fragment=0x7f030008;
+        public static final int reparonsparis_splash_screen=0x7f030009;
+        public static final int title_bar=0x7f03000a;
     }
     public static final class raw {
         public static final int about=0x7f050000;
     }
     public static final class string {
+        public static final int ConfirmDialog_comment=0x7f080015;
+        public static final int ConfirmDialog_ok=0x7f080013;
+        public static final int ConfirmDialog_tcancel=0x7f080014;
+        public static final int ConfirmDialog_title=0x7f080012;
+        public static final int ConfirmDialog_twitter=0x7f080016;
         public static final int Home_menu_about=0x7f08000e;
         public static final int Home_menu_settings=0x7f08000d;
         public static final int Home_report_button=0x7f08000f;
+        public static final int ImagePicker_toast_cannotFoundGallery=0x7f080018;
+        public static final int ImagePicker_toast_onlyAttachPhoto=0x7f080017;
         public static final int PoiTypeChooser_enable_gps_messages=0x7f080010;
         public static final int PoiTypeChooser_enable_gps_valid_button=0x7f080011;
         public static final int ReparonsParisSplashScreen_dialogMessage_noSdCard=0x7f08000a;

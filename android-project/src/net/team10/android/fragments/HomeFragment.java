@@ -3,6 +3,7 @@ package net.team10.android.fragments;
 import java.security.NoSuchAlgorithmException;
 
 import net.team10.android.Constants;
+import net.team10.android.CreatePoiReportActivity;
 import net.team10.android.PoiTypeChooserActivity;
 import net.team10.android.R;
 import net.team10.android.ReparonsParisApplication;
@@ -120,7 +121,8 @@ public final class HomeFragment
       }
       else
       {
-        startActivity(new Intent(getCheckedActivity(), PoiTypeChooserActivity.class));
+        //startActivity(new Intent(getCheckedActivity(), PoiTypeChooserActivity.class));
+    	  startActivity(new Intent(getCheckedActivity(), CreatePoiReportActivity.class));
       }
     }
   }
