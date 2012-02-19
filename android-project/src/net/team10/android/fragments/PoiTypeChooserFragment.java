@@ -52,7 +52,7 @@ public class PoiTypeChooserFragment
     public void update(Activity activity, PoiType businessObject, int position)
     {
       title.setText(businessObject.getLabel());
-      description.setText(businessObject.getOpenDataSource().name());
+      description.setText(businessObject.getOpenDataTypeId());
       icon.setImageResource(activity.getResources().getIdentifier(businessObject.getOpenDataTypeId().toLowerCase(), "drawable", activity.getPackageName()));
     }
 

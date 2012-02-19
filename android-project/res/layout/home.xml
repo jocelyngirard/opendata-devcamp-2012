@@ -21,10 +21,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_centerHorizontal="true"
+    android:layout_marginTop="40dip"
     android:layout_below="@id/reportButton"
     android:orientation="horizontal"
     android:gravity="center_horizontal"
     android:paddingTop="20dip"
+    android:paddingLeft="10dip"
+    android:paddingRight="10dip"
   >
     <Button
       android:id="@+id/agentButton"
