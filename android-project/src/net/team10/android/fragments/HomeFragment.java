@@ -79,12 +79,14 @@ public final class HomeFragment
         builder.setMessage(googleAccount.email);
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
         {
+          private ProgressDialog progressDialog;
+
           public void onClick(DialogInterface dialog, int which)
           {
             try
             {
               final String md5sum = ReparonsParisApplication.md5sum(googleAccount.email);
-              final ProgressDialog progressDialog = new ProgressDialog(getCheckedActivity());
+              progressDialog = new ProgressDialog(getCheckedActivity());
               progressDialog.setIndeterminate(true);
               progressDialog.show();
               SmartCommands.execute(new Runnable()
@@ -113,6 +115,7 @@ public final class HomeFragment
               }
             }
             startActivity(new Intent(getCheckedActivity(), PoiTypeChooserActivity.class));
+            progressDialog.dismiss();
           }
         });
         builder.setCancelable(true);
