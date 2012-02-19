@@ -265,7 +265,7 @@ public final class ReparonsParisServices
     return poiTypeStreamParser.backed.getRetentionValue(fromCache, Constants.WEBSERVICE_RETENTION_PERIOD_IN_MILLISECONDS, null, null);
   }
 
-  private final BackedWSUriStreamParser.BackedUriStreamedValue<List<PoiReport>, PoiReportParameters, JSONException, PersistenceException> poiReportsStreamParser = new BackedWSUriStreamParser.BackedUriStreamedValue<List<PoiReport>, PoiReportParameters, JSONException, PersistenceException>(Persistence.getInstance(0), this)
+  private final BackedWSUriStreamParser.BackedUriStreamedMap<List<PoiReport>, PoiReportParameters, JSONException, PersistenceException> poiReportsStreamParser = new BackedWSUriStreamParser.BackedUriStreamedMap<List<PoiReport>, PoiReportParameters, JSONException, PersistenceException>(Persistence.getInstance(0), this)
   {
 
     public KeysAggregator<PoiReportParameters> computeUri(PoiReportParameters parameter)

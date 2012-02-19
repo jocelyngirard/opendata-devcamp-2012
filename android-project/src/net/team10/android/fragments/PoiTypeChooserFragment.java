@@ -16,6 +16,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.LocationManager;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -35,16 +36,24 @@ public class PoiTypeChooserFragment
   public class PoiTypeViewAttributes
   {
 
-    private final TextView text;
+    private final TextView title;
+
+    private final TextView description;
+
+    private final ImageView icon;
 
     public PoiTypeViewAttributes(View view)
     {
-      text = (TextView) view.findViewById(android.R.id.text1);
+      title = (TextView) view.findViewById(R.id.title);
+      description = (TextView) view.findViewById(R.id.description);
+      icon = (ImageView) view.findViewById(R.id.icon);
     }
 
-    public void update(PoiType businessObject)
+    public void update(Activity activity, PoiType businessObject, int position)
     {
-      text.setText(businessObject.getLabel());
+      title.setText(businessObject.getLabel());
+      description.setText(businessObject.getOpenDataSource().name());
+      icon.setImageResource(activity.getResources().getIdentifier(businessObject.getOpenDataTypeId().toLowerCase(), "drawable", activity.getPackageName()));
     }
 
   }
@@ -55,7 +64,7 @@ public class PoiTypeChooserFragment
 
     public PoiTypeViewWrapper(PoiType businessObject)
     {
-      super(businessObject, 0, android.R.layout.simple_list_item_1);
+      super(businessObject, 0, R.layout.poitypechooser_list_item);
     }
 
     @Override
@@ -67,7 +76,7 @@ public class PoiTypeChooserFragment
     @Override
     protected void updateView(Activity activity, Object viewAttributes, View view, PoiType businessObject, int position)
     {
-      ((PoiTypeViewAttributes) viewAttributes).update(businessObject);
+      ((PoiTypeViewAttributes) viewAttributes).update(activity, businessObject, position);
     }
 
     @Override

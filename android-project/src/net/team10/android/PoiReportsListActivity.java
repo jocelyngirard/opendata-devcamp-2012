@@ -9,7 +9,6 @@ public class PoiReportsListActivity
   public void onRetrieveDisplayObjects()
   {
     setContentView(R.layout.poireportslist_fragment);
-
   }
 
   public void onRetrieveBusinessObjects()

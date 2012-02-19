@@ -26,7 +26,7 @@ public abstract class Constants
   /**
    * The encoding used for wrapping the URL of the HTTP requests.
    */
-  public static final String WEBSERVICES_HTML_ENCODING = HTTP.ISO_8859_1;
+  public static final String WEBSERVICES_HTML_ENCODING = HTTP.UTF_8;
 
   public static final long WEBSERVICE_RETENTION_PERIOD_IN_MILLISECONDS = 24l * 3600l * 1000l;
 
