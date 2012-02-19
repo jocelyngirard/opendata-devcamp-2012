@@ -123,28 +123,99 @@ public final class ReparonsParisServices
 
   private final static class PoiReportParameters
   {
-    public String openDataDataSetId;
 
-    public String openDataTypeId;
+    public final String openDataDataSetId;
 
-    public OpenDataSource dataSource;
+    public final String openDataTypeId;
 
-    public String poiTypeUid;
+    public final OpenDataSource dataSource;
 
-    public String topLeft;
+    public final String poiTypeUid;
 
-    public String bottomRight;
+    public final double topLeftLatitude;
 
-    public PoiReportParameters(String openDataDataSetId, String openDataTypeId, OpenDataSource openDataSource, String poiTypeUid, String topLeft,
-        String bottomRight)
+    public final double topLeftLongitude;
+
+    public final double bottomRightLatitude;
+
+    public final double bottomRightLongitude;
+
+    public PoiReportParameters(String openDataDataSetId, String openDataTypeId, OpenDataSource dataSource, String poiTypeUid, double topLeftLatitude,
+        double topLeftLongitude, double bottomRightLatitude, double bottomRightLongitude)
     {
-      super();
       this.openDataDataSetId = openDataDataSetId;
       this.openDataTypeId = openDataTypeId;
-      this.dataSource = openDataSource;
+      this.dataSource = dataSource;
       this.poiTypeUid = poiTypeUid;
-      this.topLeft = topLeft;
-      this.bottomRight = bottomRight;
+      this.topLeftLatitude = topLeftLatitude;
+      this.topLeftLongitude = topLeftLongitude;
+      this.bottomRightLatitude = bottomRightLatitude;
+      this.bottomRightLongitude = bottomRightLongitude;
+    }
+
+    @Override
+    public int hashCode()
+    {
+      final int prime = 31;
+      int result = 1;
+      long temp;
+      temp = Double.doubleToLongBits(bottomRightLatitude);
+      result = prime * result + (int) (temp ^ (temp >>> 32));
+      temp = Double.doubleToLongBits(bottomRightLongitude);
+      result = prime * result + (int) (temp ^ (temp >>> 32));
+      result = prime * result + ((dataSource == null) ? 0 : dataSource.hashCode());
+      result = prime * result + ((openDataDataSetId == null) ? 0 : openDataDataSetId.hashCode());
+      result = prime * result + ((openDataTypeId == null) ? 0 : openDataTypeId.hashCode());
+      result = prime * result + ((poiTypeUid == null) ? 0 : poiTypeUid.hashCode());
+      temp = Double.doubleToLongBits(topLeftLatitude);
+      result = prime * result + (int) (temp ^ (temp >>> 32));
+      temp = Double.doubleToLongBits(topLeftLongitude);
+      result = prime * result + (int) (temp ^ (temp >>> 32));
+      return result;
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+      if (this == obj)
+        return true;
+      if (obj == null)
+        return false;
+      if (getClass() != obj.getClass())
+        return false;
+      PoiReportParameters other = (PoiReportParameters) obj;
+      if (Double.doubleToLongBits(bottomRightLatitude) != Double.doubleToLongBits(other.bottomRightLatitude))
+        return false;
+      if (Double.doubleToLongBits(bottomRightLongitude) != Double.doubleToLongBits(other.bottomRightLongitude))
+        return false;
+      if (dataSource != other.dataSource)
+        return false;
+      if (openDataDataSetId == null)
+      {
+        if (other.openDataDataSetId != null)
+          return false;
+      }
+      else if (!openDataDataSetId.equals(other.openDataDataSetId))
+        return false;
+      if (openDataTypeId == null)
+      {
+        if (other.openDataTypeId != null)
+          return false;
+      }
+      else if (!openDataTypeId.equals(other.openDataTypeId))
+        return false;
+      if (poiTypeUid == null)
+      {
+        if (other.poiTypeUid != null)
+          return false;
+      }
+      else if (!poiTypeUid.equals(other.poiTypeUid))
+        return false;
+      if (Double.doubleToLongBits(topLeftLatitude) != Double.doubleToLongBits(other.topLeftLatitude))
+        return false;
+      if (Double.doubleToLongBits(topLeftLongitude) != Double.doubleToLongBits(other.topLeftLongitude))
+        return false;
+      return true;
     }
 
   }
@@ -265,7 +336,7 @@ public final class ReparonsParisServices
     return poiTypeStreamParser.backed.getRetentionValue(fromCache, Constants.WEBSERVICE_RETENTION_PERIOD_IN_MILLISECONDS, null, null);
   }
 
-  private final BackedWSUriStreamParser.BackedUriStreamedValue<List<PoiReport>, PoiReportParameters, JSONException, PersistenceException> poiReportsStreamParser = new BackedWSUriStreamParser.BackedUriStreamedValue<List<PoiReport>, PoiReportParameters, JSONException, PersistenceException>(Persistence.getInstance(0), this)
+  private final BackedWSUriStreamParser.BackedUriStreamedMap<List<PoiReport>, PoiReportParameters, JSONException, PersistenceException> poiReportsStreamParser = new BackedWSUriStreamParser.BackedUriStreamedMap<List<PoiReport>, PoiReportParameters, JSONException, PersistenceException>(Persistence.getInstance(0), this)
   {
 
     public KeysAggregator<PoiReportParameters> computeUri(PoiReportParameters parameter)
@@ -275,9 +346,8 @@ public final class ReparonsParisServices
       uriParameters.put("openDataTypeId", parameter.openDataTypeId);
       uriParameters.put("dataSource", parameter.dataSource.name());
       uriParameters.put("poiTypeUid", parameter.poiTypeUid);
-      uriParameters.put("topLeft", parameter.topLeft);
-      uriParameters.put("bottomRight", parameter.bottomRight);
-
+      uriParameters.put("topLeft", Double.toString(parameter.topLeftLatitude) + "," + Double.toString(parameter.topLeftLongitude));
+      uriParameters.put("bottomRight", Double.toString(parameter.bottomRightLatitude) + "," + Double.toString(parameter.bottomRightLongitude));
       return SimpleIOStreamerSourceKey.fromUriStreamerSourceKey(new HttpCallTypeAndBody(computeUri(Constants.API_URL, "poireports", uriParameters)), parameter);
     }
 
@@ -290,15 +360,18 @@ public final class ReparonsParisServices
   };
 
   public synchronized List<PoiReport> getPoiReports(boolean fromCache, String openDataDataSetId, String openDataTypeId, OpenDataSource openDataSource,
-      String poiTypeUid, String topLeft, String bottomRight)
+      String poiTypeUid, double topLeftLatitude, double topLeftLongitude, double bottomRightLatitude, double bottomRightLongitude)
       throws CacheException
   {
     if (log.isInfoEnabled())
     {
       log.info("Retrieving the list of POI Reports");
     }
-    return poiReportsStreamParser.backed.getRetentionValue(fromCache, Constants.WEBSERVICE_RETENTION_PERIOD_IN_MILLISECONDS, null,
-        new PoiReportParameters(openDataDataSetId, openDataTypeId, openDataSource, poiTypeUid, topLeft, bottomRight));
+    return poiReportsStreamParser.backed.getRetentionValue(
+        fromCache,
+        Constants.WEBSERVICE_RETENTION_PERIOD_IN_MILLISECONDS,
+        null,
+        new PoiReportParameters(openDataDataSetId, openDataTypeId, openDataSource, poiTypeUid, topLeftLatitude, topLeftLongitude, bottomRightLatitude, bottomRightLongitude));
   }
 
   private final BackedWSUriStreamParser.BackedUriStreamedMap<List<OpenDataPoi>, OpenDataParameters, JSONException, PersistenceException> poisStreamParser = new BackedWSUriStreamParser.BackedUriStreamedMap<List<OpenDataPoi>, OpenDataParameters, JSONException, PersistenceException>(Persistence.getInstance(0), this)

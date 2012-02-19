@@ -6,6 +6,7 @@ import net.team10.bo.Account;
 import net.team10.bo.PoiReport;
 import net.team10.bo.PoiReportStatement;
 import net.team10.bo.PoiType;
+import net.team10.bo.PoiType.OpenDataSource;
 import net.team10.server.dao.ReparonsParisDal;
 import net.team10.server.dao.ReparonsParisDal.BadAccountException;
 
@@ -47,10 +48,17 @@ public final class ReparonsParisServices
     return reparonsParisDal.getPoiTypes();
   }
 
-  public void addPoiReport(String accountUid, PoiReport poiReport, PoiReportStatement poiReportStatement, Blob imageBlob)
+  public static List<PoiReport> getPoiReports(String openDataDataSetId, String openDataTypeId, String openDataSource, double topLeftLatitude,
+      double topLeftLongitude, double bottomRightLatitude, double bottomRightLongitude)
+  {
+    return reparonsParisDal.getPoiReports(openDataDataSetId, openDataTypeId, OpenDataSource.valueOf(openDataSource), topLeftLatitude, topLeftLongitude, bottomRightLatitude,
+        bottomRightLongitude);
+  }
+
+  public void declarePoiReportStatement(String accountUid, PoiReport poiReport, PoiReportStatement poiReportStatement, Blob imageBlob)
       throws BadAccountException
   {
-    reparonsParisDal.addPoiReport(accountUid, poiReport, poiReportStatement, imageBlob);
+    reparonsParisDal.declarePoiReportStatement(accountUid, poiReport, poiReportStatement, imageBlob);
   }
 
 }

@@ -11,6 +11,7 @@ import java.util.List;
 import net.team10.android.bo.OpenDataPoi;
 import net.team10.android.ws.ReparonsParisServices;
 import net.team10.bo.Account;
+import net.team10.bo.PoiReport;
 import net.team10.bo.PoiReport.ReportKind;
 import net.team10.bo.PoiReport.ReportSeverity;
 import net.team10.bo.PoiType;
@@ -36,7 +37,7 @@ import com.smartnsoft.droid4me.support.v4.app.SmartFragmentActivity;
  * @since 2012.02.18
  */
 public final class HomeActivity
-    extends SmartFragmentActivity<Void>
+    extends SmartFragmentActivity<TitleBar.TitleBarAggregate>
     implements BusinessObjectsRetrievalAsynchronousPolicy
 {
 
@@ -73,7 +74,7 @@ public final class HomeActivity
             // And now, we decode the bitmap
             options.inJustDecodeBounds = false;
             final int edge = 256;
-            final int sampleSize = Math.max(1, (int) Math.min(bitmapWidth / edge, bitmapHeight / edge));
+            final int sampleSize = Math.max(1, Math.min(bitmapWidth / edge, bitmapHeight / edge));
             options.inSampleSize = sampleSize;
             final Bitmap bitmap = decodeFileDescriptorAsBitmap(photoUri, paddingRectangle, options, getContentResolver().openAssetFileDescriptor(photoUri, "r"));
             // We extract the input stream from the bitmap
@@ -84,8 +85,12 @@ public final class HomeActivity
             final Account account = ReparonsParisServices.getInstance().createAccount("accountId" + System.currentTimeMillis(), "accountNickname");
             final List<PoiType> poiTypes = ReparonsParisServices.getInstance().getPoiTypes(false);
             final PoiType poiType = poiTypes.get(0);
+            final double latitude = 48.8566;
+            final double longitude = 2.3522;
             final List<OpenDataPoi> openDataPois = ReparonsParisServices.getInstance().getOpenDataPois(poiType.getOpenDataDataSetId(),
-                poiType.getOpenDataTypeId(), 48.8566, 2.3522, 10000);
+                poiType.getOpenDataTypeId(), latitude, longitude, 10000);
+            final List<PoiReport> poiReports = ReparonsParisServices.getInstance().getPoiReports(false, poiType.getOpenDataDataSetId(), poiType.getOpenDataTypeId(), poiType.getOpenDataSource(),
+                poiType.getUid(), latitude + .02, longitude - .02, latitude - 0.02, longitude + 0.02);
             final OpenDataPoi openDataPoi = openDataPois.get(0);
             final InputStream photoInputStream = null;// new ByteArrayInputStream(new byte[] { 1, 2, 3, 4 });
             ReparonsParisServices.getInstance().postPoiReportStatement(account.getUid(), poiType.getUid(), ReportKind.Broken, ReportSeverity.Major,
@@ -112,6 +117,7 @@ public final class HomeActivity
 
   public void onFulfillDisplayObjects()
   {
+    // getAggregate().getAttributes().setTitle(R.string.applicationName);
   }
 
   public void onSynchronizeDisplayObjects()

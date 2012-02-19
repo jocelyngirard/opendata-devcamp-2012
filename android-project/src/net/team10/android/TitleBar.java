@@ -32,7 +32,7 @@ import com.smartnsoft.droid4me.log.LoggerFactory;
 public class TitleBar
 {
 
-  static class TitleBarAttributes
+  public static class TitleBarAttributes
       extends ProgressHandler
   {
 
