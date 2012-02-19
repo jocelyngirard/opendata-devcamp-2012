@@ -8,8 +8,6 @@ import net.team10.android.PoiReportsGroupsActivity;
 import net.team10.android.R;
 import net.team10.android.TitleBar;
 import net.team10.android.TitleBar.TitleBarRefreshFeature;
-import net.team10.android.fragments.PoiTypeChooserFragment.PoiTypeViewAttributes;
-import net.team10.android.fragments.PoiTypeChooserFragment.PoiTypeViewWrapper;
 import net.team10.android.ws.ReparonsParisServices;
 import net.team10.bo.PoiType;
 import android.app.Activity;
@@ -22,7 +20,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.smartnsoft.droid4me.LifeCycle.BusinessObjectUnavailableException;
 import com.smartnsoft.droid4me.LifeCycle.BusinessObjectsRetrievalAsynchronousPolicy;
 import com.smartnsoft.droid4me.framework.Commands;
 import com.smartnsoft.droid4me.framework.SmartAdapters;

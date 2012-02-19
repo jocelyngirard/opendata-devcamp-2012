@@ -7,8 +7,6 @@ import java.util.Map;
 
 import net.team10.android.PoiReportMapActivity;
 import net.team10.android.R;
-import net.team10.android.TitleBar;
-import net.team10.android.TitleBar.TitleBarRefreshFeature;
 import net.team10.android.bo.OpenDataPoi;
 import net.team10.android.ws.ReparonsParisServices;
 import net.team10.bo.PoiType;
@@ -29,8 +27,8 @@ import com.smartnsoft.droid4me.framework.SmartAdapters.ObjectEvent;
 import com.smartnsoft.droid4me.framework.SmartAdapters.SimpleBusinessViewWrapper;
 
 public class PoiReportsListFragment
-    extends SmartListViewFragmentV4<TitleBar.TitleBarAggregate, ListView>
-    implements BusinessObjectsRetrievalAsynchronousPolicy, TitleBarRefreshFeature
+    extends SmartListViewFragmentV4<Void, ListView>
+    implements BusinessObjectsRetrievalAsynchronousPolicy
 {
 
   public class OpenDataPoiViewAttributes

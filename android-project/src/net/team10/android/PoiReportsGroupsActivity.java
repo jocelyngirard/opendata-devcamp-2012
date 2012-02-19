@@ -1,5 +1,7 @@
 package net.team10.android;
 
+import net.team10.android.TitleBar.TitleBarRefreshFeature;
+import net.team10.android.TitleBar.TitleBarShowHomeFeature;
 import net.team10.bo.PoiType;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +14,7 @@ import com.smartnsoft.droid4me.app.SmartGroupActivity;
 
 public class PoiReportsGroupsActivity
     extends SmartGroupActivity<TitleBar.TitleBarAggregate>
-    implements View.OnClickListener
+    implements View.OnClickListener, TitleBarRefreshFeature, TitleBarShowHomeFeature
 {
 
   private Button mapButton;
@@ -59,6 +61,7 @@ public class PoiReportsGroupsActivity
     addSubActivity(PoiReportMapActivity.class.getName());
     addSubActivity(PoiReportsListActivity.class.getName());
     switchToActivity(PoiReportMapActivity.class.getName());
+    mapButton.setSelected(true);
   }
 
   public void onFulfillDisplayObjects()
@@ -74,6 +77,8 @@ public class PoiReportsGroupsActivity
       if (!getCurrentActivityId().equals(PoiReportMapActivity.class.getName()))
       {
         switchToActivity(PoiReportMapActivity.class.getName());
+        mapButton.setSelected(true);
+        listButton.setSelected(false);
       }
     }
     else if (view == listButton)
@@ -81,8 +86,15 @@ public class PoiReportsGroupsActivity
       if (!getCurrentActivityId().equals(PoiReportsListActivity.class.getName()))
       {
         switchToActivity(PoiReportsListActivity.class.getName());
+        mapButton.setSelected(false);
+        listButton.setSelected(true);
       }
     }
+  }
+
+  public void onTitleBarRefresh()
+  {
+
   }
 
 }
