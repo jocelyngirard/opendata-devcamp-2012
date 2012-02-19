@@ -33,6 +33,7 @@ import android.widget.RadioButton;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.smartnsoft.droid4me.app.ProgressHandler;
 import com.smartnsoft.droid4me.app.SmartCommands;
 import com.smartnsoft.droid4me.app.SmartCommands.GuardedCommand;
 import com.smartnsoft.droid4me.support.v4.app.SmartFragmentActivity;
@@ -229,7 +230,7 @@ public class CreatePoiReportActivity extends SmartFragmentActivity<TitleBar.Titl
 	        {
 	          public void onClick(DialogInterface dialog, int which)
 	          {
-
+	        	  postReportPoi(context, account, poiType,openDataPoi, photoInputStream, commentField);
 	          }
 	        }).setNegativeButton(R.string.ConfirmDialog_tcancel, new DialogInterface.OnClickListener()
 	    {
@@ -240,16 +241,15 @@ public class CreatePoiReportActivity extends SmartFragmentActivity<TitleBar.Titl
 	    }).create();
 	  }
 	  
-	  public void postReportPoi( final Activity activity, final Account account, final PoiType poiType, final OpenDataPoi openDataPoi, final InputStream photoInputStream, final EditText commentField)
+	  public static void postReportPoi(final Context context, final Account account, final PoiType poiType, final OpenDataPoi openDataPoi, final InputStream photoInputStream, final EditText commentField)
 	  {
 		  
-		     final ProgressDialog progressDialog = new ProgressDialog(CreatePoiReportActivity.this);
+		     final ProgressDialog progressDialog = new ProgressDialog(context);
 		      progressDialog.setMessage("envoie du rapport");
 		      progressDialog.setIndeterminate(true);
 		      progressDialog.show();
-		      
-		      new SmartCommands
-		   SmartCommands.execute(new SmartCommands.ProgressGuardedCommand(activity, null, progressDialog, "Could not save the member properly") 
+
+	/*	   SmartCommands.execute(new SmartCommands.ProgressGuardedCommand(activity, null, progressDialog, "Could not save the member properly") 
 		   {
 				
 				@Override
@@ -259,7 +259,7 @@ public class CreatePoiReportActivity extends SmartFragmentActivity<TitleBar.Titl
 					        openDataPoi.getPoiId(), commentField.getText().toString(), photoInputStream);
 					
 				}
-			});
+			});*/
 	  }
 	  
 
