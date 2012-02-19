@@ -28,6 +28,12 @@ public final class OpenDataPoi
 
   private final String geoName;
 
+  private transient boolean geoComputed;
+
+  private transient int latitude;
+
+  private transient int longitude;
+
   public OpenDataPoi(@JsonProperty("Info") String dataTypeId, @JsonProperty("recordid") String poiId, @JsonProperty("Libelle") String label,
       @JsonProperty("geom_x_y") String openDataGeo, @JsonProperty("geom_name") String geoName, @JsonProperty("datasetid") String dataSetId)
   {
@@ -75,4 +81,29 @@ public final class OpenDataPoi
     return dataSetId;
   }
 
+  public int getLatitudeE6()
+  {
+    if (geoComputed == false)
+    {
+      computeGeo();
+    }
+    return latitude;
+  }
+
+  public int getLongitudeE6()
+  {
+    if (geoComputed == false)
+    {
+      computeGeo();
+    }
+    return longitude;
+  }
+
+  private void computeGeo()
+  {
+    String coordonnees[] = openDataGeo.split(", ");
+    latitude = Integer.parseInt(coordonnees[0].replace(".", ""));
+    longitude = Integer.parseInt(coordonnees[1].replace(".", ""));
+    geoComputed = true;
+  }
 }
