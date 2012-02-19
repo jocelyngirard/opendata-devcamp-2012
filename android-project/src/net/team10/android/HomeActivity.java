@@ -150,7 +150,7 @@ public final class HomeActivity
       @Override
       public boolean isVisible()
       {
-        return true;
+        return false;
       }
 
     }));
@@ -165,7 +165,7 @@ public final class HomeActivity
       @Override
       public boolean isVisible()
       {
-        return true;
+        return false;
       }
     }));
     return commands;
