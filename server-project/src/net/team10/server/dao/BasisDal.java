@@ -85,7 +85,7 @@ abstract class BasisDal
 
   }
 
-  protected final static class TransactionWrapper
+  public final static class TransactionWrapper
   {
 
     protected final PersistenceManager persistenceManager;

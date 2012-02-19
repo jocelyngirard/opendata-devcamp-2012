@@ -31,6 +31,9 @@ public final class PoiReportModel
   private Key key;
 
   @Persistent
+  private String openDataPoiId;
+
+  @Persistent
   private String poiTypeUid;
 
   @Persistent

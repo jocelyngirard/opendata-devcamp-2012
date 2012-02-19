@@ -16,7 +16,7 @@ public final class OpenDataPoi
 
   private static final long serialVersionUID = -7596551429335353456L;
 
-  private final String dataTypeId;
+  private final String typeId;
 
   private final String poiId;
 
@@ -26,29 +26,29 @@ public final class OpenDataPoi
 
   private final String dataSetId;
 
-  private final String typeId;
+  private final String geoName;
 
-  public OpenDataPoi(@JsonProperty("Info") String openDataTypeId, @JsonProperty("recordid") String poiId, @JsonProperty("Libelle") String label,
-      @JsonProperty("geom_x_y") String openDataGeo, @JsonProperty("geom_name") String typeId, @JsonProperty("datasetid") String dataSetId)
+  public OpenDataPoi(@JsonProperty("Info") String dataTypeId, @JsonProperty("recordid") String poiId, @JsonProperty("Libelle") String label,
+      @JsonProperty("geom_x_y") String openDataGeo, @JsonProperty("geom_name") String geoName, @JsonProperty("datasetid") String dataSetId)
   {
-    this.dataTypeId = openDataTypeId;
+    this.typeId = dataTypeId;
     this.poiId = poiId;
     this.label = label;
     this.openDataGeo = openDataGeo;
-    this.typeId = typeId;
+    this.geoName = geoName;
     this.dataSetId = dataSetId;
   }
 
   @JsonProperty("Info")
-  public String getDataTypeId()
-  {
-    return dataTypeId;
-  }
-
-  @JsonProperty("geom_name")
   public String getTypeId()
   {
     return typeId;
+  }
+
+  @JsonProperty("geom_name")
+  public String getGeoName()
+  {
+    return geoName;
   }
 
   @JsonProperty("recordid")

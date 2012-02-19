@@ -22,6 +22,7 @@ import net.team10.bo.PoiReportStatement;
 import net.team10.bo.PoiType;
 import net.team10.bo.PoiType.OpenDataSource;
 import net.team10.server.server.ReparonsParisApplication.BasisResource;
+import net.team10.server.ws.ReparonsParisServices;
 
 import org.apache.commons.fileupload.FileItemIterator;
 import org.apache.commons.fileupload.FileItemStream;
@@ -182,6 +183,8 @@ public final class PoiReportResources
         logger.info("Asking the POI types");
       }
       final List<PoiType> result = new ArrayList<PoiType>();
+      result.add(new PoiType("uid", new Date(), "eclairageparis2011", "LEA", "Lanterne lectrique axiale", null, OpenDataSource.OpenDataSoft));
+      result.add(new PoiType("uid", new Date(), "mobilierstationnementparis2011", "HOR", "Horodateur", null, OpenDataSource.OpenDataSoft));
       for (int index = 0; index < 10; index++)
       {
         result.add(new PoiType("uid" + index, new Date(), "openDataDataSetId" + index, "openDataTypeId" + index, "Label " + index, null, OpenDataSource.OpenDataSoft));
@@ -280,6 +283,7 @@ public final class PoiReportResources
             {
               final PoiReport poiReport = deserializeJson(getPostData(entity, "poiReport"), PoiReport.class);
               final PoiReportStatement poiReportStatement = deserializeJson(getPostData(entity, "poiReportStament"), PoiReportStatement.class);
+              ReparonsParisServices.getInstance().addPoiReport(poiReport, poiReportStatement, imageBlob);
               final JSONObject jsonObject = new JSONObject();
               return new JsonRepresentation(jsonObject);
             }
