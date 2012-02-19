@@ -3,12 +3,7 @@ package net.team10.android.fragments;
 import java.util.ArrayList;
 import java.util.List;
 
-<<<<<<< HEAD
-import net.team10.android.MapActivity;
-import net.team10.android.PoiReportsListActivity;
-=======
 import net.team10.android.PoiReportMapActivity;
->>>>>>> 9f2da538209bf0464f0cb8ec6a7fee48afdbc454
 import net.team10.android.R;
 import net.team10.android.TitleBar;
 import net.team10.android.TitleBar.TitleBarRefreshFeature;
@@ -79,11 +74,7 @@ public class PoiTypeChooserFragment
     {
       if (objectEvent == ObjectEvent.Clicked)
       {
-<<<<<<< HEAD
-        return new Intent(getCheckedActivity(), PoiReportsListActivity.class).putExtra(MapActivity.POI_TYPE, businessObject);
-=======
         return new Intent(getCheckedActivity(), PoiReportMapActivity.class).putExtra(PoiReportMapActivity.POI_TYPE, businessObject);
->>>>>>> 9f2da538209bf0464f0cb8ec6a7fee48afdbc454
       }
 
       return super.computeIntent(activity, viewAttributes, view, businessObject, objectEvent, position);

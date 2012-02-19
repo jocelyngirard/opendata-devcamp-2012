@@ -3,7 +3,7 @@ package net.team10.android.fragments;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.team10.android.MapActivity;
+import net.team10.android.PoiReportMapActivity;
 import net.team10.android.R;
 import net.team10.android.TitleBar;
 import net.team10.android.TitleBar.TitleBarRefreshFeature;
@@ -83,7 +83,7 @@ public class PoiReportsListFragment
   public List<? extends BusinessViewWrapper<?>> retrieveBusinessObjectsList()
       throws BusinessObjectUnavailableException
   {
-    final PoiType poiType = (PoiType) getCheckedActivity().getIntent().getSerializableExtra(MapActivity.POI_TYPE);
+    final PoiType poiType = (PoiType) getCheckedActivity().getIntent().getSerializableExtra(PoiReportMapActivity.POI_TYPE);
 
     if (poiType == null)
     {
