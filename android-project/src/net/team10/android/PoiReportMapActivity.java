@@ -4,12 +4,8 @@ import java.util.List;
 
 import net.team10.android.bo.OpenDataPoi;
 import net.team10.android.ws.ReparonsParisServices;
-import net.team10.bo.PoiReport;
 import net.team10.bo.PoiType;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
 
@@ -23,7 +19,6 @@ import com.smartnsoft.droid4me.app.SmartMapActivity;
 import de.android1.overlaymanager.ManagedOverlay;
 import de.android1.overlaymanager.ManagedOverlayGestureDetector.OnOverlayGestureListener;
 import de.android1.overlaymanager.ManagedOverlayItem;
-import de.android1.overlaymanager.MarkerRenderer;
 import de.android1.overlaymanager.OverlayManager;
 import de.android1.overlaymanager.ZoomEvent;
 
@@ -44,19 +39,21 @@ public class PoiReportMapActivity
 
   private ManagedOverlay PoiManagedOverlay;
 
-  private ManagedOverlay ManagedOverlayOpen;
-
-  private ManagedOverlay ManagedOverlayScheduled;
-
-  private ManagedOverlay ManagedOverlayInProgress;
-
-  private ManagedOverlay ManagedOverlayClosed;
+  // private ManagedOverlay ManagedOverlayOpen;
+  //
+  // private ManagedOverlay ManagedOverlayScheduled;
+  //
+  // private ManagedOverlay ManagedOverlayInProgress;
+  //
+  // private ManagedOverlay ManagedOverlayClosed;
 
   private Drawable default_marker;
 
   // private ImageView marker;
 
-  private final boolean fromCache = true;
+  // private final boolean fromCache = true;
+
+  private List<OpenDataPoi> openDataPois;
 
   public static enum ReportStatus
   {
@@ -100,8 +97,7 @@ public class PoiReportMapActivity
 
     if (myLocationOverlay != null)
     {
-      List<OpenDataPoi> openDataPois;
-      List<PoiReport> poiReports;
+      // List<PoiReport> poiReports;
 
       try
       {
@@ -138,7 +134,7 @@ public class PoiReportMapActivity
           // }
           // }
           // else
-          PoiManagedOverlay.createItem(new GeoPoint(openDataPoisItem.getLatitudeE6(), openDataPoisItem.getLongitudeE6()));
+          PoiManagedOverlay.createItem(new GeoPoint(openDataPoisItem.getLatitudeE6(), openDataPoisItem.getLongitudeE6()), openDataPoisItem.getPoiId());
         }
       }
 
@@ -181,54 +177,46 @@ public class PoiReportMapActivity
     PoiManagedOverlay = overlayManager.createOverlay("POI", default_marker);
     PoiManagedOverlay.createItem(new GeoPoint(-17540798, -149549241), "Point fictif", "Initialisation OverlayManager");
 
-    PoiManagedOverlay.setCustomMarkerRenderer(setManagedOverlayMarker(ReportStatus.Open));
+    // PoiManagedOverlay.setCustomMarkerRenderer(setManagedOverlayMarker(ReportStatus.Open));
 
     overlayManager.populate();
     PoiManagedOverlay.setOnOverlayGestureListener(this);
 
   }
 
-  private MarkerRenderer setManagedOverlayMarker(final ReportStatus status)
-  {
-    return new MarkerRenderer()
-    {
-      public Drawable render(ManagedOverlayItem item, Drawable defaultMarker, int bitState)
-      {
-        BitmapDrawable b = (BitmapDrawable) defaultMarker;
-        Bitmap poiCustomMarker = Bitmap.createBitmap(b.getBitmap().copy(Bitmap.Config.ARGB_8888, true));
-        Bitmap infoCustomMarker = null;
-        switch (status)
-        {
-        case Open:
-          infoCustomMarker = ((BitmapDrawable) getResources().getDrawable(getResources().getIdentifier("@drawable/settings", null, getPackageName()))).getBitmap();
-          break;
-        // case Scheduled:
-        // infoCustomMarker
-        // break;
-        // case InProgress:
-        // infoCustomMarker
-        // break;
-        // case Closed:
-        // infoCustomMarker
-        // break;
-        }
-
-        Canvas canvas = new Canvas(poiCustomMarker);
-
-        canvas.drawBitmap(infoCustomMarker, 0.f, 0.f, null);
-
-        BitmapDrawable bd = new BitmapDrawable(poiCustomMarker);
-        bd.setBounds(0, 0, bd.getIntrinsicWidth(), bd.getIntrinsicHeight());
-        return null;
-      }
-    };
-  }
+  // private MarkerRenderer setManagedOverlayMarker(final ReportStatus status)
+  // {
+  // return new MarkerRenderer()
+  // {
+  // public Drawable render(ManagedOverlayItem item, Drawable defaultMarker, int bitState)
+  // {
+  // BitmapDrawable b = (BitmapDrawable) defaultMarker;
+  // Bitmap poiCustomMarker = Bitmap.createBitmap(b.getBitmap().copy(Bitmap.Config.ARGB_8888, true));
+  // Bitmap infoCustomMarker = null;
+  // switch (status)
+  // {
+  // case Open:
+  // infoCustomMarker = ((BitmapDrawable) getResources().getDrawable(getResources().getIdentifier("@drawable/settings", null,
+  // getPackageName()))).getBitmap();
+  // break;
+  //
+  // }
+  //
+  // Canvas canvas = new Canvas(poiCustomMarker);
+  //
+  // canvas.drawBitmap(infoCustomMarker, 0.f, 0.f, null);
+  //
+  // BitmapDrawable bd = new BitmapDrawable(poiCustomMarker);
+  // bd.setBounds(0, 0, bd.getIntrinsicWidth(), bd.getIntrinsicHeight());
+  // return null;
+  // }
+  // };
+  // }
 
   @Override
   public void onSynchronizeDisplayObjects()
   {
     super.onSynchronizeDisplayObjects();
-
     overlayManager.populate();
   }
 
@@ -246,6 +234,10 @@ public class PoiReportMapActivity
 
   public void onLongPressFinished(MotionEvent e, ManagedOverlay overlay, GeoPoint point, ManagedOverlayItem item)
   {
+    if (overlay.getItem(overlay.size() - 1).getTitle().equalsIgnoreCase("New"))
+    {
+      overlay.remove(overlay.size() - 1);
+    }
     overlay.createItem(point, "New");
   }
 
@@ -256,14 +248,21 @@ public class PoiReportMapActivity
 
   public boolean onSingleTap(MotionEvent e, ManagedOverlay overlay, GeoPoint point, ManagedOverlayItem item)
   {
-    // Intent intent = new Intent().putExtra("poiType", );
-    if (item != null)
+    for (OpenDataPoi openDataPoi : openDataPois)
     {
-      if (item.getTitle().equals("New"))
-        startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
-      else
-        startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+      if (openDataPoi.getPoiId().equals(item.getTitle()))
+      {
+        if (item != null)
+        {
+          // if (item.getTitle().equals("New"))
+          // startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
+          // else
+          startActivity(new Intent(getApplicationContext(), CreatePoiReportActivity.class).putExtra(CreatePoiReportActivity.POI, openDataPoi));
+        }
+        break;
+      }
     }
+
     return false;
   }
 

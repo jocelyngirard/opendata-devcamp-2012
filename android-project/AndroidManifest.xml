@@ -89,6 +89,7 @@
     <activity
       android:name=".CreatePoiReportActivity"
       android:configChanges="keyboardHidden|orientation"
+      android:screenOrientation="portrait"
     />
     
 
