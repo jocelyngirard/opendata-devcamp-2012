@@ -35,15 +35,6 @@ public final class PoiReportResources
       {
         logger.info("Asking for the POI types");
       }
-      // final List<PoiType> result = new ArrayList<PoiType>();
-      // result.add(new PoiType("uid", new Date(), "eclairageparis2011", "LEA", "Lanterne électrique axiale", null, OpenDataSource.OpenDataSoft));
-      // result.add(new PoiType("uid", new Date(), "mobilierstationnementparis2011", "HOR", "Horodateur", null, OpenDataSource.OpenDataSoft));
-      // for (int index = 0; index < 10; index++)
-      // {
-      // result.add(new PoiType("uid" + index, new Date(), "openDataDataSetId" + index, "openDataTypeId" + index, "Label " + index, null,
-      // OpenDataSource.OpenDataSoft));
-      // }
-
       return generateObjectJsonRepresentation(ReparonsParisServices.getInstance().getPoiTypes(), "Here are the POI types!");
     }
 
@@ -94,13 +85,6 @@ public final class PoiReportResources
       {
         logger.info("Asking the POI reports belonging to the open-data dataset with id " + openDataDataSetId + "', open-data type id '" + openDataTypeId + "', open-data source '" + openDataSource + "' in the rectangular area (" + topLeftLatitude + "," + topLeftLongitude + ")x(" + bottomRightLatitude + "," + bottomRightLongitude + ")");
       }
-      // final List<PoiReport> result = new ArrayList<PoiReport>();
-      // for (int index = 0; index < 10; index++)
-      // {
-      // result.add(new PoiReport("uid" + index, "openDataPoiId" + index, poiTypeUid, new Account("creationAccountUid", new Date(), "nickname " +
-      // index), new Date(), new Date(), ReportStatus.Open, new Account("modificationAccountUid", new Date(), "nickname " + index), ReportKind.Broken,
-      // ReportSeverity.Severe));
-      // }
 
       try
       {

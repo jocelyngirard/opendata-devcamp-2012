@@ -34,9 +34,11 @@ public final class PoiType
 
   private final OpenDataSource openDataSource;
 
+  private final String imageUrl;
+
   public PoiType(@JsonProperty("uid") String uid, @JsonProperty("creationDate") Date creationDate, @JsonProperty("openDataDataSetId") String openDataDataSetId,
       @JsonProperty("openDataTypeId") String openDataTypeId, @JsonProperty("label") String label, @JsonProperty("poiTypeFolderUid") String poiTypeFolderUid,
-      @JsonProperty("openDataSource") OpenDataSource openDataSource)
+      @JsonProperty("openDataSource") OpenDataSource openDataSource, @JsonProperty("imageUrl") String imageUrl)
   {
     this.uid = uid;
     this.creationDate = creationDate;
@@ -45,6 +47,7 @@ public final class PoiType
     this.label = label;
     this.poiTypeFolderUid = poiTypeFolderUid;
     this.openDataSource = openDataSource;
+    this.imageUrl = imageUrl;
   }
 
   @JsonProperty("uid")
@@ -87,6 +90,12 @@ public final class PoiType
   public OpenDataSource getOpenDataSource()
   {
     return openDataSource;
+  }
+
+  @JsonProperty("imageUrl")
+  public final String getImageUrl()
+  {
+    return imageUrl;
   }
 
 }
