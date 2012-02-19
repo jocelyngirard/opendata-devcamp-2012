@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.team10.android.CreatePoiReportActivity;
 import net.team10.android.PoiReportMapActivity;
 import net.team10.android.R;
 import net.team10.android.bo.OpenDataPoi;
@@ -81,7 +82,7 @@ public class PoiReportsListFragment
     {
       if (objectEvent == ObjectEvent.Clicked)
       {
-        // return new Intent(getCheckedActivity(), MapActivity.class).putExtra(MapActivity.POI_TYPE, businessObject);
+        return new Intent(getCheckedActivity(), CreatePoiReportActivity.class).putExtra(CreatePoiReportActivity.POI, businessObject);
       }
       return super.computeIntent(activity, viewAttributes, view, businessObject, objectEvent, position);
     }
@@ -106,9 +107,15 @@ public class PoiReportsListFragment
 
     try
     {
+<<<<<<< HEAD
       openDataPois = ReparonsParisServices.getInstance().getOpenDataPois(true, poiType.getOpenDataDataSetId(), poiType.getOpenDataTypeId(), 48.8566, 2.3522, 10000);
       // final List<PoiReport> poiReports = ReparonsParisServices.getInstance().getPoiReports(fromCache, poiType.getOpenDataDataSetId(),
       // poiType.getOpenDataTypeId(), poiType.getOpenDataSource(), poiType.getPoiTypeFolderUid(), 1.23, 4.56, 7.89, 0.12);
+=======
+      openDataPois = ReparonsParisServices.getInstance().getOpenDataPois(poiType.getOpenDataDataSetId(), poiType.getOpenDataTypeId(), 48.8566, 2.3522, 10000);
+      // poiReports = ReparonsParisServices.getInstance().getPoiReports(fromCache, poiType.getOpenDataDataSetId(), poiType.getOpenDataTypeId(),
+      // poiType.getOpenDataSource(), poiType.getPoiTypeFolderUid(), 1.23, 4.56, 7.89, 0.12);
+>>>>>>> c2024573c37d63ac9611817dfc9c033ffc438784
     }
     catch (Exception exception)
     {
@@ -156,6 +163,12 @@ public class PoiReportsListFragment
       });
       builder.show();
     }
+  }
+
+  @Override
+  public void onSynchronizeDisplayObjects()
+  {
+    super.onSynchronizeDisplayObjects();
   }
 
   public void onTitleBarRefresh()

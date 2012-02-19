@@ -86,6 +86,11 @@
       android:configChanges="keyboardHidden|orientation"
     />
     
+    <activity
+      android:name=".CreatePoiReportActivity"
+      android:configChanges="keyboardHidden|orientation"
+    />
+    
 
   </application>
 

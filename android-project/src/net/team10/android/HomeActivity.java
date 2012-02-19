@@ -69,7 +69,7 @@ public final class HomeActivity
             final Rect paddingRectangle = new Rect();
             // We first query the picture bounds
             options.inJustDecodeBounds = true;
-            decodeFileDescriptorAsBitmap(photoUri, paddingRectangle, options);
+            decodeFileDescriptorAsBitmap(photoUri, paddingRectangle, options, getContentResolver().openAssetFileDescriptor(photoUri, "r"));
             final int bitmapWidth = options.outWidth;
             final int bitmapHeight = options.outHeight;
             // And now, we decode the bitmap
@@ -77,7 +77,7 @@ public final class HomeActivity
             final int edge = 256;
             final int sampleSize = Math.max(1, Math.min(bitmapWidth / edge, bitmapHeight / edge));
             options.inSampleSize = sampleSize;
-            final Bitmap bitmap = decodeFileDescriptorAsBitmap(photoUri, paddingRectangle, options);
+            final Bitmap bitmap = decodeFileDescriptorAsBitmap(photoUri, paddingRectangle, options, getContentResolver().openAssetFileDescriptor(photoUri, "r"));
             // We extract the input stream from the bitmap
             final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
@@ -100,7 +100,6 @@ public final class HomeActivity
             final List<PoiReportStatement> poiReportStatements = ReparonsParisServices.getInstance().getPoiReportStatements(false, poiReport.getUid());
           }
         });
-
       }
       break;
     default:
@@ -159,10 +158,10 @@ public final class HomeActivity
     return commands;
   }
 
-  private Bitmap decodeFileDescriptorAsBitmap(Uri avatarUri, Rect paddingRectangle, BitmapFactory.Options options)
+  public static Bitmap decodeFileDescriptorAsBitmap(Uri avatarUri, Rect paddingRectangle, BitmapFactory.Options options, AssetFileDescriptor fileDescriptor)
       throws IOException
   {
-    final AssetFileDescriptor fileDescriptor = getContentResolver().openAssetFileDescriptor(avatarUri, "r");
+    //final AssetFileDescriptor fileDescriptor = getContentResolver().openAssetFileDescriptor(avatarUri, "r");
     final FileInputStream inputStream = fileDescriptor.createInputStream();
     try
     {
