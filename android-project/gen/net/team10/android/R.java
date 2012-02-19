@@ -216,6 +216,7 @@ containing a value of this type.
         public static final int ConfirmDialog_title=0x7f080018;
         public static final int ConfirmDialog_titleReportKind=0x7f08001d;
         public static final int ConfirmDialog_twitter=0x7f08001c;
+        public static final int CreatePoiReport_title=0x7f080021;
         public static final int Home_menu_about=0x7f08000e;
         public static final int Home_menu_settings=0x7f08000d;
         public static final int Home_mode_agent=0x7f080015;
