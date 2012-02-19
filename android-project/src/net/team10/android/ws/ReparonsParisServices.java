@@ -183,6 +183,37 @@ public final class ReparonsParisServices
     return Constants.WEBSERVICES_HTML_ENCODING;
   }
 
+  public List<OpenDataPoi> getOpenDataPois(String openDataDataSetId, String openDataTypeId, double latitude, double longitude, int beamInMeters)
+      throws CacheException
+  {
+    if (log.isInfoEnabled())
+    {
+      log.info("Retrieving the list of open-data POIs");
+    }
+    return poisStreamParser.backed.getMemoryValue(true, null, new OpenDataParameters(openDataDataSetId, openDataTypeId, latitude, longitude, beamInMeters));
+  }
+
+  public Account createAccount(String accountUid, String nickname)
+      throws CallException
+  {
+    if (log.isInfoEnabled())
+    {
+      log.info("Creating an account creation with the account UID '" + accountUid + "' and nickname '" + nickname + "'");
+    }
+    final List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+    final UrlEncodedFormEntity entity;
+    try
+    {
+      postParams.add(new BasicNameValuePair("account", serializeObject(new Account(accountUid, null, nickname))));
+      entity = new UrlEncodedFormEntity(postParams);
+    }
+    catch (Exception exception)
+    {
+      throw new CallException("Cannot properly encode one of the multipart parameter", exception);
+    }
+    return deserializeJson(getInputStream(computeUri(Constants.API_URL, "account", null), CallType.Post, entity), AccountResponse.class).content;
+  }
+
   private final BackedWSUriStreamParser.BackedUriStreamedValue<List<PoiType>, Void, JSONException, PersistenceException> poiTypeStreamParser = new BackedWSUriStreamParser.BackedUriStreamedValue<List<PoiType>, Void, JSONException, PersistenceException>(Persistence.getInstance(0), this)
   {
 
@@ -268,37 +299,6 @@ public final class ReparonsParisServices
 
   };
 
-  public synchronized List<OpenDataPoi> getOpenDataPois(String openDataDataSetId, String openDataTypeId, double latitude, double longitude, int beamInMeters)
-      throws CacheException
-  {
-    if (log.isInfoEnabled())
-    {
-      log.info("Retrieving the list of open-data POIs");
-    }
-    return poisStreamParser.backed.getMemoryValue(true, null, new OpenDataParameters(openDataDataSetId, openDataTypeId, latitude, longitude, beamInMeters));
-  }
-
-  public void postAccount(String accountUid)
-      throws CallException
-  {
-    if (log.isInfoEnabled())
-    {
-      log.info("Posting an account creation with the account UID '" + accountUid + "'");
-    }
-    final List<NameValuePair> postParams = new ArrayList<NameValuePair>();
-    UrlEncodedFormEntity entity = null;
-    try
-    {
-      postParams.add(new BasicNameValuePair("account", serializeObject(new Account(accountUid, null, "Eri"))));
-      entity = new UrlEncodedFormEntity(postParams);
-    }
-    catch (Exception exception)
-    {
-      throw new CallException("Cannot properly encode one of the multipart parameter", exception);
-    }
-    deserializeJson(getInputStream(computeUri(Constants.API_URL, "account", null), CallType.Post, entity), AccountResponse.class);
-  }
-
   public void postPoiReportStatement(String accountUid, String poiTypeUid, ReportKind reportKind, ReportSeverity reportSeverity, String openDataPoiId,
       String comment, InputStream photoInputStream)
       throws CallException
@@ -307,20 +307,39 @@ public final class ReparonsParisServices
     {
       log.info("Posting a new POI report with the account with UID '" + accountUid + "'");
     }
-    final MultipartEntity multipartEntity = new MultipartEntity();
+    // final MultipartEntity multipartEntity = new MultipartEntity();
+    // try
+    // {
+    // if (photoInputStream != null)
+    // {
+    // multipartEntity.addPart("photo", new InputStreamBody(photoInputStream, "photo.png"));
+    // }
+    // multipartEntity.addPart(
+    // "poiReport",
+    // new StringBody(serializeObject(new PoiReport(null, openDataPoiId, poiTypeUid, new Account(accountUid, null, null), null, null, null, null,
+    // reportKind, reportSeverity))));
+    // multipartEntity.addPart("poiReportStatement", new StringBody(serializeObject(new PoiReportStatement(null, null, null, null, comment, null))));
+    // }
+    // catch (Exception exception)
+    // {
+    // throw new CallException("Cannot properly encode one of the multipart parameter", exception);
+    // }
+
+    final List<NameValuePair> postParams = new ArrayList<NameValuePair>();
+    final UrlEncodedFormEntity entity;
     try
     {
-      multipartEntity.addPart("photo", new InputStreamBody(photoInputStream, "photo.png"));
-      multipartEntity.addPart(
-          "poiReport",
-          new StringBody(serializeObject(new PoiReport(null, openDataPoiId, poiTypeUid, new Account(accountUid, null, null), null, null, null, null, reportKind, reportSeverity))));
-      multipartEntity.addPart("poiReportStatement", new StringBody(serializeObject(new PoiReportStatement(null, null, null, null, comment, null))));
+      postParams.add(new BasicNameValuePair("poiReport", serializeObject(new PoiReport(null, openDataPoiId, poiTypeUid, new Account(accountUid, null, null), null, null, null, null, reportKind, reportSeverity))));
+      postParams.add(new BasicNameValuePair("poiReportStatement", serializeObject(new StringBody(serializeObject(new PoiReportStatement(null, null, null, null, comment, null))))));
+      entity = new UrlEncodedFormEntity(postParams);
     }
     catch (Exception exception)
     {
       throw new CallException("Cannot properly encode one of the multipart parameter", exception);
     }
-    deserializeJson(getInputStream(computeUri(Constants.API_URL, "poireport", null), CallType.Post, multipartEntity), String.class);
+    final Map<String, String> uriParameters = new HashMap<String, String>();
+    uriParameters.put("accountUid", accountUid);
+    deserializeJson(getInputStream(computeUri(Constants.API_URL, "poireport", uriParameters), CallType.Post, entity), Void.class);
   }
 
   private <T> T deserializeJson(InputStream inputStream, Class<T> valueType)

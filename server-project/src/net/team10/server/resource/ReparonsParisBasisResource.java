@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import net.team10.server.dao.BasisDal.DalException;
 import net.team10.server.server.ReparonsParisApplication.BasisResource;
 
 import org.codehaus.jackson.JsonFactory;
@@ -17,6 +18,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.restlet.data.Status;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ResourceException;
 
@@ -25,6 +27,17 @@ abstract class ReparonsParisBasisResource
 {
 
   protected static final Logger logger = Logger.getLogger(ReparonsParisBasisResource.class.getName());
+
+  private static final int DAL_PROBLEM_CODE = BasisResource.START_PROBLEMCODE + 1;
+
+  protected final ResourceException handleDalException(DalException exception, String message)
+  {
+    if (logger.isLoggable(Level.WARNING))
+    {
+      logger.log(Level.WARNING, message, exception);
+    }
+    return handleProblem(Status.CLIENT_ERROR_BAD_REQUEST, ReparonsParisBasisResource.DAL_PROBLEM_CODE, message);
+  }
 
   protected final Representation generateObjectJsonRepresentation(Object object, String message)
       throws ResourceException

@@ -244,7 +244,7 @@ public final class ReparonsParisApplication
     router.attach("/account", AccountResources.PoiReportsResource.class);
     router.attach("/poitype", PoiReportResources.PoiTypesResource.class);
     router.attach("/poitypes", PoiReportResources.PoiTypesResource.class);
-    router.attach("/poireport", PoiReportResources.PoiReportsResource.class);
+    router.attach("/poireport?{queryParameters}", PoiReportResources.PoiReportsResource.class);
     router.attach("/poireports?{queryParameters}", PoiReportResources.PoiReportsResource.class);
 
     return router;

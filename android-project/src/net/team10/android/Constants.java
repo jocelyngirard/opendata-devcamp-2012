@@ -30,12 +30,16 @@ public abstract class Constants
 
   public static final long WEBSERVICE_RETENTION_PERIOD_IN_MILLISECONDS = 24l * 3600l * 1000l;
 
-  public static final String API_URL = "http://reparonsparis.appspot.com/rest";
+  // The test environment
+  public static final String API_URL = "http://10.0.2.2:8888/rest";
+
+  // The production environment
+  // public static final String API_URL = "http://reparonsparis.appspot.com/rest";
 
   public static final String OPEN_DATA_SOFT_URL = "http://demo2.opendatasoft.com/api/search/dataset";
 
   public static final String GOOGLE_MAPS_API_KEY = "0yyOboPOlEVpjLWYbx-0ZU3Nn3HwjcLHrBvSLXg";
 
-  public static final String EMAIL_MD5 = "emailMd5";
+  public static final String EMAIL_MD5_PREFERENCE_KEY = "emailMd5";
 
 }

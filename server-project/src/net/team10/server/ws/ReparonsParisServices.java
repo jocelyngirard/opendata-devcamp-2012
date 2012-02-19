@@ -31,16 +31,15 @@ public final class ReparonsParisServices
     return instance;
   }
 
-  public void addPoiReport(String accountUid, PoiReport poiReport, PoiReportStatement poiReportStatement, Blob imageBlob)
-      throws BadAccountException
-  {
-    reparonsParisDal.addPoiReport(accountUid, poiReport, poiReportStatement, imageBlob);
-  }
-
   public Account createAccount(Account account)
       throws BadAccountException
   {
     return reparonsParisDal.addAccount(account);
+  }
+
+  public static PoiType createPoiType(PoiType poiType)
+  {
+    return reparonsParisDal.addPoiType(poiType);
   }
 
   public List<PoiType> getPoiTypes()
@@ -48,9 +47,10 @@ public final class ReparonsParisServices
     return reparonsParisDal.getPoiTypes();
   }
 
-  public static PoiType createPoiType(PoiType poiType)
+  public void addPoiReport(String accountUid, PoiReport poiReport, PoiReportStatement poiReportStatement, Blob imageBlob)
+      throws BadAccountException
   {
-    return reparonsParisDal.addPoiType(poiType);
+    reparonsParisDal.addPoiReport(accountUid, poiReport, poiReportStatement, imageBlob);
   }
 
 }

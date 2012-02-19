@@ -11,7 +11,7 @@ import javax.jdo.Transaction;
  * @author Édouard Mercier
  * @since 2012.02.18
  */
-abstract class BasisDal
+public abstract class BasisDal
 {
 
   public abstract static class DalException

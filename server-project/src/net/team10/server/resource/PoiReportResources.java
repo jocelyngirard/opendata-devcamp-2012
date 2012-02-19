@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 
-import javax.servlet.http.HttpServletRequest;
-
 import net.team10.bo.Account;
 import net.team10.bo.PoiReport;
 import net.team10.bo.PoiReport.ReportKind;
@@ -15,26 +13,15 @@ import net.team10.bo.PoiReport.ReportSeverity;
 import net.team10.bo.PoiReport.ReportStatus;
 import net.team10.bo.PoiReportStatement;
 import net.team10.bo.PoiType;
+import net.team10.server.dao.ReparonsParisDal.BadAccountException;
 import net.team10.server.ws.ReparonsParisServices;
 
-import org.apache.commons.fileupload.FileItemIterator;
-import org.apache.commons.fileupload.FileItemStream;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.apache.commons.io.IOUtils;
-import org.json.JSONObject;
 import org.restlet.data.Form;
-import org.restlet.data.MediaType;
-import org.restlet.engine.http.HttpCall;
-import org.restlet.engine.http.HttpRequest;
-import org.restlet.ext.json.JsonRepresentation;
-import org.restlet.ext.servlet.internal.ServletCall;
 import org.restlet.representation.Representation;
 import org.restlet.representation.Variant;
 import org.restlet.resource.Get;
 import org.restlet.resource.Post;
 import org.restlet.resource.ResourceException;
-
-import com.google.appengine.api.datastore.Blob;
 
 /**
  * @author Édouard Mercier
@@ -136,56 +123,99 @@ public final class PoiReportResources
       }
 
       // Taken from http://stackoverflow.com/questions/1513603/how-to-upload-and-store-an-image-with-google-app-engine-java
-      if (MediaType.MULTIPART_FORM_DATA.equals(entity.getMediaType(), true) == true)
+      // if (MediaType.MULTIPART_FORM_DATA.equals(entity.getMediaType(), true) == true)
+      // {
+      // HttpServletRequest httpServletRequest = null;
+      // if (getRequest() instanceof HttpRequest)
+      // {
+      // final HttpCall httpCall = ((HttpRequest) getRequest()).getHttpCall();
+      // if (httpCall instanceof ServletCall)
+      // {
+      // httpServletRequest = ((ServletCall) httpCall).getRequest();
+      // }
+      // }
+      // if (httpServletRequest != null)
+      // {
+      // final ServletFileUpload upload = new ServletFileUpload();
+      // final FileItemIterator iterator;
+      // try
+      // {
+      // iterator = upload.getItemIterator(httpServletRequest);
+      // Blob imageBlob = null;
+      // String rawPoiReport = null;
+      // String rawPoiReportStament = null;
+      // while (iterator.hasNext())
+      // {
+      // final FileItemStream fileItemStream = iterator.next();
+      // if (fileItemStream.isFormField() == false)
+      // {
+      // if (fileItemStream.getFieldName().equals("photo") == true)
+      // {
+      // if (logger.isLoggable(Level.FINE))
+      // {
+      // logger.fine("Deserializing the photo");
+      // }
+      // imageBlob = new Blob(IOUtils.toByteArray(fileItemStream.openStream()));
+      // }
+      // }
+      // else if (fileItemStream.getFieldName().equals("poiReport") == true)
+      // {
+      // if (logger.isLoggable(Level.FINE))
+      // {
+      // logger.fine("Deserializing the POI report");
+      // }
+      // final InputStream inputStream = fileItemStream.openStream();
+      // rawPoiReport = new String(IOUtils.toByteArray(inputStream));
+      // }
+      // else if (fileItemStream.getFieldName().equals("poiReportStatement") == true)
+      // {
+      // if (logger.isLoggable(Level.FINE))
+      // {
+      // logger.fine("Deserializing the POI report statement");
+      // }
+      // rawPoiReportStament = new String(IOUtils.toByteArray(fileItemStream.openStream()));
+      // }
+      // }
+      // // if (imageBlob != null)
+      // {
+      // final PoiReport poiReport = deserializeJson(rawPoiReport, PoiReport.class);
+      // final PoiReportStatement poiReportStatement = deserializeJson(rawPoiReportStament, PoiReportStatement.class);
+      // ReparonsParisServices.getInstance().addPoiReport(accountUid, poiReport, poiReportStatement, imageBlob);
+      // return ok("POI report created");
+      // }
+      // }
+      // catch (Exception exception)
+      // {
+      // if (logger.isLoggable(Level.FINE))
+      // {
+      // logger.log(Level.FINE, "Cannot ---> 1");
+      // }
+      // throw handleException(exception, "Could not store the photo!");
+      // }
+      // }
+      // }
+      // if (logger.isLoggable(Level.FINE))
+      // {
+      // logger.log(Level.FINE, "Cannot ---> 2");
+      // }
+      //
+      // if (logger.isLoggable(Level.FINE))
+      // {
+      // logger.log(Level.FINE, "Cannot ---> 3");
+      // }
+      // return error("noPhotoAttached", "ko", "A POI report can only be created provided a photo is attached to it!");
+
+      final PoiReport poiReport = deserializeJson(getPostData(entity, "poiReport"), PoiReport.class);
+      final PoiReportStatement poiReportStatement = deserializeJson(getPostData(entity, "poiReportStatement"), PoiReportStatement.class);
+      try
       {
-        HttpServletRequest httpServletRequest = null;
-        if (getRequest() instanceof HttpRequest)
-        {
-          final HttpCall httpCall = ((HttpRequest) getRequest()).getHttpCall();
-          if (httpCall instanceof ServletCall)
-          {
-            httpServletRequest = ((ServletCall) httpCall).getRequest();
-          }
-        }
-        if (httpServletRequest != null)
-        {
-          final ServletFileUpload upload = new ServletFileUpload();
-          final FileItemIterator iterator;
-          try
-          {
-            iterator = upload.getItemIterator(httpServletRequest);
-            Blob imageBlob = null;
-            while (iterator.hasNext())
-            {
-              final FileItemStream fileItemStream = iterator.next();
-              if (fileItemStream.isFormField() == false)
-              {
-                if (fileItemStream.getFieldName().equals("photo") == true)
-                {
-                  imageBlob = new Blob(IOUtils.toByteArray(fileItemStream.openStream()));
-                }
-              }
-            }
-            if (imageBlob != null)
-            {
-              final PoiReport poiReport = deserializeJson(getPostData(entity, "poiReport"), PoiReport.class);
-              final PoiReportStatement poiReportStatement = deserializeJson(getPostData(entity, "poiReportStament"), PoiReportStatement.class);
-              ReparonsParisServices.getInstance().addPoiReport(accountUid, poiReport, poiReportStatement, imageBlob);
-              final JSONObject jsonObject = new JSONObject();
-              return new JsonRepresentation(jsonObject);
-            }
-          }
-          catch (Exception exception)
-          {
-            throw handleException(exception, "Could not store the image!");
-          }
-        }
-        else
-        {
-          throw handleException(new IllegalStateException("Request cannot be turned into a servlet request"), "Could not store the image!");
-        }
+        ReparonsParisServices.getInstance().addPoiReport(accountUid, poiReport, poiReportStatement, null);
+        return ok("POI report created");
       }
-      return error("noPhotoAttached", "ko", "A POI report can only be created provided a photo is attached to it!");
+      catch (BadAccountException exception)
+      {
+        throw handleDalException(exception, "Could not record a POI report");
+      }
     }
 
   }

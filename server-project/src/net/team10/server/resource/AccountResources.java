@@ -37,7 +37,7 @@ public final class AccountResources
       }
       catch (BadAccountException exception)
       {
-        throw handleException(exception, "Could not create the account!");
+        throw handleDalException(exception, "Could not create the account!");
       }
     }
 

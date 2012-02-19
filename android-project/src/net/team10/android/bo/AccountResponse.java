@@ -6,6 +6,6 @@ public class AccountResponse
     extends JsonResponse
 {
 
-  public Account content;
+  public  Account content;
 
 }
