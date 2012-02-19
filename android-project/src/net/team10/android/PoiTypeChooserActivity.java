@@ -5,7 +5,7 @@ import net.team10.android.fragments.PoiTypeChooserFragment;
 
 import com.smartnsoft.droid4me.support.v4.app.SmartFragmentActivity;
 
-public class PoiTypeChooserActivity
+public final class PoiTypeChooserActivity
     extends SmartFragmentActivity<TitleBar.TitleBarAggregate>
     implements TitleBarRefreshFeature
 {
@@ -18,17 +18,14 @@ public class PoiTypeChooserActivity
   public void onRetrieveBusinessObjects()
       throws BusinessObjectUnavailableException
   {
-
   }
 
   public void onFulfillDisplayObjects()
   {
-    // getAggregate().getAttributes().setTitle(R.string.PoiTypeChooser_title);
   }
 
   public void onSynchronizeDisplayObjects()
   {
-
   }
 
   public void onTitleBarRefresh()
