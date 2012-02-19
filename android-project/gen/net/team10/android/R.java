@@ -184,6 +184,7 @@ containing a value of this type.
     }
     public static final class string {
         public static final int ConfirmDialog_comment=0x7f080018;
+        public static final int ConfirmDialog_error=0x7f08001b;
         public static final int ConfirmDialog_ok=0x7f080016;
         public static final int ConfirmDialog_tcancel=0x7f080017;
         public static final int ConfirmDialog_title=0x7f080015;
@@ -192,8 +193,8 @@ containing a value of this type.
         public static final int Home_menu_about=0x7f08000e;
         public static final int Home_menu_settings=0x7f08000d;
         public static final int Home_report_button=0x7f08000f;
-        public static final int ImagePicker_toast_cannotFoundGallery=0x7f08001c;
-        public static final int ImagePicker_toast_onlyAttachPhoto=0x7f08001b;
+        public static final int ImagePicker_toast_cannotFoundGallery=0x7f08001d;
+        public static final int ImagePicker_toast_onlyAttachPhoto=0x7f08001c;
         public static final int PoiReportsGroup_button_list=0x7f080014;
         public static final int PoiReportsGroup_button_map=0x7f080013;
         public static final int PoiTypeChooser_enable_gps_messages=0x7f080010;

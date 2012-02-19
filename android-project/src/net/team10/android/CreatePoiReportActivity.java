@@ -14,6 +14,7 @@ import net.team10.bo.PoiType;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,13 +31,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RatingBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.smartnsoft.droid4me.app.SmartCommands;
 import com.smartnsoft.droid4me.app.SmartCommands.GuardedCommand;
 import com.smartnsoft.droid4me.support.v4.app.SmartFragmentActivity;
-import com.smartnsoft.droid4me.ws.WebServiceClient.CallException;
 
 public class CreatePoiReportActivity extends SmartFragmentActivity<TitleBar.TitleBarAggregate> implements View.OnClickListener
 {
@@ -161,6 +160,7 @@ public class CreatePoiReportActivity extends SmartFragmentActivity<TitleBar.Titl
 	          }
 	        };
 	        type.setText("Type d'incident");
+	        
 	}
 	
 	public int getReportResourceId(ReportKind reportKind) 
@@ -176,8 +176,11 @@ public class CreatePoiReportActivity extends SmartFragmentActivity<TitleBar.Titl
 		}
 		return 0;
 	}
+	
+	
 
-	public void onSynchronizeDisplayObjects() {
+	public void onSynchronizeDisplayObjects() 
+	{
 		
 	}
 
@@ -186,7 +189,7 @@ public class CreatePoiReportActivity extends SmartFragmentActivity<TitleBar.Titl
 		if(view == done)
 		{
 		    final View confirlDialogLayout = getLayoutInflater().inflate(R.layout.confirm_dialog, null);
-			CreatePoiReportActivity.createConfirmationDialog(CreatePoiReportActivity.this, confirlDialogLayout, account, poiType, openDataPoi, photoInputStream).show();
+			CreatePoiReportActivity.createConfirmationDialog(CreatePoiReportActivity.this, CreatePoiReportActivity.this, confirlDialogLayout, account, poiType, openDataPoi, photoInputStream).show();
 		}
 		
 		else if( view == photo)
@@ -209,13 +212,15 @@ public class CreatePoiReportActivity extends SmartFragmentActivity<TitleBar.Titl
 			                  type.setCompoundDrawables((type.getContext().getResources().getDrawable(getReportResourceId(reportKind))), null, null, null);
 			                  type.setText(label[which]);
 			                  type.setTag(label[which]);
-							
 						}
 		              }).show();
+		    
+		    
+		 
 		}
 	}
 	
-	  static Dialog createConfirmationDialog( final Context context, View view, final Account account, final PoiType poiType, final OpenDataPoi openDataPoi, final InputStream photoInputStream)
+	  static Dialog createConfirmationDialog(final Activity activity, final Context context, View view, final Account account, final PoiType poiType, final OpenDataPoi openDataPoi, final InputStream photoInputStream)
 	  {
 	    final EditText commentField = (EditText) view.findViewById(R.id.commentField);
 	    final CheckBox twiterCheck = (CheckBox) view.findViewById(R.id.checkBox);
@@ -224,20 +229,38 @@ public class CreatePoiReportActivity extends SmartFragmentActivity<TitleBar.Titl
 	        {
 	          public void onClick(DialogInterface dialog, int which)
 	          {
-		            try {
-						ReparonsParisServices.getInstance().postPoiReportStatement(account.getUid(), poiType.getUid(), ReportKind.Broken, ReportSeverity.Major,
-						        openDataPoi.getPoiId(), commentField.getText().toString(), photoInputStream);
-					} catch (CallException e) {
 
-						e.printStackTrace();
-					}
 	          }
 	        }).setNegativeButton(R.string.ConfirmDialog_tcancel, new DialogInterface.OnClickListener()
 	    {
 	      public void onClick(DialogInterface dialog, int which)
 	      {
+	    	  
 	      }
 	    }).create();
 	  }
+	  
+	  public void postReportPoi( final Activity activity, final Account account, final PoiType poiType, final OpenDataPoi openDataPoi, final InputStream photoInputStream, final EditText commentField)
+	  {
+		  
+		     final ProgressDialog progressDialog = new ProgressDialog(CreatePoiReportActivity.this);
+		      progressDialog.setMessage("envoie du rapport");
+		      progressDialog.setIndeterminate(true);
+		      progressDialog.show();
+		      
+		      new SmartCommands
+		   SmartCommands.execute(new SmartCommands.ProgressGuardedCommand(activity, null, progressDialog, "Could not save the member properly") 
+		   {
+				
+				@Override
+				protected void runGuardedProgress() throws Exception {
+
+					ReparonsParisServices.getInstance().postPoiReportStatement(account.getUid(), poiType.getUid(), ReportKind.Broken, ReportSeverity.Major,
+					        openDataPoi.getPoiId(), commentField.getText().toString(), photoInputStream);
+					
+				}
+			});
+	  }
+	  
 
 }
