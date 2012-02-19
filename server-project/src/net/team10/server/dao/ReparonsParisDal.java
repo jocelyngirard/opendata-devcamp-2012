@@ -82,7 +82,7 @@ public final class ReparonsParisDal
       final List<PoiType> poiTypes = new ArrayList<PoiType>();
       for (PoiTypeModel poiTypeModel : poiTypeModels)
       {
-        poiTypes.add(new PoiType(poiTypeModel.getUid(), poiTypeModel.getCreationDate(), poiTypeModel.getOpenDataDataSetId(), poiTypeModel.getOpenDataTypeId(), poiTypeModel.getLabel(), poiTypeModel.getPoiTypeFolderUid(), poiTypeModel.getOpenDataSource()));
+        poiTypes.add(poiTypeModel.toPojo());
       }
       return poiTypes;
     }
@@ -98,10 +98,10 @@ public final class ReparonsParisDal
     try
     {
       tw.begin();
-      final PoiTypeModel poiTypeModel = new PoiTypeModel(new Date(), poiType.getOpenDataDataSetId(), poiType.getOpenDataTypeId(), poiType.getLabel(), poiType.getPoiTypeFolderUid(), poiType.getOpenDataSource());
+      final PoiTypeModel poiTypeModel = new PoiTypeModel(new Date(), poiType.getOpenDataDataSetId(), poiType.getOpenDataTypeId(), poiType.getLabel(), poiType.getPoiTypeFolderUid(), poiType.getOpenDataSource(), poiType.getImageUrl());
       tw.persistenceManager.makePersistent(poiTypeModel);
       tw.commit();
-      return new PoiType(poiTypeModel.getUid(), poiTypeModel.getCreationDate(), poiTypeModel.getOpenDataDataSetId(), poiTypeModel.getOpenDataTypeId(), poiTypeModel.getLabel(), poiTypeModel.getPoiTypeFolderUid(), poiTypeModel.getOpenDataSource());
+      return poiTypeModel.toPojo();
     }
     finally
     {
@@ -211,14 +211,14 @@ public final class ReparonsParisDal
         {
           // No POI report is being currently not-closed for that POI
           tw.begin();
-          poiReportModel = new PoiReportModel(poiReport.getOpenDataPoiId(), poiReport.getPoiTypeUid(), accountUid, new Date(), new Date(), ReportStatus.Open, accountUid, poiReport.getReportKind(), poiReport.getReportSeverity());
+          poiReportModel = new PoiReportModel(poiReport.getOpenDataPoiId(), poiReport.getPoiTypeUid(), accountUid, new Date(), new Date(), ReportStatus.Open, accountUid, poiReport.getReportKind(), poiReport.getReportSeverity(), photoBlob);
           tw.persistenceManager.makePersistent(poiReportModel);
           tw.commit();
         }
         // Now, we can create a new POI report statement
         {
           tw.begin();
-          final PoiReportStatementModel poiReportStatementModel = new PoiReportStatementModel(poiReportModel.getUid(), accountUid, new Date(), poiReportStatement.getComment(), photoBlob);
+          final PoiReportStatementModel poiReportStatementModel = new PoiReportStatementModel(poiReportModel.getUid(), accountUid, new Date(), poiReportStatement.getComment());
           tw.persistenceManager.makePersistent(poiReportStatementModel);
           tw.commit();
         }

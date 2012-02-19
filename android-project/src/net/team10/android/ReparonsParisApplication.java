@@ -190,7 +190,6 @@ public final class ReparonsParisApplication
     {
       public void onLifeCycleEvent(Activity activity, Object component, ActivityController.Interceptor.InterceptorEvent event)
       {
-
         titleBar.onLifeCycleEvent(activity, event);
       }
     };

@@ -15,6 +15,7 @@ import net.team10.bo.PoiReport.ReportKind;
 import net.team10.bo.PoiReport.ReportSeverity;
 import net.team10.bo.PoiReport.ReportStatus;
 
+import com.google.appengine.api.datastore.Blob;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 
@@ -60,12 +61,14 @@ public final class PoiReportModel
   @Persistent
   private ReportSeverity reportSeverity;
 
+  @Persistent
+  private Blob photo;
   public PoiReportModel()
   {
   }
 
   public PoiReportModel(String openDataPoiId, String poiTypeUid, String creationAccountUid, Date creationDate, Date modificationDate,
-      ReportStatus reportStatus, String modificationAccountUid, ReportKind reportKind, ReportSeverity reportSeverity)
+      ReportStatus reportStatus, String modificationAccountUid, ReportKind reportKind, ReportSeverity reportSeverity, Blob photo)
   {
     this.openDataPoiId = openDataPoiId;
     this.poiTypeUid = poiTypeUid;
@@ -76,6 +79,7 @@ public final class PoiReportModel
     this.modificationAccountUid = modificationAccountUid;
     this.reportKind = reportKind;
     this.reportSeverity = reportSeverity;
+    this.photo = photo;
   }
 
   public String getUid()
@@ -126,6 +130,11 @@ public final class PoiReportModel
   public final ReportSeverity getReportSeverity()
   {
     return reportSeverity;
+  }
+
+  public final Blob getPhoto()
+  {
+    return photo;
   }
 
   public PoiReport toPojo(Account creationAccount, Account modificationAccount)

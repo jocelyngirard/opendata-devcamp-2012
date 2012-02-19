@@ -9,6 +9,7 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+import net.team10.bo.PoiType;
 import net.team10.bo.PoiType.OpenDataSource;
 
 import com.google.appengine.api.datastore.Key;
@@ -47,11 +48,15 @@ public final class PoiTypeModel
   @Persistent
   private OpenDataSource openDataSource;
 
+  @Persistent
+  private String imageUrl;
+
   public PoiTypeModel()
   {
   }
 
-  public PoiTypeModel(Date creationDate, String openDataDataSetId, String openDataTypeId, String label, String poiTypeFolderUid, OpenDataSource openDataSource)
+  public PoiTypeModel(Date creationDate, String openDataDataSetId, String openDataTypeId, String label, String poiTypeFolderUid, OpenDataSource openDataSource,
+      String imageUrl)
   {
     this.creationDate = creationDate;
     this.openDataDataSetId = openDataDataSetId;
@@ -59,6 +64,7 @@ public final class PoiTypeModel
     this.label = label;
     this.poiTypeFolderUid = poiTypeFolderUid;
     this.openDataSource = openDataSource;
+    this.imageUrl = imageUrl;
   }
 
   public String getUid()
@@ -94,6 +100,16 @@ public final class PoiTypeModel
   public OpenDataSource getOpenDataSource()
   {
     return openDataSource;
+  }
+
+  public final String getImageUrl()
+  {
+    return imageUrl;
+  }
+
+  public PoiType toPojo()
+  {
+    return new PoiType(getUid(), getCreationDate(), getOpenDataDataSetId(), getOpenDataTypeId(), getLabel(), getPoiTypeFolderUid(), getOpenDataSource(), getImageUrl());
   }
 
 }

@@ -23,7 +23,7 @@ import de.android1.overlaymanager.lazyload.LazyLoadCallback;
 import de.android1.overlaymanager.lazyload.LazyLoadException;
 
 public class PoiReportMapActivity
-    extends SmartMapActivity<TitleBar.TitleBarAggregate>
+    extends SmartMapActivity<Void>
     implements LifeCycle.BusinessObjectsRetrievalAsynchronousPolicy, OnOverlayGestureListener, LazyLoadCallback
 {
   public static final String POI_TYPE = "poiType";

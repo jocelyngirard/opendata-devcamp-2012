@@ -26,6 +26,9 @@
   <string name="PoiTypeChooser_title">Choix du type d\'infrastructure</string>
   <string name="PoiReportsGroup_button_map">Plan</string>
   <string name="PoiReportsGroup_button_list">Liste</string>
+  <string name="Home_mode_agent">Mode Agent</string>
+  <string name="Home_settings">Paramètres</string>
+  <string name="Home_support">Donation</string>
 
   <string name="ConfirmDialog_title">Confirmation</string>
   <string name="ConfirmDialog_ok">OK</string>
