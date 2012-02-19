@@ -30,9 +30,6 @@ public abstract class Constants
 
   public static final long WEBSERVICE_RETENTION_PERIOD_IN_MILLISECONDS = 24l * 3600l * 1000l;
 
-  // The test environment
-  // public static final String API_URL = "http://10.0.2.2:8888/rest";
-
   // The production environment
   public static final String API_URL = "http://reparonsparis.appspot.com/rest";
 
