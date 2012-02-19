@@ -78,19 +78,23 @@ containing a value of this type.
         public static final int titleText=0x7f070004;
     }
     public static final class drawable {
-        public static final int droid4me_inside=0x7f020000;
-        public static final int droid4sample_splash_logo=0x7f020001;
-        public static final int icon=0x7f020002;
-        public static final int map_marker=0x7f020003;
-        public static final int poweredby_smartnsoft=0x7f020004;
-        public static final int reparonsparis_splash_logo=0x7f020005;
-        public static final int smartnsoft_illustration=0x7f020006;
-        public static final int title_bar_button_background=0x7f020007;
-        public static final int title_bar_button_background_disabled=0x7f020008;
-        public static final int title_bar_button_background_pressed=0x7f020009;
-        public static final int title_bar_button_background_selected=0x7f02000a;
-        public static final int title_bar_home=0x7f02000b;
-        public static final int title_bar_refresh=0x7f02000c;
+        public static final int blue_marker=0x7f020000;
+        public static final int droid4me_inside=0x7f020001;
+        public static final int droid4sample_splash_logo=0x7f020002;
+        public static final int green_marker=0x7f020003;
+        public static final int icon=0x7f020004;
+        public static final int map_marker=0x7f020005;
+        public static final int poweredby_smartnsoft=0x7f020006;
+        public static final int red_marker=0x7f020007;
+        public static final int reparonsparis_splash_logo=0x7f020008;
+        public static final int smartnsoft_illustration=0x7f020009;
+        public static final int title_bar_button_background=0x7f02000a;
+        public static final int title_bar_button_background_disabled=0x7f02000b;
+        public static final int title_bar_button_background_pressed=0x7f02000c;
+        public static final int title_bar_button_background_selected=0x7f02000d;
+        public static final int title_bar_home=0x7f02000e;
+        public static final int title_bar_refresh=0x7f02000f;
+        public static final int yellow_marker=0x7f020010;
     }
     public static final class id {
         public static final int center=0x7f0a0003;

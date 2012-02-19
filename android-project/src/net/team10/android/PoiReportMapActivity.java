@@ -4,7 +4,13 @@ import java.util.List;
 
 import net.team10.android.bo.OpenDataPoi;
 import net.team10.android.ws.ReparonsParisServices;
+import net.team10.bo.PoiReport;
 import net.team10.bo.PoiType;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.MotionEvent;
 
 import com.google.android.maps.GeoPoint;
@@ -17,14 +23,13 @@ import com.smartnsoft.droid4me.app.SmartMapActivity;
 import de.android1.overlaymanager.ManagedOverlay;
 import de.android1.overlaymanager.ManagedOverlayGestureDetector.OnOverlayGestureListener;
 import de.android1.overlaymanager.ManagedOverlayItem;
+import de.android1.overlaymanager.MarkerRenderer;
 import de.android1.overlaymanager.OverlayManager;
 import de.android1.overlaymanager.ZoomEvent;
-import de.android1.overlaymanager.lazyload.LazyLoadCallback;
-import de.android1.overlaymanager.lazyload.LazyLoadException;
 
 public class PoiReportMapActivity
     extends SmartMapActivity<TitleBar.TitleBarAggregate>
-    implements LifeCycle.BusinessObjectsRetrievalAsynchronousPolicy, OnOverlayGestureListener, LazyLoadCallback
+    implements LifeCycle.BusinessObjectsRetrievalAsynchronousPolicy, OnOverlayGestureListener
 {
   public static final String POI_TYPE = "poiType";
 
@@ -38,7 +43,24 @@ public class PoiReportMapActivity
 
   private ManagedOverlay PoiManagedOverlay;
 
+  private ManagedOverlay ManagedOverlayOpen;
+
+  private ManagedOverlay ManagedOverlayScheduled;
+
+  private ManagedOverlay ManagedOverlayInProgress;
+
+  private ManagedOverlay ManagedOverlayClosed;
+
   private final List<ManagedOverlayItem> items = null;
+
+  private Drawable default_marker;
+
+  private final boolean fromCache = true;
+
+  public static enum ReportStatus
+  {
+    Open, Scheduled, InProgress, Closed
+  }
 
   @Override
   protected String getGoogleMapsApiKey()
@@ -52,27 +74,53 @@ public class PoiReportMapActivity
     final PoiType poiType = (PoiType) getIntent().getSerializableExtra(PoiReportMapActivity.POI_TYPE);
     if (poiType == null)
     {
-      throw new BusinessObjectUnavailableException("PoiType null pointer exception");
+      throw new BusinessObjectUnavailableException("Le POI que vous demandez n'existe pas.");
     }
 
     if (myLocationOverlay != null)
     {
       List<OpenDataPoi> openDataPois;
+      List<PoiReport> poiReports;
 
       try
       {
         openDataPois = ReparonsParisServices.getInstance().getOpenDataPois(poiType.getOpenDataDataSetId(), poiType.getOpenDataTypeId(),
             myLocationOverlay.getMyLocation().getLatitudeE6() / 1E6, myLocationOverlay.getMyLocation().getLongitudeE6() / 1E6, 10000);
+        poiReports = ReparonsParisServices.getInstance().getPoiReports(fromCache, poiType.getOpenDataDataSetId(), poiType.getOpenDataTypeId(),
+            poiType.getOpenDataSource(), poiType.getPoiTypeFolderUid(), "1.23,4.56", "7.89,0.12");
       }
       catch (Exception exception)
       {
         throw new BusinessObjectUnavailableException(exception);
       }
 
-      for (OpenDataPoi openDataPoisItem : openDataPois)
+      for (PoiReport poiReportItem : poiReports)
       {
-        PoiManagedOverlay.createItem(new GeoPoint(openDataPoisItem.getLatitudeE6(), openDataPoisItem.getLongitudeE6()));
+        for (OpenDataPoi openDataPoisItem : openDataPois)
+        {
+          if (openDataPoisItem.getDataSetId().equals(poiReportItem.getOpenDataPoiId()))
+          {
+            switch (poiReportItem.getReportStatus())
+            {
+            case Open:
+              ManagedOverlayOpen.createItem(new GeoPoint(openDataPoisItem.getLatitudeE6(), openDataPoisItem.getLongitudeE6()));
+              break;
+            case Scheduled:
+              ManagedOverlayScheduled.createItem(new GeoPoint(openDataPoisItem.getLatitudeE6(), openDataPoisItem.getLongitudeE6()));
+              break;
+            case InProgress:
+              ManagedOverlayInProgress.createItem(new GeoPoint(openDataPoisItem.getLatitudeE6(), openDataPoisItem.getLongitudeE6()));
+              break;
+            case Closed:
+              ManagedOverlayClosed.createItem(new GeoPoint(openDataPoisItem.getLatitudeE6(), openDataPoisItem.getLongitudeE6()));
+              break;
+            }
+          }
+          else
+            PoiManagedOverlay.createItem(new GeoPoint(openDataPoisItem.getLatitudeE6(), openDataPoisItem.getLongitudeE6()));
+        }
       }
+
     }
 
   }
@@ -109,20 +157,64 @@ public class PoiReportMapActivity
     // OverlayManager
     overlayManager = new OverlayManager(getApplication(), mapView);
 
-    PoiManagedOverlay = overlayManager.createOverlay("POI", getResources().getDrawable(R.drawable.map_marker));
+    PoiManagedOverlay = overlayManager.createOverlay("POI", default_marker);
     PoiManagedOverlay.createItem(new GeoPoint(-17540798, -149549241), "Point fictif", "Initialisation OverlayManager");
 
     overlayManager.populate();
     PoiManagedOverlay.setOnOverlayGestureListener(this);
-    // PoiManagedOverlay.setLazyLoadCallback(this);
 
+    ManagedOverlayOpen = overlayManager.createOverlay("Open", default_marker);
+    ManagedOverlayScheduled = overlayManager.createOverlay("Scheduled", default_marker);
+    ManagedOverlayInProgress = overlayManager.createOverlay("InProgress", default_marker);
+    ManagedOverlayClosed = overlayManager.createOverlay("Closed", default_marker);
+
+    ManagedOverlayOpen.setCustomMarkerRenderer(setManagedOverlayMarker(ReportStatus.Open));
+    ManagedOverlayScheduled.setCustomMarkerRenderer(setManagedOverlayMarker(ReportStatus.Scheduled));
+    ManagedOverlayInProgress.setCustomMarkerRenderer(setManagedOverlayMarker(ReportStatus.InProgress));
+    ManagedOverlayClosed.setCustomMarkerRenderer(setManagedOverlayMarker(ReportStatus.Closed));
+  }
+
+  private MarkerRenderer setManagedOverlayMarker(final ReportStatus status)
+  {
+    return new MarkerRenderer()
+    {
+      public Drawable render(ManagedOverlayItem item, Drawable defaultMarker, int bitState)
+      {
+        BitmapDrawable b = (BitmapDrawable) defaultMarker;
+        Bitmap poiCustomMarker = Bitmap.createBitmap(b.getBitmap().copy(Bitmap.Config.ARGB_8888, true));
+        Bitmap infoCustomMarker = null;
+        switch (status)
+        {
+        // case Open:
+        // infoCustomMarker
+        // break;
+        // case Scheduled:
+        // infoCustomMarker
+        // break;
+        // case InProgress:
+        // infoCustomMarker
+        // break;
+        // case Closed:
+        // infoCustomMarker
+        // break;
+        }
+
+        Canvas canvas = new Canvas(poiCustomMarker);
+
+        canvas.drawBitmap(infoCustomMarker, 0.f, 0.f, null);
+
+        BitmapDrawable bd = new BitmapDrawable(poiCustomMarker);
+        return bd;
+      }
+    };
   }
 
   @Override
   public void onSynchronizeDisplayObjects()
   {
     super.onSynchronizeDisplayObjects();
-    // overlayManager.populate();
+
+    overlayManager.populate();
   }
 
   public boolean onDoubleTap(MotionEvent e, ManagedOverlay overlay, GeoPoint point, ManagedOverlayItem item)
@@ -134,13 +226,11 @@ public class PoiReportMapActivity
 
   public void onLongPress(MotionEvent e, ManagedOverlay overlay)
   {
-    // TODO Auto-generated method stub
 
   }
 
   public void onLongPressFinished(MotionEvent e, ManagedOverlay overlay, GeoPoint point, ManagedOverlayItem item)
   {
-    // TODO Auto-generated method stub
 
   }
 
@@ -153,32 +243,13 @@ public class PoiReportMapActivity
   {
     if (item != null)
     {
-
+      startActivity(new Intent(getApplicationContext(), SettingsActivity.class));
     }
     return false;
   }
 
   public boolean onZoom(ZoomEvent arg0, ManagedOverlay arg1)
   {
-    // TODO Auto-generated method stub
     return false;
-  }
-
-  public List<ManagedOverlayItem> lazyload(GeoPoint topLeft, GeoPoint bottomRight, ManagedOverlay overlay)
-      throws LazyLoadException
-  {
-    if (items != null)
-    {
-      items.clear();
-      // if(topLeft< && <bottomRight)
-      {
-        // refreshBusinessObjectsAndDisplay();
-      }
-      // else
-      {
-        items.addAll(PoiManagedOverlay.getOverlayItems());
-      }
-    }
-    return items;
   }
 }
