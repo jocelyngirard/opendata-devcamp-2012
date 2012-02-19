@@ -9,6 +9,8 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+import net.team10.bo.Account;
+import net.team10.bo.PoiReport;
 import net.team10.bo.PoiReport.ReportKind;
 import net.team10.bo.PoiReport.ReportSeverity;
 import net.team10.bo.PoiReport.ReportStatus;
@@ -124,6 +126,11 @@ public final class PoiReportModel
   public final ReportSeverity getReportSeverity()
   {
     return reportSeverity;
+  }
+
+  public PoiReport toPojo(Account creationAccount, Account modificationAccount)
+  {
+    return new PoiReport(getUid(), getOpenDataPoiId(), getPoiTypeUid(), creationAccount, getCreationDate(), getModificationDate(), getReportStatus(), modificationAccount, getReportKind(), getReportSeverity());
   }
 
 }

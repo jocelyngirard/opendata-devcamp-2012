@@ -1,16 +1,9 @@
 package net.team10.server.resource;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 
-import net.team10.bo.Account;
 import net.team10.bo.PoiReport;
-import net.team10.bo.PoiReport.ReportKind;
-import net.team10.bo.PoiReport.ReportSeverity;
-import net.team10.bo.PoiReport.ReportStatus;
 import net.team10.bo.PoiReportStatement;
 import net.team10.bo.PoiType;
 import net.team10.server.dao.ReparonsParisDal.BadAccountException;
@@ -79,13 +72,13 @@ public final class PoiReportResources
       final Form form = getRequest().getResourceRef().getQueryAsForm();
       final String openDataDataSetId = form.getFirstValue("openDataDataSetId");
       final String openDataTypeId = form.getFirstValue("openDataTypeId");
-      final String dataSource = form.getFirstValue("dataSource");
+      final String openDataSource = form.getFirstValue("dataSource");
       final String poiTypeUid = form.getFirstValue("poiTypeUid");
       final String topLeft = form.getFirstValue("topLeft");
       final double topLeftLatitude;
       final double topLeftLongitude;
       {
-        final StringTokenizer tokenizer = new StringTokenizer(",", topLeft);
+        final StringTokenizer tokenizer = new StringTokenizer(topLeft, ",");
         topLeftLatitude = Double.parseDouble(tokenizer.nextToken());
         topLeftLongitude = Double.parseDouble(tokenizer.nextToken());
       }
@@ -93,22 +86,31 @@ public final class PoiReportResources
       final double bottomRightLatitude;
       final double bottomRightLongitude;
       {
-        final StringTokenizer tokenizer = new StringTokenizer(",", bottomRight);
+        final StringTokenizer tokenizer = new StringTokenizer(bottomRight, ",");
         bottomRightLatitude = Double.parseDouble(tokenizer.nextToken());
         bottomRightLongitude = Double.parseDouble(tokenizer.nextToken());
       }
       if (logger.isLoggable(Level.INFO))
       {
-        logger.info("Asking the POI reports belonging to the open-data dataset with id " + openDataDataSetId + "', open-data type id '" + openDataTypeId + "', data source '" + dataSource + "' in the rectangular area (" + topLeftLatitude + "," + topLeftLongitude + ")x(" + bottomRightLatitude + "," + bottomRightLongitude + ")");
+        logger.info("Asking the POI reports belonging to the open-data dataset with id " + openDataDataSetId + "', open-data type id '" + openDataTypeId + "', open-data source '" + openDataSource + "' in the rectangular area (" + topLeftLatitude + "," + topLeftLongitude + ")x(" + bottomRightLatitude + "," + bottomRightLongitude + ")");
       }
-      final List<PoiReport> result = new ArrayList<PoiReport>();
-      for (int index = 0; index < 10; index++)
-      {
-        result.add(new PoiReport("uid" + index, "openDataPoiId" + index, poiTypeUid, new Account("creationAccountUid", new Date(), "nickname " + index), new Date(), new Date(), ReportStatus.Open, new Account("modificationAccountUid", new Date(), "nickname " + index), ReportKind.Broken, ReportSeverity.Severe));
-      }
+      // final List<PoiReport> result = new ArrayList<PoiReport>();
+      // for (int index = 0; index < 10; index++)
+      // {
+      // result.add(new PoiReport("uid" + index, "openDataPoiId" + index, poiTypeUid, new Account("creationAccountUid", new Date(), "nickname " +
+      // index), new Date(), new Date(), ReportStatus.Open, new Account("modificationAccountUid", new Date(), "nickname " + index), ReportKind.Broken,
+      // ReportSeverity.Severe));
+      // }
 
-      final String message = "Here are the POI reports!";
-      return generateObjectJsonRepresentation(result, message);
+      try
+      {
+        return generateObjectJsonRepresentation(ReparonsParisServices.getPoiReports(openDataDataSetId, openDataTypeId, openDataSource, topLeftLatitude,
+            topLeftLongitude, bottomRightLatitude, bottomRightLongitude), "The POI reports");
+      }
+      catch (Exception exception)
+      {
+        throw handleException(exception, "Could not request the POI reports");
+      }
     }
 
     @Post
@@ -185,7 +187,7 @@ public final class PoiReportResources
       final PoiReportStatement poiReportStatement = deserializeJson(postForm.getFirstValue("poiReportStatement"), PoiReportStatement.class);
       try
       {
-        ReparonsParisServices.getInstance().addPoiReport(accountUid, poiReport, poiReportStatement, null);
+        ReparonsParisServices.getInstance().declarePoiReportStatement(accountUid, poiReport, poiReportStatement, null);
         return ok("POI report created");
       }
       catch (BadAccountException exception)

@@ -9,6 +9,7 @@ import net.team10.android.PoiReportMapActivity;
 import net.team10.android.R;
 import net.team10.android.bo.OpenDataPoi;
 import net.team10.android.ws.ReparonsParisServices;
+import net.team10.bo.PoiReport;
 import net.team10.bo.PoiType;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -107,8 +108,8 @@ public class PoiReportsListFragment
     try
     {
       openDataPois = ReparonsParisServices.getInstance().getOpenDataPois(poiType.getOpenDataDataSetId(), poiType.getOpenDataTypeId(), 48.8566, 2.3522, 10000);
-      // poiReports = ReparonsParisServices.getInstance().getPoiReports(fromCache, poiType.getOpenDataDataSetId(), poiType.getOpenDataTypeId(),
-      // poiType.getOpenDataSource(), poiType.getPoiTypeFolderUid(), "1.23,4.56", "7.89,0.12");
+      final List<PoiReport> poiReports = ReparonsParisServices.getInstance().getPoiReports(fromCache, poiType.getOpenDataDataSetId(),
+          poiType.getOpenDataTypeId(), poiType.getOpenDataSource(), poiType.getPoiTypeFolderUid(), 1.23, 4.56, 7.89, 0.12);
     }
     catch (Exception exception)
     {
