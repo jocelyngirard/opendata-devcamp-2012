@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.smartnsoft.droid4me.LifeCycle.BusinessObjectsRetrievalAsynchronousPolicy;
 import com.smartnsoft.droid4me.app.SmartCommands;
@@ -76,7 +77,13 @@ public final class HomeFragment
       {
         final GoogleAccountInformations googleAccount = ReparonsParisApplication.getGoogleAccountInformations(getCheckedActivity());
         final AlertDialog.Builder builder = new AlertDialog.Builder(getCheckedActivity());
-        builder.setMessage(googleAccount.email);
+        //builder.setMessage(googleAccount.email);
+        final View dialogView = getActivity().getLayoutInflater().inflate(R.layout.credential_item_dialog_box, null);
+        final EditText email = (EditText) dialogView.findViewById(R.id.email);
+        final EditText name = (EditText) dialogView.findViewById(R.id.pseudo);
+        builder.setView(dialogView);
+        builder.setTitle("Entrer vos informations");
+        email.setText(googleAccount.email);
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener()
         {
           public void onClick(DialogInterface dialog, int which)
@@ -84,6 +91,7 @@ public final class HomeFragment
             try
             {
               final String md5sum = ReparonsParisApplication.md5sum(googleAccount.email);
+
               final ProgressDialog progressDialog = new ProgressDialog(getCheckedActivity());
               progressDialog.setIndeterminate(true);
               progressDialog.show();
@@ -93,7 +101,7 @@ public final class HomeFragment
                 {
                   try
                   {
-                    final String nickname = "Nick";
+                    final String nickname = name.getText().toString();
                     ReparonsParisServices.getInstance().createAccount(md5sum, nickname);
                   }
                   catch (CallException e)
