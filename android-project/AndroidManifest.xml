@@ -67,6 +67,11 @@
     />
     
     <activity
+      android:name=".PoiReportsListActivity"
+      android:configChanges="keyboardHidden|orientation"
+    />
+    
+    <activity
       android:name=".PoiTypeChooserActivity"
       android:configChanges="keyboardHidden|orientation"
     />

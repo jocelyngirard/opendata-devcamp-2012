@@ -3,11 +3,13 @@ package net.team10.android.fragments;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.team10.android.MapActivity;
 import net.team10.android.R;
 import net.team10.android.TitleBar;
 import net.team10.android.TitleBar.TitleBarRefreshFeature;
+import net.team10.android.bo.OpenDataPoi;
 import net.team10.android.ws.ReparonsParisServices;
-import net.team10.bo.PoiReport;
+import net.team10.bo.PoiType;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -28,46 +30,46 @@ public class PoiReportsListFragment
     implements BusinessObjectsRetrievalAsynchronousPolicy, TitleBarRefreshFeature
 {
 
-  public class PoiReportViewAttributes
+  public class OpenDataPoiViewAttributes
   {
 
     private final TextView text;
 
-    public PoiReportViewAttributes(View view)
+    public OpenDataPoiViewAttributes(View view)
     {
       text = (TextView) view.findViewById(android.R.id.text1);
     }
 
-    public void update(PoiReport businessObject)
+    public void update(OpenDataPoi businessObject)
     {
-      // text.setText(businessObject.getLabel());
+      text.setText(businessObject.getLabel());
     }
 
   }
 
-  public class PoiReportViewWrapper
-      extends SimpleBusinessViewWrapper<PoiReport>
+  public class OpenDataPoiViewWrapper
+      extends SimpleBusinessViewWrapper<OpenDataPoi>
   {
 
-    public PoiReportViewWrapper(PoiReport businessObject)
+    public OpenDataPoiViewWrapper(OpenDataPoi businessObject)
     {
       super(businessObject, 0, android.R.layout.simple_list_item_1);
     }
 
     @Override
-    protected Object extractNewViewAttributes(Activity activity, View view, PoiReport businessObject)
+    protected Object extractNewViewAttributes(Activity activity, View view, OpenDataPoi businessObject)
     {
-      return new PoiReportViewAttributes(view);
+      return new OpenDataPoiViewAttributes(view);
     }
 
     @Override
-    protected void updateView(Activity activity, Object viewAttributes, View view, PoiReport businessObject, int position)
+    protected void updateView(Activity activity, Object viewAttributes, View view, OpenDataPoi businessObject, int position)
     {
-      ((PoiReportViewAttributes) viewAttributes).update(businessObject);
+      ((OpenDataPoiViewAttributes) viewAttributes).update(businessObject);
     }
 
     @Override
-    public Intent computeIntent(Activity activity, Object viewAttributes, View view, PoiReport businessObject, ObjectEvent objectEvent, int position)
+    public Intent computeIntent(Activity activity, Object viewAttributes, View view, OpenDataPoi businessObject, ObjectEvent objectEvent, int position)
     {
       if (objectEvent == ObjectEvent.Clicked)
       {
@@ -81,12 +83,18 @@ public class PoiReportsListFragment
   public List<? extends BusinessViewWrapper<?>> retrieveBusinessObjectsList()
       throws BusinessObjectUnavailableException
   {
-    List<PoiReport> poiReports;
+    final PoiType poiType = (PoiType) getCheckedActivity().getIntent().getSerializableExtra(MapActivity.POI_TYPE);
+
+    if (poiType == null)
+    {
+      throw new BusinessObjectUnavailableException("The PoiType is missing in the intent, we cannot continuous this view.");
+    }
+
+    List<OpenDataPoi> openDataPois;
 
     try
     {
-      poiReports = null;
-      ReparonsParisServices.getInstance().getPoiTypes();
+      openDataPois = ReparonsParisServices.getInstance().getOpenDataPois(poiType.getOpenDataDataSetId(), poiType.getOpenDataTypeId(), 48.8566, 2.3522, 10000);
     }
     catch (Exception exception)
     {
@@ -95,9 +103,9 @@ public class PoiReportsListFragment
 
     final List<BusinessViewWrapper<?>> wrappers = new ArrayList<SmartAdapters.BusinessViewWrapper<?>>();
 
-    for (PoiReport poiReport : poiReports)
+    for (OpenDataPoi openDataPoi : openDataPois)
     {
-      wrappers.add(new PoiReportViewWrapper(poiReport));
+      wrappers.add(new OpenDataPoiViewWrapper(openDataPoi));
     }
 
     return wrappers;

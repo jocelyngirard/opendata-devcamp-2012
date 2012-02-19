@@ -121,9 +121,10 @@ containing a value of this type.
         public static final int about=0x7f030000;
         public static final int home=0x7f030001;
         public static final int home_fragment=0x7f030002;
-        public static final int poitypechooser_fragment=0x7f030003;
-        public static final int reparonsparis_splash_screen=0x7f030004;
-        public static final int title_bar=0x7f030005;
+        public static final int poireportslist_fragment=0x7f030003;
+        public static final int poitypechooser_fragment=0x7f030004;
+        public static final int reparonsparis_splash_screen=0x7f030005;
+        public static final int title_bar=0x7f030006;
     }
     public static final class raw {
         public static final int about=0x7f050000;

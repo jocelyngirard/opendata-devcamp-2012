@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.team10.android.MapActivity;
+import net.team10.android.PoiReportsListActivity;
 import net.team10.android.R;
 import net.team10.android.TitleBar;
 import net.team10.android.TitleBar.TitleBarRefreshFeature;
@@ -19,10 +20,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.smartnsoft.droid4me.LifeCycle.BusinessObjectsRetrievalAsynchronousPolicy;
+import com.smartnsoft.droid4me.framework.Commands;
 import com.smartnsoft.droid4me.framework.SmartAdapters;
 import com.smartnsoft.droid4me.framework.SmartAdapters.BusinessViewWrapper;
 import com.smartnsoft.droid4me.framework.SmartAdapters.ObjectEvent;
 import com.smartnsoft.droid4me.framework.SmartAdapters.SimpleBusinessViewWrapper;
+import com.smartnsoft.droid4me.menu.StaticMenuCommand;
 
 public class PoiTypeChooserFragment
     extends SmartListViewFragmentV4<TitleBar.TitleBarAggregate, ListView>
@@ -72,12 +75,14 @@ public class PoiTypeChooserFragment
     {
       if (objectEvent == ObjectEvent.Clicked)
       {
-        return new Intent(getCheckedActivity(), MapActivity.class).putExtra(MapActivity.POI_TYPE, businessObject);
+        return new Intent(getCheckedActivity(), PoiReportsListActivity.class).putExtra(MapActivity.POI_TYPE, businessObject);
       }
       return super.computeIntent(activity, viewAttributes, view, businessObject, objectEvent, position);
     }
 
   }
+
+  private boolean fromCache = true;
 
   public List<? extends BusinessViewWrapper<?>> retrieveBusinessObjectsList()
       throws BusinessObjectUnavailableException
@@ -86,7 +91,7 @@ public class PoiTypeChooserFragment
 
     try
     {
-      poiTypes = ReparonsParisServices.getInstance().getPoiTypes();
+      poiTypes = ReparonsParisServices.getInstance().getPoiTypes(fromCache);
     }
     catch (Exception exception)
     {
@@ -100,6 +105,7 @@ public class PoiTypeChooserFragment
       wrappers.add(new PoiTypeViewWrapper(poiType));
     }
 
+    fromCache = true;
     return wrappers;
   }
 
@@ -107,6 +113,8 @@ public class PoiTypeChooserFragment
   public void onFulfillDisplayObjects()
   {
     super.onFulfillDisplayObjects();
+
+    setHasOptionsMenu(true);
 
     if (!((LocationManager) getCheckedActivity().getSystemService(Activity.LOCATION_SERVICE)).isProviderEnabled(LocationManager.GPS_PROVIDER))
     {
@@ -131,8 +139,24 @@ public class PoiTypeChooserFragment
     }
   }
 
+  @Override
+  public List<StaticMenuCommand> getMenuCommands()
+  {
+    final List<StaticMenuCommand> commands = new ArrayList<StaticMenuCommand>();
+    commands.add(new StaticMenuCommand("refresh", '1', 's', android.R.drawable.ic_menu_preferences, new Commands.StaticEnabledExecutable()
+    {
+      @Override
+      public void run()
+      {
+        onTitleBarRefresh();
+      }
+    }));
+    return commands;
+  }
+
   public void onTitleBarRefresh()
   {
+    fromCache = false;
     refreshBusinessObjectsAndDisplay(true);
   }
 }

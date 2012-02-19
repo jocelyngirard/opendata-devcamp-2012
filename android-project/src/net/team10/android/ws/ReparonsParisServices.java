@@ -90,14 +90,14 @@ public final class ReparonsParisServices
 
   };
 
-  public synchronized List<PoiType> getPoiTypes()
+  public synchronized List<PoiType> getPoiTypes(boolean fromCache)
       throws CacheException
   {
     if (log.isInfoEnabled())
     {
       log.info("Retrieving the list of POI types");
     }
-    return poiTypeStreamParser.backed.getRetentionValue(true, Constants.WEBSERVICE_RETENTION_PERIOD_IN_MILLISECONDS, null, null);
+    return poiTypeStreamParser.backed.getRetentionValue(fromCache, Constants.WEBSERVICE_RETENTION_PERIOD_IN_MILLISECONDS, null, null);
   }
 
   private final static class OpenDataParameters
@@ -182,7 +182,7 @@ public final class ReparonsParisServices
       final Map<String, String> uriParameters = new HashMap<String, String>();
       uriParameters.put("format", "json");
       uriParameters.put("pretty_print", "false");
-//      uriParameters.put("disp", "geo");
+      // uriParameters.put("disp", "geo");
       uriParameters.put("location", parameter.latidude + "," + parameter.longitude);
       uriParameters.put("distance", Integer.toString(parameter.beamInMeters));
       return SimpleIOStreamerSourceKey.fromUriStreamerSourceKey(
