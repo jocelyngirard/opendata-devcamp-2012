@@ -37,7 +37,7 @@ import com.smartnsoft.droid4me.support.v4.app.SmartFragmentActivity;
  * @since 2012.02.18
  */
 public final class HomeActivity
-    extends SmartFragmentActivity<Void>
+    extends SmartFragmentActivity<TitleBar.TitleBarAggregate>
     implements BusinessObjectsRetrievalAsynchronousPolicy
 {
 
@@ -74,7 +74,7 @@ public final class HomeActivity
             // And now, we decode the bitmap
             options.inJustDecodeBounds = false;
             final int edge = 256;
-            final int sampleSize = Math.max(1, (int) Math.min(bitmapWidth / edge, bitmapHeight / edge));
+            final int sampleSize = Math.max(1, Math.min(bitmapWidth / edge, bitmapHeight / edge));
             options.inSampleSize = sampleSize;
             final Bitmap bitmap = decodeFileDescriptorAsBitmap(photoUri, paddingRectangle, options);
             // We extract the input stream from the bitmap
@@ -118,6 +118,7 @@ public final class HomeActivity
 
   public void onFulfillDisplayObjects()
   {
+    // getAggregate().getAttributes().setTitle(R.string.applicationName);
   }
 
   public void onSynchronizeDisplayObjects()

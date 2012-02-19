@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+     xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_width="fill_parent"
+     android:layout_height="wrap_content"
+>
+  <Button
+      android:id="@+id/mapButton"
+      android:layout_width="fill_parent"
+      android:layout_height="42dip"
+      android:layout_weight="1"
+      android:singleLine="true"
+      android:ellipsize="marquee"
+      android:text="@string/PoiReportsGroup_button_map"
+      android:background="@drawable/abs__tab_indicator_holo"
+  />
+   <Button
+      android:id="@+id/listButton"
+      android:layout_width="fill_parent"
+      android:layout_height="42dip"
+      android:layout_weight="1"
+      android:singleLine="true"
+      android:ellipsize="marquee"
+      android:text="@string/PoiReportsGroup_button_list"
+      android:background="@drawable/abs__tab_indicator_holo"
+   />
+</LinearLayout>

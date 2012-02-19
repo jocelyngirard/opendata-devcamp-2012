@@ -2,7 +2,7 @@
 <fragment
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:name="net.team10.android.fragments.PoiTypeChooserFragment"
-  android:id="@+id/homeFragment"
+  android:id="@+id/poiTypeChooserFragment"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
 />

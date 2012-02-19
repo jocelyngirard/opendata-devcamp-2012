@@ -26,12 +26,12 @@ public abstract class Constants
   /**
    * The encoding used for wrapping the URL of the HTTP requests.
    */
-  public static final String WEBSERVICES_HTML_ENCODING = HTTP.ISO_8859_1;
+  public static final String WEBSERVICES_HTML_ENCODING = HTTP.UTF_8;
 
   public static final long WEBSERVICE_RETENTION_PERIOD_IN_MILLISECONDS = 24l * 3600l * 1000l;
 
   // The test environment
-  //   public static final String API_URL = "http://10.0.2.2:8888/rest";
+  // public static final String API_URL = "http://10.0.2.2:8888/rest";
 
   // The production environment
   public static final String API_URL = "http://reparonsparis.appspot.com/rest";
